@@ -9,13 +9,9 @@ WinS::WinS()
 
 }
 
-WinS::WinS(Batched* sb_, const Font& fnt)
+WinS::WinS(SpriteBatch *sb_)
 {
     WinS::sb = sb_;
-    WinS::bp = new Texture();
-    WinS::bp->Load("wp.png");
-
-    font = &fnt;
 }
 
 WinS::~WinS()
@@ -25,8 +21,6 @@ WinS::~WinS()
             delete windows.at(i);
     }
     windows.clear();
-
-    delete bp;
 }
 
 void WinS::Draw()
@@ -52,7 +46,7 @@ void WinS::ToTop(Win* w) {
     }
 }
 
-void WinS::Update(const GameTimer &gt) {
+void WinS::Update() {
     MouseHooked = false;
 
     KeyboardHooked = false;
@@ -70,7 +64,5 @@ std::vector<Win*> WinS::windows;
 
 bool WinS::KeyboardHooked;
 bool WinS::MouseHooked;
-const Font* WinS::font;
-Texture* WinS::bp;
-Batched* WinS::sb;
+SpriteBatch* WinS::sb;
 

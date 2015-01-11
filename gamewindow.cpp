@@ -5,6 +5,7 @@
 #include "jargShader.h"
 #include "spritebatch.h"
 #include "glm/gtx/transform.hpp"
+#include "Win.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -47,7 +48,7 @@ bool GameWindow::Init()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     int err = glewInit();
     if (err != GLEW_OK)
@@ -104,6 +105,9 @@ bool GameWindow::Init()
     fb = std::make_shared<FrameBuffer>();
     tex = std::make_shared<Texture>();
     tex->Empty(glm::vec2(100, 100));
+
+    ws = std::make_shared<WinS>(batch.get());
+    ws->windows.push_back(new Win());
 }
 
 bool GameWindow::Destroy()
@@ -127,7 +131,7 @@ void GameWindow::Update()
 {
     glfwPollEvents();
 
-
+    ws->Update();
 
     Mouse::resetDelta();
 }
@@ -143,6 +147,8 @@ void GameWindow::Draw()
     batch->setUniform(proj * model);
     batch->renderText("123 asdasdasd\n12123123", 50, 50, 1, 1, glm::vec4(1,1,1,1));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
+
+    ws->Draw();
 
     batch->render();
 

@@ -1,38 +1,37 @@
 #include "Win.h"
-#include "glm.hpp"
+#include <glm/glm.hpp>
 #include "WinS.h"
-#include <glm.hpp>
 #include "Mouse.h"
 #include <vector>
-#include "JHelpers_inl.h"
-
+#include "colorExtender.h"
+#include "jhelper_inl.h"
 
 Win::Win(void) :
     size(100, 100),
     pos(0),
     col(0,0,0,0.75)
 {
-    text = new TextGeometry("azazazaadasdasd");
+    //text = new TextGeometry("azazazaadasdasd");
 }
 
-Win::Win(glm::vec2 p, glm::vec2 s) :
+Win::Win(glm::vec2 &p, glm::vec2 &s) :
     size(s),
     pos(p),
     col(0,0,0,0.75f)
 {
-    text = new TextGeometry("azazazaadasdasd");
+    //text = new TextGeometry("azazazaadasdasd");
 }
 
-Win::Win(glm::vec2 p, glm::vec2 s, glm::vec4 t_col) :
+Win::Win(glm::vec2 &p, glm::vec2 &s, glm::vec4 &t_col) :
     size(s),
     pos(p),
     col(t_col)
 {
-    text = new TextGeometry("azazazaadasdasd");
+    //text = new TextGeometry("azazazaadasdasd");
 }
 
 
-Win::~Win(void)
+Win::~Win()
 {
     if(Items.size() > 0){
         for(unsigned int i=0; i< Items.size(); i++){
@@ -40,22 +39,22 @@ Win::~Win(void)
         }
     }
     Items.clear();
-    delete text;
+    //delete text;
 }
 
 void Win::Draw() const
 {
-    Batched& sb = *WinS::sb;
+    SpriteBatch& sb = *WinS::sb;
 
-    sb.DrawRectangle(pos, size, col);
-    sb.DrawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, Colors::White);
+    sb.drawRect(pos, size, col);
+    sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, WHITE);
 
-    sb.DrawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, Colors::White);
-    sb.DrawLine(pos + glm::vec2(0,20), glm::vec2(pos.x + size.x, pos.y + 20), 2, Colors::White);
-    sb.DrawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, Colors::White);
-    sb.DrawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, Colors::White);
+    sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, WHITE);
+    sb.drawLine(pos + glm::vec2(0,20), glm::vec2(pos.x + size.x, pos.y + 20), 2, WHITE);
+    sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, WHITE);
+    sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, WHITE);
 
-    text->DrawAt(atCenter(text->Size, pos, glm::vec2(size.x, 20)));
+    //text->DrawAt(atCenter(text->Size, pos, glm::vec2(size.x, 20)));
 
     if(Items.size() > 0){
         for(unsigned int i=0; i< Items.size(); i++){

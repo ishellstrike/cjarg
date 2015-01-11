@@ -2,28 +2,25 @@
 #ifndef WinS_h__
 #define WinS_h__
 #include "SpriteBatch.h"
-#include "TextureManager.h"
+#include "jtexture.h"
 #include <vector>
 #include "Win.h"
-#include "GameTimer.h"
 #include <list>
-#include "glm.hpp"
+#include <glm/glm.hpp>
 
 class WinS{
 public:
     WinS();
-    WinS(Batched* sb_, const Font& fnt);
+    WinS(SpriteBatch* sb_);
     ~WinS();
     static std::vector<Win*> windows;
     static bool MouseHooked;
     static bool KeyboardHooked;
 
     void Draw();
-    void Update(const GameTimer &gt);
+    void Update();
     static void ToTop(Win* w);
-    static Batched* sb;
-    static Texture* bp;
-    static const Font* font;
+    static SpriteBatch* sb;
 };
 
 #endif // WinS_h__

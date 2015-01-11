@@ -38,7 +38,7 @@ public:
     GameWindow();
     ~GameWindow();
 
-    WinS ws;
+    std::shared_ptr<WinS> ws;
 
     std::shared_ptr<JargShader> basic, font;
     std::shared_ptr<SpriteBatch> batch;

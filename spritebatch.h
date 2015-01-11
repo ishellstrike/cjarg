@@ -41,9 +41,10 @@ public:
     glm::vec2 renderText(const char *text, float x, float y, float sx, float sy, glm::vec4 &col_);
 
     void render();
-    void drawRect(glm::vec2 &loc, glm::vec2 &size, glm::vec4 &_col);
+    void drawRect(const glm::vec2 &loc, const glm::vec2 &size, const glm::vec4 &_col);
     glm::vec2 renderAtlas();
-    void drawQuad(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, glm::vec4 &col_);
+    void drawQuad(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, const glm::vec4 &col_);
+    void drawLine(const glm::vec2 &start, const glm::vec2 &end, float width, const glm::vec4 &color);
 private:
     FT_Face m_ftFace;
     void drawQuadText(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, glm::vec4 &color);

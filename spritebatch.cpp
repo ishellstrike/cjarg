@@ -182,7 +182,7 @@ glm::vec2 SpriteBatch::renderAtlas()
     return glm::vec2(x_max - x_start, y - y_start);
 }
 
-void SpriteBatch::drawRect(glm::vec2 &loc, glm::vec2 &size, glm::vec4 &_col)
+void SpriteBatch::drawRect(const glm::vec2 &loc, const glm::vec2 &size, const glm::vec4 &_col)
 {
     if(cur >= SIZE - 1)
         render();
@@ -259,7 +259,7 @@ void SpriteBatch::drawQuadText(glm::vec2 &loc, glm::vec2 &size, const Texture &t
     cur++;
 }
 
-void SpriteBatch::drawQuad(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, glm::vec4 &col_)
+void SpriteBatch::drawQuad(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, const glm::vec4 &col_)
 {
     if(current_program != basic_program)
     {
@@ -284,6 +284,46 @@ void SpriteBatch::drawQuad(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, 
     col[cur*4 + 1] = col_;
     col[cur*4 + 2] = col_;
     col[cur*4 + 3] = col_;
+
+    uv[cur*4]      = glm::vec2(0,0);
+    uv[cur*4 + 1]  = glm::vec2(1,0);
+    uv[cur*4 + 2]  = glm::vec2(1,1);
+    uv[cur*4 + 3]  = glm::vec2(0,1);
+
+    index[cur*6]     = cur*4;
+    index[cur*6 + 1] = cur*4 + 1;
+    index[cur*6 + 2] = cur*4 + 3;
+    index[cur*6 + 3] = cur*4 + 1;
+    index[cur*6 + 4] = cur*4 + 2;
+    index[cur*6 + 5] = cur*4 + 3;
+
+    cur++;
+}
+
+void SpriteBatch::drawLine(const glm::vec2 &start, const glm::vec2 &end, float width, const glm::vec4 &color)
+{
+    if(cur >= SIZE - 1)
+        render();
+    if(current_program != color_program)
+    {
+        render();
+        current_program = color_program;
+        current_program->Use();
+    }
+
+    glm::vec2 s = start;
+    glm::vec2 e = end;
+
+
+    pos[cur*4]     = glm::vec3(s.x, s.y, 0);
+    pos[cur*4 + 1] = glm::vec3(s.x + width, s.y, 0);
+    pos[cur*4 + 2] = glm::vec3(e.x + width, e.y + 1, 0);
+    pos[cur*4 + 3] = glm::vec3(e.x, e.y, 0);
+
+    col[cur*4]     = color;
+    col[cur*4 + 1] = color;
+    col[cur*4 + 2] = color;
+    col[cur*4 + 3] = color;
 
     uv[cur*4]      = glm::vec2(0,0);
     uv[cur*4 + 1]  = glm::vec2(1,0);
