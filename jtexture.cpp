@@ -1,0 +1,70 @@
+#include "jtexture.h"
+
+Texture::Texture() :
+    textureId(0),
+    name("empty"),
+    height(0),
+    width(0),
+    zsize(0)
+{
+}
+
+Texture::Texture(GLuint id) :
+    textureId(id),
+    height(0),
+    width(0),
+    zsize(0)
+{
+    std::string s = "fromID ";
+    name = s.append(std::to_string(id));
+}
+
+Texture::~Texture()
+{
+    if(textureId != -1){
+        glDeleteTextures(1, &textureId);
+        textureId = -1;
+    }
+}
+
+void Texture::Empty(glm::vec2 &size, GLuint dim /*= GL_TEXTURE_2D*/, GLuint format /*= GL_RGBA*/)
+{
+    width = size.x;
+    height = size.y;
+    name = "empty_texture";
+
+    glGenTextures(1, &textureId);
+    glBindTexture(dim, textureId);
+    glTexImage2D(dim, 0, format, size.x, size.y, 0, format, GL_UNSIGNED_BYTE, NULL);
+
+    glTexParameteri(dim, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(dim, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glBindTexture(dim, 0);
+}
+
+void Texture::IdOnly()
+{
+    name = "id only";
+    glGenTextures(1, &textureId);
+}
+
+void Texture::CreateDepth(glm::vec2 &size)
+{
+    width = size.x;
+    height = size.y;
+    name = "empty_depth";
+
+    glGenTextures(1, &textureId);
+
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
