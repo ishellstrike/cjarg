@@ -7,9 +7,9 @@
 
 #include <GL/glew.h>
 
-#include <ft2build.h>
+#include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
-#include <freetype/config/ftheader.h>
+#include <freetype2/config/ftheader.h>
 
 #define SIZE 10000
 class SpriteBatch
@@ -36,9 +36,9 @@ public:
     std::shared_ptr<JargShader> font_program, basic_program, color_program, current_program;
 
     void initFreeType();
-    void setUniform(glm::mat4 &uni);
+    void setUniform(const glm::mat4 &uni);
 
-    glm::vec2 renderText(const char *text, float x, float y, float sx, float sy, glm::vec4 &col_);
+    glm::vec2 renderText(const char *text, float x, float y, float sx, float sy, const glm::vec4 &col_);
 
     void render();
     void drawRect(const glm::vec2 &loc, const glm::vec2 &size, const glm::vec4 &_col);
@@ -47,7 +47,7 @@ public:
     void drawLine(const glm::vec2 &start, const glm::vec2 &end, float width, const glm::vec4 &color);
 private:
     FT_Face m_ftFace;
-    void drawQuadText(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, glm::vec4 &color);
+    void drawQuadText(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, const glm::vec4 &color);
     //glm::vec2 renderText(const char *text, float x, float y, float sx, float sy, glm::vec4 &color);
 };
 #endif // SPRITEBATCH_H

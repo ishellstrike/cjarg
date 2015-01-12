@@ -1,7 +1,7 @@
 #include "Win.h"
 #include <glm/glm.hpp>
 #include "WinS.h"
-#include "Mouse.h"
+#include "mouse.h"
 #include <vector>
 #include "colorExtender.h"
 #include "jhelper_inl.h"

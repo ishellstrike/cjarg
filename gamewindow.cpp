@@ -145,7 +145,7 @@ void GameWindow::Draw()
 
     model = glm::mat4(1.f);
     batch->setUniform(proj * model);
-    batch->renderText("123 asdasdasd\n12123123", 50, 50, 1, 1, glm::vec4(1,1,1,1));
+    batch->renderText("123 asdasdasd\n12123123", 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
 
     ws->Draw();

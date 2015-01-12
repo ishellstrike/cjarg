@@ -1,12 +1,19 @@
 #include "spritebatch.h"
 #include "logger.h"
 
+#include <unistd.h>
+
 SpriteBatch::SpriteBatch()
 {
     index = new GLuint[SIZE*6];
     uv = new glm::vec2[SIZE*4];
     pos = new glm::vec3[SIZE*4];
     col = new glm::vec4[SIZE*4];
+
+    char buf[255];
+    getcwd(buf, 255);
+
+    LOG(info) << buf;
 
     basic_program = std::make_shared<JargShader>();
     basic_program->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/basic.glsl");
@@ -72,7 +79,7 @@ void SpriteBatch::initFreeType()
     char fontPath[] = "data/fonts/Inconsolata.otf";
     if(FT_New_Face(ft, fontPath, 0, &m_ftFace))
     {
-        LOG(fatal) << "Could not open font" << fontPath;
+        LOG(fatal) << "Could not open font " << fontPath;
         return;
     }
     else
@@ -81,13 +88,13 @@ void SpriteBatch::initFreeType()
     FT_Set_Pixel_Sizes(m_ftFace, 0, 48);
 }
 
-void SpriteBatch::setUniform(glm::mat4 &uni)
+void SpriteBatch::setUniform(const glm::mat4 &uni)
 {
     uniform = uni;
 }
 
 
-glm::vec2 SpriteBatch::renderText(const char *text, float x, float y, float sx, float sy, glm::vec4 &col_)
+glm::vec2 SpriteBatch::renderText(const char *text, float x, float y, float sx, float sy, const glm::vec4 &col_)
 {
     float x_start = x;
     float y_start = y;
@@ -106,7 +113,7 @@ glm::vec2 SpriteBatch::renderText(const char *text, float x, float y, float sx, 
         }
         if(FT_Load_Char(m_ftFace, *p, FT_LOAD_RENDER))
         {
-            LOG(error) << "Could not load character" << *p;
+            LOG(error) << "Could not load character " << *p;
             continue;
         }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -217,7 +224,7 @@ void SpriteBatch::drawRect(const glm::vec2 &loc, const glm::vec2 &size, const gl
     cur++;
 }
 
-void SpriteBatch::drawQuadText(glm::vec2 &loc, glm::vec2 &size, const Texture &tex, glm::vec4 &color)
+void SpriteBatch::drawQuadText(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, const glm::vec4 &color)
 {
     if(current_program != font_program)
     {

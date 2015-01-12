@@ -42,9 +42,6 @@ public:
 
     std::shared_ptr<JargShader> basic, font;
     std::shared_ptr<SpriteBatch> batch;
-
-private:
-    GLFWwindow *m_window;
 };
 
 #endif // GAMEWINDOW_H

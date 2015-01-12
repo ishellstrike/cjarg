@@ -25,6 +25,7 @@ Log::Log(int type, const char *file, int line) :
 
     o_stream << " " << string_format("%06d", clock())
              << " " << file << " " << string_format("%3d", line) << " ";
+
 }
 
 Log::~Log()

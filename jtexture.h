@@ -18,7 +18,7 @@ public:
 
     //void Load(const QString &a, bool smooth = false, bool mip = false);
     //void Load(QImage *a, bool smooth = false, bool mip = false);
-    void Empty(glm::vec2 &size, GLuint dim = GL_TEXTURE_2D, GLuint format = GL_RGBA);
+    void Empty(const glm::vec2 &size, GLuint dim = GL_TEXTURE_2D, GLuint format = GL_RGBA);
     void CreateDepth(glm::vec2 &size);
     void IdOnly();
 };

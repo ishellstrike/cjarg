@@ -1,7 +1,7 @@
 #pragma once
 #ifndef WinS_h__
 #define WinS_h__
-#include "SpriteBatch.h"
+#include "spritebatch.h"
 #include "jtexture.h"
 #include <vector>
 #include "Win.h"

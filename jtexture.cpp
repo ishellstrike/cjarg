@@ -27,7 +27,7 @@ Texture::~Texture()
     }
 }
 
-void Texture::Empty(glm::vec2 &size, GLuint dim /*= GL_TEXTURE_2D*/, GLuint format /*= GL_RGBA*/)
+void Texture::Empty(const glm::vec2 &size, GLuint dim /*= GL_TEXTURE_2D*/, GLuint format /*= GL_RGBA*/)
 {
     width = size.x;
     height = size.y;

@@ -41,9 +41,9 @@ HEADERS += \
 
 
 
-win32:LIBS += -L$$PWD/3rdparty/lib/ -lglew32 -lglfw3dll -lfreetype
-LIBS += -lopengl32
-unix:LIBS += -lglew32 -lglfw3dll -lfreetype
+win32:LIBS += -L$$PWD/3rdparty/lib/
+LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
+unix:INCLUDEPATH += /usr/include/freetype2
 
 win32:INCLUDEPATH += $$PWD/3rdparty/include
 win32:DEPENDPATH += $$PWD/3rdparty/include
