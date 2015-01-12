@@ -17,7 +17,9 @@ SOURCES += main.cpp \
     FrameBuffer.cpp \
     TextureGenerator.cpp \
     Win.cpp \
-    WinS.cpp
+    WinS.cpp \
+    gametimer.cpp \
+    fpscounter.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -37,7 +39,9 @@ HEADERS += \
     WComponent.h \
     Win.h \
     WinS.h \
-    jhelper_inl.h
+    jhelper_inl.h \
+    gametimer.h \
+    fpscounter.h
 
 
 

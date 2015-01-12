@@ -67,10 +67,16 @@ void Win::Update()
 {
     glm::vec2 wpos = GlobalPos();
     if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + glm::vec2(size.x,20))){
-        if(Mouse::IsLeftDown()){
-            pos += Mouse::GetCursorDelta();
+        if(Mouse::IsLeftPressed())
+        {
+            drag_point = Mouse::GetCursorLastPos() - pos;
+            dragged = true;
         }
     }
+    if(Mouse::IsLeftDown() && dragged)
+        pos = glm::vec2(Mouse::GetCursorPos().x, Mouse::GetCursorLastPos().y) - drag_point;
+    else
+        dragged = false;
 
     if(Items.size() > 0){
         for(unsigned int i=0; i< Items.size(); i++){

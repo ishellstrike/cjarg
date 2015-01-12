@@ -15,6 +15,8 @@ public:
     virtual void Draw() const;
     void Update();
     glm::vec2 GlobalPos() const;
+    glm::vec2 drag_point;
+    bool dragged = false;
 
     glm::vec2 size;
     glm::vec2 pos;

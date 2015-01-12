@@ -12,6 +12,8 @@
 #include "spritebatch.h"
 #include "FrameBuffer.h"
 #include "WinS.h"
+#include "fpscounter.h"
+#include "gametimer.h"
 
 class GameWindow {
 public:
@@ -24,6 +26,8 @@ public:
     void Draw();
 
     void Mainloop();
+    GameTimer gt;
+    FPSCounter fps;
 
     static void Resize(int w, int h);
 

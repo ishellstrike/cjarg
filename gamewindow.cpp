@@ -48,7 +48,7 @@ bool GameWindow::Init()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
     int err = glewInit();
     if (err != GLEW_OK)
@@ -131,6 +131,9 @@ void GameWindow::Update()
 {
     glfwPollEvents();
 
+    gt.Update(glfwGetTime());
+    fps.Update(gt);
+
     ws->Update();
 
     Mouse::resetDelta();
@@ -145,7 +148,7 @@ void GameWindow::Draw()
 
     model = glm::mat4(1.f);
     batch->setUniform(proj * model);
-    batch->renderText("123 asdasdasd\n12123123", 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
+    batch->renderText(("123 asdasdasd\n121sdfsdfdf\ndsdfsdf\nsdfsdfsdf\n23123  " + std::to_string(fps.GetCount())).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
 
     ws->Draw();
