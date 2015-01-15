@@ -45,8 +45,8 @@ HEADERS += \
 
 
 
-win32:LIBS += -L$$PWD/3rdparty/lib/
-LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
+win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew -lglfw32 -lfreetype
+unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
 unix:INCLUDEPATH += /usr/include/freetype2
 
 win32:INCLUDEPATH += $$PWD/3rdparty/include
@@ -172,3 +172,6 @@ DISTFILES += \
     data/textures/wearpolka2.png \
     data/textures/wearpolka3.png \
     data/textures/wearpolka4.png
+
+OTHER_FILES += \
+    README.md
