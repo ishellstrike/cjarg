@@ -1,0 +1,21 @@
+[
+	{
+	"type":"item",
+	"id":"test",
+	"weight":111,
+	"description":"",
+	"flags":
+	[
+        ["flag_hammer", 1]
+	]
+	},{
+	"type":"item",
+	"id":"tes1",
+	"weight":111,
+	"description":"",
+	"flags":
+	[
+        ["flag_hammer", 1]
+	]
+	}
+]

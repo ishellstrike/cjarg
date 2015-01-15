@@ -5,8 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <iostream>
-#include <string>
+#include "jsonparser.h"
 
 #ifdef WIN32
 int wmain(int argc, wchar_t *argv[])
@@ -16,6 +15,8 @@ int main()
 {
     GameWindow gw;
     gw.Init();
+    JsonParser parser;
+    parser.parseDataDirectory();
 
     gw.Mainloop();
 

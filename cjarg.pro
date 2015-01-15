@@ -19,7 +19,14 @@ SOURCES += main.cpp \
     Win.cpp \
     WinS.cpp \
     gametimer.cpp \
-    fpscounter.cpp
+    fpscounter.cpp \
+    json/json_internalarray.inl \
+    json/json_internalmap.inl \
+    json/json_reader.cpp \
+    json/json_value.cpp \
+    json/json_valueiterator.inl \
+    json/json_writer.cpp \
+    jsonparser.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -41,12 +48,23 @@ HEADERS += \
     WinS.h \
     jhelper_inl.h \
     gametimer.h \
-    fpscounter.h
+    fpscounter.h \
+    json_batchallocator.h \
+    json/writer.h \
+    json/value.h \
+    json/reader.h \
+    json/json.h \
+    json/forwards.h \
+    json/features.h \
+    json/config.h \
+    json/autolink.h \
+    json/json_batchallocator.h \
+    jsonparser.h
 
 
 
 win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew -lglfw32 -lfreetype
-unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
+unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -ljson_linux-gcc-4.8_libmt
 unix:INCLUDEPATH += /usr/include/freetype2
 
 win32:INCLUDEPATH += $$PWD/3rdparty/include
@@ -174,4 +192,8 @@ DISTFILES += \
     data/textures/wearpolka4.png
 
 OTHER_FILES += \
-    README.md
+    README.md \
+    data/json/test_recipe.json \
+    data/json/basic.json \
+    data/json/aaa.json \
+    data/json/error.json

@@ -1,0 +1,16 @@
+[
+{
+    "type":"recipe",
+    "flag_items":[["hammer", 0, 2], ["saw", 1, 3]],
+    "__comment_1":"[%item_flag, %count, %flag_quality]; count == 0 means tool",
+
+    "exact_items":[["plank"], 4],
+    "__comment_2":"[%item_id, %count]; count == 0 means tool",
+
+    "reqire":[["physics", 3]],
+    "__comment_3":"[%ability_id, %level];",
+
+    "result":[["some_result", 1]],
+    "__comment_3":"[%item_id, %count];",
+}
+]

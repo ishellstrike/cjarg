@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include <memory>
-
+#include <thread>
 
 Log::Log(int type, const char *file, int line) :
     o_stream(std::cout.rdbuf()),
@@ -23,8 +23,9 @@ Log::Log(int type, const char *file, int line) :
         break;
     }
 
-    o_stream << " " << string_format("%06d", clock())
-             << " " << file << " " << string_format("%3d", line) << " ";
+    std::thread::id id = std::this_thread::get_id();
+
+    o_stream << " " << string_format("%06d %16s %3d %0x] ", clock(), file, line, id);
 
 }
 
