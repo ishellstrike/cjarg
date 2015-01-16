@@ -3,7 +3,7 @@
 #include "jtexture.h"
 #include <string>
 #include <memory>
-#include "jargShader.h"
+#include "jargshader.h"
 
 #include <GL/glew.h>
 

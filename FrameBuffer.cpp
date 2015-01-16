@@ -1,4 +1,4 @@
-#include "FrameBuffer.h"
+#include "framebuffer.h"
 
 
 FrameBuffer::FrameBuffer(bool _depth)

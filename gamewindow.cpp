@@ -2,10 +2,10 @@
 #include "mouse.h"
 #include "keyboard.h"
 #include "settings.h"
-#include "jargShader.h"
+#include "jargshader.h"
 #include "spritebatch.h"
 #include "glm/gtx/transform.hpp"
-#include "Win.h"
+#include "ui_win.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -131,9 +131,6 @@ void GameWindow::Update()
 {
     glfwPollEvents();
 
-    gt.Update(glfwGetTime());
-    fps.Update(gt);
-
     ws->Update();
 
     Mouse::resetDelta();
@@ -148,8 +145,9 @@ void GameWindow::Draw()
 
     model = glm::mat4(1.f);
     batch->setUniform(proj * model);
-    batch->renderText(("123 asdasdasd\n121sdfsdfdf\ndsdfsdf\nsdfsdfsdf\n23123  " + std::to_string(fps.GetCount())).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
+    //batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
+    glfwSetWindowTitle(window, std::to_string(fps.GetCount()).c_str());
 
     ws->Draw();
 
@@ -198,6 +196,8 @@ void GameWindow::Draw()
 //    batched->RenderFinally();
 
     glfwSwapBuffers(window);
+    gt.Update(glfwGetTime());
+    fps.Update(gt);
 }
 
 void GameWindow::Mainloop()

@@ -10,14 +10,9 @@ SOURCES += main.cpp \
     mouse.cpp \
     logger.cpp \
     keyboard.cpp \
-    jargShader.cpp \
     settings.cpp \
     jtexture.cpp \
     spritebatch.cpp \
-    FrameBuffer.cpp \
-    TextureGenerator.cpp \
-    Win.cpp \
-    WinS.cpp \
     gametimer.cpp \
     fpscounter.cpp \
     json/json_internalarray.inl \
@@ -26,7 +21,12 @@ SOURCES += main.cpp \
     json/json_value.cpp \
     json/json_valueiterator.inl \
     json/json_writer.cpp \
-    jsonparser.cpp
+    jsonparser.cpp \
+    framebuffer.cpp \
+    jargshader.cpp \
+    texturegenerator.cpp \
+    win.cpp \
+    ui_wins.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -36,16 +36,9 @@ HEADERS += \
     mouse.h \
     keyboard.h \
     logger.h \
-    colorExtender.h \
-    jargShader.h \
     settings.h \
     jtexture.h \
     spritebatch.h \
-    FrameBuffer.h \
-    TextureGenerator.h \
-    WComponent.h \
-    Win.h \
-    WinS.h \
     jhelper_inl.h \
     gametimer.h \
     fpscounter.h \
@@ -59,11 +52,18 @@ HEADERS += \
     json/config.h \
     json/autolink.h \
     json/json_batchallocator.h \
-    jsonparser.h
+    jsonparser.h \
+    ui_wins.h \
+    ui_component.h \
+    ui_win.h \
+    texturegenerator.h \
+    colorextender.h \
+    framebuffer.h \
+    jargshader.h
 
 
 
-win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew -lglfw32 -lfreetype
+win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew32 -lglfw3dll -lfreetype
 unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -ljson_linux-gcc-4.8_libmt
 unix:INCLUDEPATH += /usr/include/freetype2
 

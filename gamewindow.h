@@ -8,10 +8,10 @@
 #include <memory>
 #include <string>
 #include "logger.h"
-#include "jargShader.h"
+#include "jargshader.h"
 #include "spritebatch.h"
-#include "FrameBuffer.h"
-#include "WinS.h"
+#include "framebuffer.h"
+#include "ui_wins.h"
 #include "fpscounter.h"
 #include "gametimer.h"
 

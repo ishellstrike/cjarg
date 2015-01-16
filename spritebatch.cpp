@@ -1,7 +1,7 @@
 #include "spritebatch.h"
 #include "logger.h"
 
-#include <unistd.h>
+//#include <unistd.h>
 
 SpriteBatch::SpriteBatch()
 {
@@ -10,10 +10,10 @@ SpriteBatch::SpriteBatch()
     pos = new glm::vec3[SIZE*4];
     col = new glm::vec4[SIZE*4];
 
-    char buf[255];
-    getcwd(buf, 255);
+    //char buf[255];
+    //getcwd(buf, 255);
 
-    LOG(info) << buf;
+    //LOG(info) << buf;
 
     basic_program = std::make_shared<JargShader>();
     basic_program->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/basic.glsl");

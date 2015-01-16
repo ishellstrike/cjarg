@@ -2,7 +2,7 @@
 #ifndef Win_h__
 #define Win_h__
 #include <glm/glm.hpp>
-#include "WComponent.h"
+#include "ui_component.h"
 #include <vector>
 #include <string>
 class Win : public WContainer

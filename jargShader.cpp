@@ -1,4 +1,4 @@
-#include "jargShader.h"
+#include "jargshader.h"
 #include <GL/glew.h>
 #include <string>
 #include <fstream>

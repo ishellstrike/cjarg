@@ -1,9 +1,9 @@
-#include "Win.h"
+#include "ui_win.h"
 #include <glm/glm.hpp>
-#include "WinS.h"
+#include "ui_wins.h"
 #include "mouse.h"
 #include <vector>
-#include "colorExtender.h"
+#include "colorextender.h"
 #include "jhelper_inl.h"
 
 Win::Win(void) :

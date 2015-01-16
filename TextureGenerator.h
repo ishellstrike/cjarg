@@ -2,8 +2,8 @@
 #define TEX_GEN_H_
 #include "jtexture.h"
 #include <vector>
-#include "FrameBuffer.h"
-#include "jargShader.h"
+#include "framebuffer.h"
+#include "jargshader.h"
 #include <memory>
 #include <functional>
 

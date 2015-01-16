@@ -8,7 +8,7 @@
 #include <string>
 #include <stdarg.h>
 #include <math.h>
-#include "colorExtender.h"
+#include "colorextender.h"
 
 #ifdef NDEBUG
 #define OPENGL_CHECK_ERRORS() \

@@ -25,7 +25,7 @@ Log::Log(int type, const char *file, int line) :
 
     std::thread::id id = std::this_thread::get_id();
 
-    o_stream << " " << string_format("%06d %16s %3d %0x] ", clock(), file, line, id);
+    o_stream << " " << string_format("%06d %16s %3d %0x] ", clock(), file, line, id).c_str();
 
 }
 
