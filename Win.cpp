@@ -4,7 +4,7 @@
 #include "mouse.h"
 #include <vector>
 #include "colorextender.h"
-#include "jhelper_inl.h"
+#include "jhelper.inl"
 
 Win::Win(void) :
     size(100, 100),

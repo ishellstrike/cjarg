@@ -1,3 +1,6 @@
 [submodule "lodepng"]
 	path = lodepng
 	url = https://github.com/ishellstrike/lodepng
+[submodule "json"]
+	path = json
+	url = https://github.com/ishellstrike/json

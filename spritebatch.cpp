@@ -199,20 +199,20 @@ void SpriteBatch::drawRect(const glm::vec2 &loc, const glm::vec2 &size, const gl
         current_program = color_program;
         current_program->Use();
     }
-    pos[cur*4]     = glm::vec3(loc.x, loc.y, 0);
-    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y, 0);
+    pos[cur*4]     = glm::vec3(loc.x,          loc.y,          0);
+    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y,          0);
     pos[cur*4 + 2] = glm::vec3(loc.x + size.x, loc.y + size.y, 0);
-    pos[cur*4 + 3] = glm::vec3(loc.x, loc.y + size.y, 0);
+    pos[cur*4 + 3] = glm::vec3(loc.x,          loc.y + size.y, 0);
 
     col[cur*4]     = _col;
     col[cur*4 + 1] = _col;
     col[cur*4 + 2] = _col;
     col[cur*4 + 3] = _col;
 
-    uv[cur*4]     = glm::vec2(0,0);
-    uv[cur*4 + 1] = glm::vec2(1,0);
-    uv[cur*4 + 2] = glm::vec2(1,1);
-    uv[cur*4 + 3] = glm::vec2(0,1);
+    uv[cur*4]     = glm::vec2(0, 0);
+    uv[cur*4 + 1] = glm::vec2(1, 0);
+    uv[cur*4 + 2] = glm::vec2(1, 1);
+    uv[cur*4 + 3] = glm::vec2(0, 1);
 
     index[cur*6]     = cur*4;
     index[cur*6 + 1] = cur*4 + 1;
@@ -241,20 +241,20 @@ void SpriteBatch::drawQuadText(const glm::vec2 &loc, const glm::vec2 &size, cons
     if(cur >= SIZE - 1)
         render();
 
-    pos[cur*4]     = glm::vec3(loc.x, loc.y, 0);
-    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y, 0);
+    pos[cur*4]     = glm::vec3(loc.x,          loc.y,          0);
+    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y,          0);
     pos[cur*4 + 2] = glm::vec3(loc.x + size.x, loc.y + size.y, 0);
-    pos[cur*4 + 3] = glm::vec3(loc.x, loc.y + size.y, 0);
+    pos[cur*4 + 3] = glm::vec3(loc.x,          loc.y + size.y, 0);
 
     col[cur*4]     = color;
     col[cur*4 + 1] = color;
     col[cur*4 + 2] = color;
     col[cur*4 + 3] = color;
 
-    uv[cur*4]      = glm::vec2(0,0);
-    uv[cur*4 + 1]  = glm::vec2(1,0);
-    uv[cur*4 + 2]  = glm::vec2(1,1);
-    uv[cur*4 + 3]  = glm::vec2(0,1);
+    uv[cur*4]      = glm::vec2(0, 0);
+    uv[cur*4 + 1]  = glm::vec2(1, 0);
+    uv[cur*4 + 2]  = glm::vec2(1, 1);
+    uv[cur*4 + 3]  = glm::vec2(0, 1);
 
     index[cur*6]     = cur*4;
     index[cur*6 + 1] = cur*4 + 1;
@@ -282,20 +282,67 @@ void SpriteBatch::drawQuad(const glm::vec2 &loc, const glm::vec2 &size, const Te
     if(cur >= SIZE - 1)
         render();
 
-    pos[cur*4]     = glm::vec3(loc.x, loc.y, 0);
-    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y, 0);
+    pos[cur*4]     = glm::vec3(loc.x,          loc.y,          0);
+    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y,          0);
     pos[cur*4 + 2] = glm::vec3(loc.x + size.x, loc.y + size.y, 0);
-    pos[cur*4 + 3] = glm::vec3(loc.x, loc.y + size.y, 0);
+    pos[cur*4 + 3] = glm::vec3(loc.x,          loc.y + size.y, 0);
 
     col[cur*4]     = col_;
     col[cur*4 + 1] = col_;
     col[cur*4 + 2] = col_;
     col[cur*4 + 3] = col_;
 
-    uv[cur*4]      = glm::vec2(0,0);
-    uv[cur*4 + 1]  = glm::vec2(1,0);
-    uv[cur*4 + 2]  = glm::vec2(1,1);
-    uv[cur*4 + 3]  = glm::vec2(0,1);
+    uv[cur*4]      = glm::vec2(0, 0);
+    uv[cur*4 + 1]  = glm::vec2(1, 0);
+    uv[cur*4 + 2]  = glm::vec2(1, 1);
+    uv[cur*4 + 3]  = glm::vec2(0, 1);
+
+    index[cur*6]     = cur*4;
+    index[cur*6 + 1] = cur*4 + 1;
+    index[cur*6 + 2] = cur*4 + 3;
+    index[cur*6 + 3] = cur*4 + 1;
+    index[cur*6 + 4] = cur*4 + 2;
+    index[cur*6 + 5] = cur*4 + 3;
+
+    cur++;
+}
+
+void SpriteBatch::drawQuadAtlas(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, int apos, const glm::vec4 &col_)
+{
+    if(current_program != basic_program)
+    {
+        render();
+        current_program = basic_program;
+        current_program->Use();
+    }
+    if(tex.textureId != current)
+    {
+        render();
+        current = tex.textureId;
+    }
+    if(cur >= SIZE - 1)
+        render();
+
+    pos[cur*4]     = glm::vec3(loc.x,          loc.y,          0);
+    pos[cur*4 + 1] = glm::vec3(loc.x + size.x, loc.y,          0);
+    pos[cur*4 + 2] = glm::vec3(loc.x + size.x, loc.y + size.y, 0);
+    pos[cur*4 + 3] = glm::vec3(loc.x,          loc.y + size.y, 0);
+
+    col[cur*4]     = col_;
+    col[cur*4 + 1] = col_;
+    col[cur*4 + 2] = col_;
+    col[cur*4 + 3] = col_;
+
+    float sx = 32 / (float) tex.width;
+    float sy = 32 / (float) tex.height;
+    int inrow = tex.width / 32;
+    float x = (apos % inrow) * sx;
+    float y = (apos / inrow) * sy;
+
+    uv[cur*4]      = glm::vec2(x,      y);
+    uv[cur*4 + 1]  = glm::vec2(x + sx, y);
+    uv[cur*4 + 2]  = glm::vec2(x + sx, y + sy);
+    uv[cur*4 + 3]  = glm::vec2(x,      y + sy);
 
     index[cur*6]     = cur*4;
     index[cur*6 + 1] = cur*4 + 1;
@@ -322,20 +369,20 @@ void SpriteBatch::drawLine(const glm::vec2 &start, const glm::vec2 &end, float w
     glm::vec2 e = end;
 
 
-    pos[cur*4]     = glm::vec3(s.x, s.y, 0);
-    pos[cur*4 + 1] = glm::vec3(s.x + width, s.y, 0);
+    pos[cur*4]     = glm::vec3(s.x,         s.y,     0);
+    pos[cur*4 + 1] = glm::vec3(s.x + width, s.y,     0);
     pos[cur*4 + 2] = glm::vec3(e.x + width, e.y + 1, 0);
-    pos[cur*4 + 3] = glm::vec3(e.x, e.y, 0);
+    pos[cur*4 + 3] = glm::vec3(e.x,         e.y,     0);
 
     col[cur*4]     = color;
     col[cur*4 + 1] = color;
     col[cur*4 + 2] = color;
     col[cur*4 + 3] = color;
 
-    uv[cur*4]      = glm::vec2(0,0);
-    uv[cur*4 + 1]  = glm::vec2(1,0);
-    uv[cur*4 + 2]  = glm::vec2(1,1);
-    uv[cur*4 + 3]  = glm::vec2(0,1);
+    uv[cur*4]      = glm::vec2(0, 0);
+    uv[cur*4 + 1]  = glm::vec2(1, 0);
+    uv[cur*4 + 2]  = glm::vec2(1, 1);
+    uv[cur*4 + 3]  = glm::vec2(0, 1);
 
     index[cur*6]     = cur*4;
     index[cur*6 + 1] = cur*4 + 1;

@@ -28,6 +28,20 @@ inline glm::vec3 lerp(glm::vec3 &a, glm::vec3 &b, float a_percent){
     return a_percent * a + (1.0f - a_percent) * b;
 }
 
+inline std::string wstring_to_string(const std::wstring &wstr)
+{
+    std::string s(wstr.length(), ' ');
+    std::copy(wstr.begin(), wstr.end(), s.begin());
+    return s;
+}
+
+inline std::wstring string_to_wstring(const std::string &str)
+{
+    std::wstring s(str.length(), L' ');
+    std::copy(str.begin(), str.end(), s.begin());
+    return s;
+}
+
 inline double triangular(double min, double max, double mean) {
     double U = rand() / (double) RAND_MAX;
     double F = (mean - min) / (max - min);

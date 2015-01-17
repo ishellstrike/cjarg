@@ -15,18 +15,22 @@ SOURCES += main.cpp \
     spritebatch.cpp \
     gametimer.cpp \
     fpscounter.cpp \
-    json/json_internalarray.inl \
-    json/json_internalmap.inl \
-    json/json_reader.cpp \
-    json/json_value.cpp \
-    json/json_valueiterator.inl \
-    json/json_writer.cpp \
     jsonparser.cpp \
     framebuffer.cpp \
     jargshader.cpp \
     texturegenerator.cpp \
     win.cpp \
-    ui_wins.cpp
+    ui_wins.cpp \
+    json/json_internalarray.inl \
+    json/json_internalmap.inl \
+    json/json_valueiterator.inl \
+    json/json_reader.cpp \
+    json/json_value.cpp \
+    json/json_writer.cpp \
+    lodepng/lodepng.cpp \
+    pixmap.cpp \
+    textureatlas.cpp \
+    jhelper.inl
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -39,19 +43,8 @@ HEADERS += \
     settings.h \
     jtexture.h \
     spritebatch.h \
-    jhelper_inl.h \
     gametimer.h \
     fpscounter.h \
-    json_batchallocator.h \
-    json/writer.h \
-    json/value.h \
-    json/reader.h \
-    json/json.h \
-    json/forwards.h \
-    json/features.h \
-    json/config.h \
-    json/autolink.h \
-    json/json_batchallocator.h \
     jsonparser.h \
     ui_wins.h \
     ui_component.h \
@@ -59,7 +52,12 @@ HEADERS += \
     texturegenerator.h \
     colorextender.h \
     framebuffer.h \
-    jargshader.h
+    jargshader.h \
+    json/*.h \
+    lodepng/lodepng.h \
+    pixmap.h \
+    textureatlas.h \
+    fielsystem.h
 
 
 

@@ -3,6 +3,7 @@
 #include <ctime>
 #include <memory>
 #include <thread>
+#include "jhelper.inl"
 
 Log::Log(int type, const char *file, int line) :
     o_stream(std::cout.rdbuf()),

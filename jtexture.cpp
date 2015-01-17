@@ -1,19 +1,13 @@
 #include "jtexture.h"
+#include "logger.h"
+#include "pixmap.h"
 
-Texture::Texture() :
-    textureId(0),
-    name("empty"),
-    height(0),
-    width(0),
-    zsize(0)
+Texture::Texture()
 {
 }
 
 Texture::Texture(GLuint id) :
-    textureId(id),
-    height(0),
-    width(0),
-    zsize(0)
+    textureId(id)
 {
     std::string s = "fromID ";
     name = s.append(std::to_string(id));
@@ -24,6 +18,34 @@ Texture::~Texture()
     if(textureId != -1){
         glDeleteTextures(1, &textureId);
         textureId = -1;
+    }
+}
+
+void Texture::Load(const std::string &a, bool smooth, bool mip)
+{
+    Pixmap p(a);
+    auto slpos = a.find_last_of('/');
+    name = a.substr(slpos, a.length() - slpos);
+    Load(p, smooth, mip);
+}
+
+void Texture::Load(const Pixmap &a, bool smooth, bool mip)
+{
+    width = a.width;
+    height = a.height;
+
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &a.data[0]);
+    if(smooth)
+    {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+    else
+    {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     }
 }
 

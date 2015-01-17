@@ -14,6 +14,7 @@
 #include "ui_wins.h"
 #include "fpscounter.h"
 #include "gametimer.h"
+#include "textureatlas.h"
 
 class GameWindow {
 public:
@@ -33,6 +34,7 @@ public:
 
     GLFWmonitor *monitor;
     GLFWwindow *window;
+    TextureAtlas atlas;
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;

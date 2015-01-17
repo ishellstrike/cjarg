@@ -1,7 +1,8 @@
 # cjarg
 
 submolules
-  json-cpp
+  json
+  lodepng
 
 dependencies
   GLEW

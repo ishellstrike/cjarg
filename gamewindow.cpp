@@ -6,6 +6,10 @@
 #include "spritebatch.h"
 #include "glm/gtx/transform.hpp"
 #include "ui_win.h"
+#include "colorextender.h"
+#include "textureatlas.h"
+#include <thread>
+#include <chrono>
 
 #define MAJOR 2
 #define MINOR 1
@@ -104,10 +108,11 @@ bool GameWindow::Init()
 
     fb = std::make_shared<FrameBuffer>();
     tex = std::make_shared<Texture>();
-    tex->Empty(glm::vec2(100, 100));
 
     ws = std::make_shared<WinS>(batch.get());
     ws->windows.push_back(new Win());
+
+    atlas.LoadAll("data/textures/");
 }
 
 bool GameWindow::Destroy()
@@ -147,6 +152,8 @@ void GameWindow::Draw()
     batch->setUniform(proj * model);
     //batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
+    batch->drawQuad(glm::vec2(100.f,100.f), glm::vec2(1000.f,1000.f), atlas.tex, WHITE);
+    batch->drawQuadAtlas(glm::vec2(100.f,100.f), glm::vec2(100.f,100.f), atlas.tex, 65, WHITE);
     glfwSetWindowTitle(window, std::to_string(fps.GetCount()).c_str());
 
     ws->Draw();
@@ -207,6 +214,7 @@ void GameWindow::Mainloop()
     {
         Update();
         Draw();
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 
