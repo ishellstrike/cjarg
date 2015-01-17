@@ -15,6 +15,7 @@
 #include "fpscounter.h"
 #include "gametimer.h"
 #include "textureatlas.h"
+#include "logic/map/sector.h"
 
 class GameWindow {
 public:
@@ -32,9 +33,10 @@ public:
 
     static void Resize(int w, int h);
 
-    GLFWmonitor *monitor;
-    GLFWwindow *window;
+    GLFWmonitor *monitor = nullptr;
+    GLFWwindow *window = nullptr;
     TextureAtlas atlas;
+    Sector sec;
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;

@@ -19,7 +19,7 @@ void TextureAtlas::LoadAll(const std::string &a)
 
     Pixmap atlas(glm::vec2(2048, 2048));
 
-    int x, y;
+    int x = 0, y = 0;
     for(std::string file: files)
     {
         Pixmap tex("data/textures/"+file);

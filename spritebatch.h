@@ -33,7 +33,10 @@ public:
 
     glm::mat4 uniform;
 
-    std::shared_ptr<JargShader> font_program, basic_program, color_program, current_program;
+    std::shared_ptr<JargShader> font_program = std::make_shared<JargShader>(),
+                                basic_program = std::make_shared<JargShader>(),
+                                color_program = std::make_shared<JargShader>(),
+                                current_program;
 
     void initFreeType();
     void setUniform(const glm::mat4 &uni);

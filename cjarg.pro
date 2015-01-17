@@ -30,7 +30,11 @@ SOURCES += main.cpp \
     lodepng/lodepng.cpp \
     pixmap.cpp \
     textureatlas.cpp \
-    jhelper.inl
+    jhelper.inl \
+    logic/map/sector.cpp \
+    logic/map/block.cpp \
+    logic/map/level.cpp \
+    logic/map/levelworker.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -57,7 +61,11 @@ HEADERS += \
     lodepng/lodepng.h \
     pixmap.h \
     textureatlas.h \
-    fielsystem.h
+    fielsystem.h \
+    logic/map/sector.h \
+    logic/map/block.h \
+    logic/map/level.h \
+    logic/map/levelworker.h
 
 
 

@@ -3,7 +3,9 @@
 
 //#include <unistd.h>
 
-SpriteBatch::SpriteBatch()
+SpriteBatch::SpriteBatch() :
+    font(std::make_shared<Texture>()),
+    fontatlas(std::make_shared<Texture>())
 {
     index = new GLuint[SIZE*6];
     uv = new glm::vec2[SIZE*4];
@@ -15,7 +17,6 @@ SpriteBatch::SpriteBatch()
 
     //LOG(info) << buf;
 
-    basic_program = std::make_shared<JargShader>();
     basic_program->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/basic.glsl");
     basic_program->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/basic.glsl");
     basic_program->Link();
@@ -25,7 +26,6 @@ SpriteBatch::SpriteBatch()
     basic_program->getAttrib();
     glUniform1i(basic_program->vars[1], 0);
 
-    font_program = std::make_shared<JargShader>();
     font_program->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/font.glsl");
     font_program->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/font.glsl");
     font_program->Link();
@@ -35,7 +35,6 @@ SpriteBatch::SpriteBatch()
     font_program->getAttrib();
     glUniform1i(font_program->vars[1], 0);
 
-    color_program = std::make_shared<JargShader>();
     color_program->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/color.glsl");
     color_program->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/color.glsl");
     color_program->Link();
@@ -49,10 +48,9 @@ SpriteBatch::SpriteBatch()
 
     glGenBuffers(4, m_vbo);
 
-    font = std::make_shared<Texture>();
+
     font->IdOnly();
 
-    fontatlas = std::make_shared<Texture>();
     fontatlas->Empty(glm::vec2(512, 512));
 }
 
@@ -149,7 +147,7 @@ glm::vec2 SpriteBatch::renderAtlas()
     float x_max = 0;
     const char *p;
     FT_GlyphSlot ftGlyph = m_ftFace->glyph;
-    char text[] = "`1234567890-=qwertyuiop[]asdfghjkl;'\zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"|ZXCVBNM<>?\|";
+    char text[] = "`1234567890-=qwertyuiop[]asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?\\|";
 
     for(p = text; *p; p++)
     {

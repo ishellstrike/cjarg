@@ -34,7 +34,7 @@ bool GameWindow::Init()
     if (!glfwErrorCode)
     {
         LOG(error) << "glfwInit error " << glfwErrorCode;
-        return glfwErrorCode;
+        return false;
     }
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
@@ -113,6 +113,7 @@ bool GameWindow::Init()
     ws->windows.push_back(new Win());
 
     atlas.LoadAll("data/textures/");
+    sec = Sector();
 }
 
 bool GameWindow::Destroy()

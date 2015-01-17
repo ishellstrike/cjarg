@@ -5,8 +5,8 @@
 #include <glm/glm.hpp>
 #include "logger.h"
 
-#define RESX Settings::instance()->resolution.x
-#define RESY Settings::instance()->resolution.y
+#define RESX (int)Settings::instance()->resolution.x
+#define RESY (int)Settings::instance()->resolution.y
 
 class Settings
 {

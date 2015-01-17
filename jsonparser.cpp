@@ -3,8 +3,6 @@
 #include <fstream>
 #include "json/json.h"
 #include "logger.h"
-#include "fielsystem.h"
-#include <vector>
 
 JsonParser::JsonParser()
 {
@@ -12,8 +10,6 @@ JsonParser::JsonParser()
 
 void JsonParser::parseDataDirectory()
 {
-    std::vector<std::string> files;
-    getFiles("data/json/", files);
 
     std::filebuf fb;
     if (fb.open ("data/json/error.json",std::ios::in))

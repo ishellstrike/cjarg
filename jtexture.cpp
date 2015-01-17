@@ -7,10 +7,9 @@ Texture::Texture()
 }
 
 Texture::Texture(GLuint id) :
-    textureId(id)
+    textureId(id),
+    name("fromID " + std::to_string(id))
 {
-    std::string s = "fromID ";
-    name = s.append(std::to_string(id));
 }
 
 Texture::~Texture()
@@ -51,8 +50,8 @@ void Texture::Load(const Pixmap &a, bool smooth, bool mip)
 
 void Texture::Empty(const glm::vec2 &size, GLuint dim /*= GL_TEXTURE_2D*/, GLuint format /*= GL_RGBA*/)
 {
-    width = size.x;
-    height = size.y;
+    width = (int) size.x;
+    height = (int) size.y;
     name = "empty_texture";
 
     glGenTextures(1, &textureId);
@@ -73,8 +72,8 @@ void Texture::IdOnly()
 
 void Texture::CreateDepth(glm::vec2 &size)
 {
-    width = size.x;
-    height = size.y;
+    width = (int) size.x;
+    height = (int) size.y;
     name = "empty_depth";
 
     glGenTextures(1, &textureId);

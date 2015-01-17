@@ -11,9 +11,9 @@ Pixmap::Pixmap(const std::string &a)
 
 Pixmap::Pixmap(glm::vec2 size)
 {
-    width = size.x;
-    height = size.y;
-    data.resize(size.x * size.y * 4, 0);
+    width = (int) size.x;
+    height = (int) size.y;
+    data.resize((int)(size.x * size.y) * 4, 0);
 }
 
 Pixmap::~Pixmap()
@@ -33,8 +33,8 @@ void Pixmap::Blit(const Pixmap &source, const glm::vec2 &pos)
         throw std::out_of_range("target pixmap not enough large");
     }
 
-    for(int i = 0; i < source.height; i++)
-        memcpy(&data[(height * (i + pos.y) + pos.x)*4],
+    for(unsigned i = 0; i < source.height; i++)
+        memcpy(&data[(height * (i + (int) pos.y) + (int) pos.x)*4],
                &source.data[(source.height * i)*4],
                sizeof(unsigned char) * 4 * source.width);
 }
