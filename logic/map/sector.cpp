@@ -7,6 +7,12 @@ Sector::Sector()
         start = new Block();
 }
 
+Sector::Sector(const Point &p) :
+    offset(p)
+{
+
+}
+
 Sector::~Sector()
 {
 

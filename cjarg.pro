@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     logic/map/sector.cpp \
     logic/map/block.cpp \
     logic/map/level.cpp \
-    logic/map/levelworker.cpp
+    logic/map/levelworker.cpp \
+    logic/map/point.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -65,7 +66,9 @@ HEADERS += \
     logic/map/sector.h \
     logic/map/block.h \
     logic/map/level.h \
-    logic/map/levelworker.h
+    logic/map/levelworker.h \
+    logic/map/point.h \
+    logic/map/sectormap.h
 
 
 

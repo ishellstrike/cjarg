@@ -6,13 +6,15 @@
 #define RXYZ RX*RY*RZ
 #include "block.h"
 #include <glm/glm.hpp>
+#include "point.h"
 
 struct Sector
 {
     Sector();
+    Sector(const Point &p);
     ~Sector();
     Block blocks[RX][RY][RZ];
-    glm::vec2 offset;
+    Point offset;
 };
 
 #endif // SECTOR_H

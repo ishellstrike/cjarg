@@ -1,9 +1,8 @@
 #include "TextureGenerator.h"
 #include <stdarg.h>
-#include "jargShader.h"
+#include "jargshader.h"
 #include <functional>
 
-// TODO: наследуемые классы текстурного генератора, с перегрузкой функции OtherUniforms, которая вызывается перед рендером
 TextureGenerator::TextureGenerator(void)
 {
 }

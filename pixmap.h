@@ -2,6 +2,7 @@
 #define PIXMAP_H
 #include <vector>
 #include <glm/glm.hpp>
+#include <string>
 
 struct Pixmap
 {

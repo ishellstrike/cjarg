@@ -38,12 +38,18 @@
     void getFiles(const std::string &dir, std::vector<std::string> &files)
     {
         files.clear();
-        DIR *dir = opendir("."+dir);
-        if(dir)
+        DIR *direct = opendir(("./"+dir).c_str());
+        if(direct)
         {
             struct dirent *ent;
-            while((ent = readdir(dir)) != nullptr)
-                files.push_back(ent->d_name);
+            while((ent = readdir(direct)) != nullptr)
+            {
+                std::string fn = ent->d_name;
+                if(fn == "." || fn == "..")
+                    continue;
+
+                files.push_back(fn);
+            }
         }
         else
             LOG(error) << "Error opening directory";
