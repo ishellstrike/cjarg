@@ -1,4 +1,4 @@
-#include "ui_wins.h"
+#include "ui/wins.h"
 #include <vector>
 #include <list>
 #include "mouse.h"

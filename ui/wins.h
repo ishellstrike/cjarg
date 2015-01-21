@@ -4,7 +4,7 @@
 #include "spritebatch.h"
 #include "jtexture.h"
 #include <vector>
-#include "ui_win.h"
+#include "ui/win.h"
 #include <list>
 #include <glm/glm.hpp>
 

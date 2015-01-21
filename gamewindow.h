@@ -11,7 +11,7 @@
 #include "jargshader.h"
 #include "spritebatch.h"
 #include "framebuffer.h"
-#include "ui_wins.h"
+#include "ui/wins.h"
 #include "fpscounter.h"
 #include "gametimer.h"
 #include "textureatlas.h"

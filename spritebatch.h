@@ -30,6 +30,7 @@ public:
 
     std::shared_ptr<Texture> font;
     std::shared_ptr<Texture> fontatlas;
+    FT_Library ft;
 
     glm::mat4 uniform;
 

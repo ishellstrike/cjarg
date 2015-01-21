@@ -2,19 +2,26 @@
 
 Sector::Sector()
 {
-    Block *start = &blocks[0][0][0];
-    for(int i = 0; i < RXYZ; i++, start++)
-        start = new Block();
+    FOR
+    {
+        blocks[i][j][k] = new Block();
+    }
 }
 
 Sector::Sector(const Point &p) :
     offset(p)
 {
-
+    FOR
+    {
+        blocks[i][j][k] = new Block();
+    }
 }
 
 Sector::~Sector()
 {
-
+    FOR
+    {
+        delete blocks[i][j][k];
+    }
 }
 

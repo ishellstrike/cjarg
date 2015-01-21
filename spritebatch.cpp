@@ -61,12 +61,13 @@ SpriteBatch::~SpriteBatch()
     delete[] pos;
     delete[] col;
 
+    FT_Done_FreeType(ft);
+
     glDeleteBuffers(4, m_vbo);
 }
 
 void SpriteBatch::initFreeType()
 {
-    FT_Library ft;
     if(FT_Init_FreeType(&ft))
     {
         LOG(fatal) << "could not init free type library.";

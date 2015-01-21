@@ -2,9 +2,11 @@
 #ifndef Win_h__
 #define Win_h__
 #include <glm/glm.hpp>
-#include "ui_component.h"
+#include "ui/component.h"
 #include <vector>
 #include <string>
+#include <memory>
+
 class Win : public WContainer
 {
 public:
@@ -21,7 +23,7 @@ public:
     glm::vec2 size;
     glm::vec2 pos;
     glm::vec4 col;
-    std::vector<WComponent*> Items;
+    std::vector<std::unique_ptr<WComponent>> Items;
     //TextGeometry* text;
 };
 

@@ -19,8 +19,6 @@ SOURCES += main.cpp \
     framebuffer.cpp \
     jargshader.cpp \
     texturegenerator.cpp \
-    win.cpp \
-    ui_wins.cpp \
     json/json_internalarray.inl \
     json/json_internalmap.inl \
     json/json_valueiterator.inl \
@@ -35,7 +33,9 @@ SOURCES += main.cpp \
     logic/map/block.cpp \
     logic/map/level.cpp \
     logic/map/levelworker.cpp \
-    logic/map/point.cpp
+    logic/map/point.cpp \
+    ui/wins.cpp \
+    ui/win.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -51,9 +51,6 @@ HEADERS += \
     gametimer.h \
     fpscounter.h \
     jsonparser.h \
-    ui_wins.h \
-    ui_component.h \
-    ui_win.h \
     texturegenerator.h \
     colorextender.h \
     framebuffer.h \
@@ -68,7 +65,10 @@ HEADERS += \
     logic/map/level.h \
     logic/map/levelworker.h \
     logic/map/point.h \
-    logic/map/sectormap.h
+    logic/map/sectormap.h \
+    ui/component.h \
+    ui/win.h \
+    ui/wins.h
 
 
 

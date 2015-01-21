@@ -1,6 +1,6 @@
-#include "ui_win.h"
+#include "ui/win.h"
 #include <glm/glm.hpp>
-#include "ui_wins.h"
+#include "ui/wins.h"
 #include "mouse.h"
 #include <vector>
 #include "colorextender.h"
@@ -33,13 +33,6 @@ Win::Win(glm::vec2 &p, glm::vec2 &s, glm::vec4 &t_col) :
 
 Win::~Win()
 {
-    if(Items.size() > 0){
-        for(unsigned int i=0; i< Items.size(); i++){
-            delete Items[i];
-        }
-    }
-    Items.clear();
-    //delete text;
 }
 
 void Win::Draw() const

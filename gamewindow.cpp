@@ -5,7 +5,7 @@
 #include "jargshader.h"
 #include "spritebatch.h"
 #include "glm/gtx/transform.hpp"
-#include "ui_win.h"
+#include "ui/win.h"
 #include "colorextender.h"
 #include "textureatlas.h"
 #include <thread>
@@ -215,7 +215,7 @@ void GameWindow::Mainloop()
     {
         Update();
         Draw();
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        std::this_thread::sleep_for(std::chrono::milliseconds(32));
     }
 }
 
