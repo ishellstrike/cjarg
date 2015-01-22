@@ -113,7 +113,8 @@ bool GameWindow::Init()
     ws->windows.push_back(new Win());
 
     atlas.LoadAll("data/textures/");
-    sec = Sector();
+    sec = new Sector();
+    delete sec;
 }
 
 bool GameWindow::Destroy()

@@ -6,6 +6,8 @@ struct Block
 {
     Block();
     ~Block();
+
+    int id;
 };
 
 #endif // BLOCK_H

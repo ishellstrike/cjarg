@@ -36,7 +36,7 @@ public:
     GLFWmonitor *monitor = nullptr;
     GLFWwindow *window = nullptr;
     TextureAtlas atlas;
-    Sector sec;
+    Sector *sec;
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;

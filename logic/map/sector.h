@@ -7,7 +7,7 @@
 #include "block.h"
 #include <glm/glm.hpp>
 #include "point.h"
-#define FOR for(int i=0;i<RX;i++) for(int j=0;j<RY;j++) for (int k=0;k<RZ;k++)
+#define FORijk for(int i=0; i<RX; i++) for(int j=0; j<RY; j++) for (int k=0; k<RZ; k++)
 
 struct Sector
 {

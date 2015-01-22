@@ -37,9 +37,6 @@ SOURCES += main.cpp \
     ui/wins.cpp \
     ui/win.cpp
 
-include(deployment.pri)
-qtcAddDeployment()
-
 HEADERS += \
     gamewindow.h \
     mouse.h \
