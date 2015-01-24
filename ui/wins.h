@@ -1,4 +1,3 @@
-#pragma once
 #ifndef WinS_h__
 #define WinS_h__
 #include "spritebatch.h"

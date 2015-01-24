@@ -15,7 +15,8 @@
 #include "fpscounter.h"
 #include "gametimer.h"
 #include "textureatlas.h"
-#include "logic/map/sector.h"
+#include "logic/map/level.h"
+#include "logic/map/levelworker.h"
 
 class GameWindow {
 public:
@@ -36,7 +37,8 @@ public:
     GLFWmonitor *monitor = nullptr;
     GLFWwindow *window = nullptr;
     TextureAtlas atlas;
-    Sector *sec;
+    std::shared_ptr<Level> level;
+    std::shared_ptr<LevelWorker> lworker;
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;

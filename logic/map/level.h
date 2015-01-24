@@ -2,13 +2,18 @@
 #define LEVEL_H
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include "sector.h"
 #include "sectormap.h"
+#include "spritebatch.h"
+#include "levelworker.h"
 
 class Level
 {
 public:
-    Level();
+    Level(LevelWorker &lw);
     ~Level();
+
+    void Draw(SpriteBatch &sb);
 
     SectorMap active;
 };

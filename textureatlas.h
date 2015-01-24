@@ -8,7 +8,7 @@ class TextureAtlas
 public:
     TextureAtlas();
     ~TextureAtlas();
-    Texture tex;
+    static Texture tex;
 
     void LoadAll(const std::string &a);
 };

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef Win_h__
 #define Win_h__
 #include <glm/glm.hpp>

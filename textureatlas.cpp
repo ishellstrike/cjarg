@@ -34,3 +34,5 @@ void TextureAtlas::LoadAll(const std::string &a)
     tex.Load(atlas);
 }
 
+
+Texture TextureAtlas::tex;

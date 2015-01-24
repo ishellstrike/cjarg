@@ -35,7 +35,10 @@ SOURCES += main.cpp \
     logic/map/levelworker.cpp \
     logic/map/point.cpp \
     ui/wins.cpp \
-    ui/win.cpp
+    ui/win.cpp \
+    logic/base/database.cpp \
+    logic/map/agents/agent.cpp \
+    logic/map/agents/chest.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -57,21 +60,18 @@ HEADERS += \
     pixmap.h \
     textureatlas.h \
     fielsystem.h \
-    logic/map/sector.h \
-    logic/map/block.h \
-    logic/map/level.h \
-    logic/map/levelworker.h \
-    logic/map/point.h \
-    logic/map/sectormap.h \
-    ui/component.h \
-    ui/win.h \
-    ui/wins.h
+    logic/map/*.h \
+    ui/*.h \
+    logic/base/database.h \
+    logic/map/agents/agent.h \
+    logic/map/agents/chest.h
 
 
 
 win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew32 -lglfw3dll -lfreetype
 unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -ljson_linux-gcc-4.8_libmt
 unix:INCLUDEPATH += /usr/include/freetype2
+INCLUDEPATH += $$PWD
 
 win32:INCLUDEPATH += $$PWD/3rdparty/include
 win32:DEPENDPATH += $$PWD/3rdparty/include

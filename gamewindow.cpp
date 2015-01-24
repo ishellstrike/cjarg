@@ -113,8 +113,11 @@ bool GameWindow::Init()
     ws->windows.push_back(new Win());
 
     atlas.LoadAll("data/textures/");
-    sec = new Sector();
-    delete sec;
+
+    lworker = std::make_shared<LevelWorker>();
+    level = std::make_shared<Level>(*lworker);
+
+    lworker->getSector( {1, 1} );
 }
 
 bool GameWindow::Destroy()
@@ -147,11 +150,13 @@ void GameWindow::Draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.1, 0.2, 0.3, 1.0f);
-
-
-
     model = glm::mat4(1.f);
     batch->setUniform(proj * model);
+
+    level->Draw(*batch);
+
+
+
     //batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawQuad(glm::vec2(100.f,100.f), glm::vec2(1000.f,1000.f), atlas.tex, WHITE);
@@ -159,7 +164,6 @@ void GameWindow::Draw()
     glfwSetWindowTitle(window, std::to_string(fps.GetCount()).c_str());
 
     ws->Draw();
-
     batch->render();
 
     //Mesh m = Quad::GetMesh();
