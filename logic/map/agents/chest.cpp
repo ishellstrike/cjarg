@@ -2,7 +2,6 @@
 
 Chest::Chest()
 {
-
 }
 
 Chest::~Chest()

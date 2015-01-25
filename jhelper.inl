@@ -78,15 +78,16 @@ inline double triangular() {
         return max - sqrt((1 - U) * (max - min) * (max - mean));
 }
 
-inline bool inLimsV(glm::vec2 param1, glm::vec2 wpos, glm::vec2 size)
+template<typename T>
+inline bool inLimsV(T param1, T topleft, T bottomright)
 {
-    return param1.x >= wpos.x && param1.y >= wpos.y && param1.x <= size.x && param1.y <= size.y;
+    return param1.x >= topleft.x && param1.y >= topleft.y && param1.x <= bottomright.x && param1.y <= bottomright.y;
 }
 
-template<class _Ty>
-inline bool inLims(_Ty param1, _Ty wpos, _Ty size)
+template<class T>
+inline bool inLims(T param1, T left, T right)
 {
-    return param1 >= wpos && param1 <= size;
+    return param1 >= left && param1 <= right;
 }
 
 inline char keyToChar(int key, bool shift){

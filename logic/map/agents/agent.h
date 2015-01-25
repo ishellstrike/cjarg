@@ -49,17 +49,17 @@ private:
         std::shared_ptr<CasterValueBase> _value;
 
     public:
-        //template <typename T_>
-        //Something(const T_ & t) :
-        //    _value(new CasterValue<T_>(t))
-       // {
-       // }
+        template <typename T_>
+        Caster(const T_ &t) :
+            _value(new CasterValue<T_>(t))
+        {
+        }
 
         template <typename T_>
-        T_ & as()
+        T_ &as()
         {
             if (magic_number_for<T_>() != _value->magic_number)
-                throw SomethingIsSomethingElse();
+                throw;
             return std::static_pointer_cast<CasterValue<T_>>(_value)->value;
         }
 
@@ -72,7 +72,7 @@ private:
         }
 };
 
-class Agent : public Caster
+class Agent
 {
 public:
     Agent();

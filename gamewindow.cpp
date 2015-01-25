@@ -10,6 +10,10 @@
 #include "textureatlas.h"
 #include <thread>
 #include <chrono>
+#include "logic/map/trivialgenerator.h"
+#include "jhelper.inl"
+#include "logic/map/agents/agent.h"
+#include "logic/map/agents/chest.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -99,8 +103,8 @@ bool GameWindow::Init()
     glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int a, int b){
         GameWindow::Resize(a, b); Mouse::SetWindowSize(a, b);
     });
-    glfwSetScrollCallback(window, [](GLFWwindow *window, double a, double b){
-        Mouse::Scroll(b);
+    glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset){
+        Mouse::Scroll(yoffset);
     });
 
     batch = std::make_shared<SpriteBatch>();
@@ -114,10 +118,19 @@ bool GameWindow::Init()
 
     atlas.LoadAll("data/textures/");
 
-    lworker = std::make_shared<LevelWorker>();
-    level = std::make_shared<Level>(*lworker);
+    auto bb = new Block(1, {1, 2, new Chest()});
+    if( bb->getAgent<Chest>())
+    {
+         bb->getAgent<Chest>()->items.push_back(123123);
+    }
 
-    lworker->getSector( {1, 1} );
+    database::instance()->registerBlock("block", bb);
+    //LOG(info) << bb->getAgent<Chest>()->items[0];
+
+    lworker = std::make_shared<LevelWorker>();
+    lworker->SetGenerator(TrivialGenerator::Generate);
+    level = std::make_shared<Level>(*lworker);
+    level->Preload({0,0}, 5);
 }
 
 bool GameWindow::Destroy()
@@ -141,6 +154,38 @@ void GameWindow::Update()
 {
     glfwPollEvents();
 
+
+    if(Keyboard::isKeyDown(GLFW_KEY_UP))
+        cam.y -= 10;
+    if(Keyboard::isKeyDown(GLFW_KEY_DOWN))
+        cam.y += 10;
+    if(Keyboard::isKeyDown(GLFW_KEY_LEFT))
+        cam.x -= 10;
+    if(Keyboard::isKeyDown(GLFW_KEY_RIGHT))
+        cam.x += 10;
+
+    if(Mouse::isWheelUp())
+    {
+        level->zoom *= 1.1;
+
+        cam.x *= 1.1;
+        cam.y *= 1.1;
+    }
+    if(Mouse::isWheelDown())
+    {
+        level->zoom /= 1.1;
+        cam.x /= 1.1;
+        cam.y /= 1.1;
+    }
+
+    if(Keyboard::isKeyDown(GLFW_KEY_PERIOD))
+        cam.z += 1;
+    if(Keyboard::isKeyDown(GLFW_KEY_COMMA))
+        cam.z -= 1;
+
+    cam.z = glm::max(cam.z, 0.f);
+    cam.z = glm::min(cam.z, (float)RZ);
+
     ws->Update();
 
     Mouse::resetDelta();
@@ -149,11 +194,11 @@ void GameWindow::Update()
 void GameWindow::Draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.1, 0.2, 0.3, 1.0f);
+    glClearColor(0,0,0,0);
     model = glm::mat4(1.f);
     batch->setUniform(proj * model);
 
-    level->Draw(*batch);
+    level->Draw(*batch, cam);
 
 
 
@@ -161,7 +206,7 @@ void GameWindow::Draw()
     batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->drawQuad(glm::vec2(100.f,100.f), glm::vec2(1000.f,1000.f), atlas.tex, WHITE);
     batch->drawQuadAtlas(glm::vec2(100.f,100.f), glm::vec2(100.f,100.f), atlas.tex, 65, WHITE);
-    glfwSetWindowTitle(window, std::to_string(fps.GetCount()).c_str());
+    glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
     ws->Draw();
     batch->render();

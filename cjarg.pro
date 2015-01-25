@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     ui/win.cpp \
     logic/base/database.cpp \
     logic/map/agents/agent.cpp \
-    logic/map/agents/chest.cpp
+    logic/map/agents/chest.cpp \
+    logic/map/trivialgenerator.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -64,7 +65,9 @@ HEADERS += \
     ui/*.h \
     logic/base/database.h \
     logic/map/agents/agent.h \
-    logic/map/agents/chest.h
+    logic/map/agents/chest.h \
+    logic/map/diamondsquare.h \
+    logic/map/trivialgenerator.h
 
 
 

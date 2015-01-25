@@ -26,3 +26,13 @@ Sector::~Sector()
     }
 }
 
+void Sector::blockId(const Point3 &p, Jid i)
+{
+    blocks[p.x][p.y][p.z]->id(i);
+}
+
+Jid Sector::blockId(const Point3 &p)
+{
+    return blocks[p.x][p.y][p.z]->id();
+}
+

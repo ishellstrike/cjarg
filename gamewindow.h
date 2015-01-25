@@ -17,6 +17,7 @@
 #include "textureatlas.h"
 #include "logic/map/level.h"
 #include "logic/map/levelworker.h"
+#include "logic/base/database.h"
 
 class GameWindow {
 public:
@@ -39,6 +40,7 @@ public:
     TextureAtlas atlas;
     std::shared_ptr<Level> level;
     std::shared_ptr<LevelWorker> lworker;
+    glm::vec3 cam;
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;

@@ -2,6 +2,8 @@
 #define DATABASE_H
 #include "logger.h"
 #include <mutex>
+#include "logic/map/block.h"
+#include <unordered_map>
 
 class database
 {
@@ -36,10 +38,19 @@ public:
         LOG(info) << "droping database instance";
     }
 
+    std::unordered_map<std::string, Jid> block_pointer;
+    std::vector<Block*> block_db;
+    void registerBlock(std::string s, Block* b);
+
 private:
     static database *m_inst;
     database(){}
-    ~database(){}
+    ~database()
+    {
+        for(Block* block: block_db){
+            delete block;
+        }
+    }
     database(const database &root){}
     database &operator=(const database &){}
 };

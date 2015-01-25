@@ -6,28 +6,31 @@ Block::Block()
 
 }
 
-Block::~Block()
+Block::Block(int a, std::vector<Caster> agents_)
 {
-
+   agents = agents_;
 }
 
-int Block::id()
+Block::~Block()
+{
+}
+
+Jid Block::id()
 {
     return m_id;
 }
 
-int Block::tex()
+Jid Block::tex()
 {
     return m_tex;
 }
 
-void Block::id(int id_)
+void Block::id(Jid id_)
 {
     m_id = id_;
 }
 
-void Block::tex(int tex_)
+void Block::tex(Jid tex_)
 {
     m_tex = tex_;
 }
-

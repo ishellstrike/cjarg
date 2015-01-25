@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 #include "sectormap.h"
+#include <functional>
 
 class LevelWorker
 {
@@ -11,8 +12,12 @@ public:
     LevelWorker();
     ~LevelWorker();
 
-    SectorMap mem;
     Sector *getSector(const Point &pos);
+    void SetGenerator(std::function<void(Sector&)> gen);
+
+private:
+    SectorMap mem;
+    std::function<void(Sector&)> generator;
 };
 
 #endif // LEVELWORKER_H

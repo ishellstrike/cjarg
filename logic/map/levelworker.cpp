@@ -17,8 +17,19 @@ Sector *LevelWorker::getSector(const Point &pos)
     {
         Sector *s = new Sector(pos);
         mem[pos] = s;
+
+        if(generator)
+        {
+            generator(*s);
+        }
+
         return s;
     }
     return f->second;
+}
+
+void LevelWorker::SetGenerator(std::function<void(Sector &)> gen)
+{
+    generator = gen;
 }
 

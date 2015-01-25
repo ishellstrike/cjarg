@@ -10,12 +10,16 @@
 class Level
 {
 public:
-    Level(LevelWorker &lw);
+    Level(LevelWorker &lw_);
     ~Level();
 
-    void Draw(SpriteBatch &sb);
+    void Draw(SpriteBatch &sb, const glm::vec3 &cam);
+    void Preload(Point p, int r);
+
+    float zoom = 32;
 
     SectorMap active;
+    LevelWorker &lw;
 };
 
 #endif // LEVEL_H
