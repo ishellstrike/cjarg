@@ -9,8 +9,8 @@ int wmain(int argc, wchar_t *argv[])
 int main()
 #endif
 {
-GameWindow gw;
-gw.Init();
-gw.Mainloop();
-return 0;
+    GameWindow gw;
+    gw.Init();
+    gw.Mainloop();
+    return 0;
 }

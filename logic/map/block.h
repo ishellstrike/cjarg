@@ -1,11 +1,12 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 #include <vector>
-#include "agents/agent.h"
+#include <logic/agents/gamepart.h>
+#include "../agents/agent.h"
 typedef int Jid;
 typedef int Jtex;
 
-class Block
+class Block : public GamePart
 {
 public:
     Block();
@@ -14,7 +15,7 @@ public:
      * \param a
      * \param agents_
      */
-    Block(int a, std::vector<Caster> agents_);
+    Block(std::vector<Caster> agents_, Jtex a);
     ~Block();
 
     Jid id();
@@ -23,21 +24,9 @@ public:
     void id(Jid id_);
     void tex(Jid tex_);
 
-    template <typename T>
-    T *getAgent(){
-        for(Caster c: agents)
-        {
-            if(c.is<T>())
-                return &c.as<T>();
-        }
-        return nullptr;
-    }
-
 private:
     Jid m_id = 0;
     Jtex m_tex = 0;
-
-    std::vector<Caster> agents;
 };
 
 #endif // BLOCK_H

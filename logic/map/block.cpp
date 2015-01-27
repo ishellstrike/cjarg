@@ -6,7 +6,7 @@ Block::Block()
 
 }
 
-Block::Block(int a, std::vector<Caster> agents_)
+Block::Block(std::vector<Caster> agents_, int a)
 {
    agents = agents_;
 }

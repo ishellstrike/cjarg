@@ -37,9 +37,12 @@ SOURCES += main.cpp \
     ui/wins.cpp \
     ui/win.cpp \
     logic/base/database.cpp \
-    logic/map/agents/agent.cpp \
-    logic/map/agents/chest.cpp \
-    logic/map/trivialgenerator.cpp
+    logic/map/trivialgenerator.cpp \
+    miniz/miniz.c \
+    logic/entity/creature.cpp \
+    logic/agents/agent.cpp \
+    logic/agents/chest.cpp \
+    logic/agents/gamepart.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -64,10 +67,12 @@ HEADERS += \
     logic/map/*.h \
     ui/*.h \
     logic/base/database.h \
-    logic/map/agents/agent.h \
-    logic/map/agents/chest.h \
     logic/map/diamondsquare.h \
-    logic/map/trivialgenerator.h
+    logic/map/trivialgenerator.h \
+    logic/entity/creature.h \
+    logic/agents/agent.h \
+    logic/agents/chest.h \
+    logic/agents/gamepart.h
 
 
 

@@ -12,8 +12,8 @@
 #include <chrono>
 #include "logic/map/trivialgenerator.h"
 #include "jhelper.inl"
-#include "logic/map/agents/agent.h"
-#include "logic/map/agents/chest.h"
+#include "logic/agents/agent.h"
+#include "logic/agents/chest.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -118,7 +118,12 @@ bool GameWindow::Init()
 
     atlas.LoadAll("data/textures/");
 
-    auto bb = new Block(1, {1, 2, new Chest()});
+    auto bb = new Block({Chest()}, 0);
+
+    PART(bb, Chest)
+       LOG(info) << 123;
+    PARTEND()
+
     if( bb->getAgent<Chest>())
     {
          bb->getAgent<Chest>()->items.push_back(123123);
