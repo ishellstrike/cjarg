@@ -15,11 +15,11 @@ public:
      * \param a
      * \param agents_
      */
-    Block(std::vector<Caster> agents_, Jtex a);
+    Block(std::vector<Caster> agents_, const std::string &id);
     ~Block();
 
     Jid id();
-    Jid tex();
+    Jtex tex();
 
     void id(Jid id_);
     void tex(Jid tex_);

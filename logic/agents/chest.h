@@ -7,6 +7,7 @@ class Chest : public Agent
 {
 public:
     Chest();
+    Chest(std::vector<int> items_);
     ~Chest();
 
     std::vector<int> items;

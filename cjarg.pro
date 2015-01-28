@@ -77,7 +77,7 @@ HEADERS += \
 
 
 win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew32 -lglfw3dll -lfreetype
-unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -ljson_linux-gcc-4.8_libmt
+unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
 unix:INCLUDEPATH += /usr/include/freetype2
 INCLUDEPATH += $$PWD
 

@@ -118,11 +118,11 @@ bool GameWindow::Init()
 
     atlas.LoadAll("data/textures/");
 
-    auto bb = new Block({Chest()}, 0);
+    auto bb = new Block({Chest()}, "block");
 
-    PART(bb, Chest)
+    AGENT(bb, Chest)
        LOG(info) << 123;
-    PARTEND()
+    AGENTEND()
 
     if( bb->getAgent<Chest>())
     {

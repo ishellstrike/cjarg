@@ -14,10 +14,10 @@ private:
 
         struct CasterValueBase
         {
-            int magic_number;
+            int id;
 
             CasterValueBase(const int m) :
-                magic_number(m)
+                id(m)
             {
             }
 
@@ -41,6 +41,8 @@ private:
 
         std::shared_ptr<CasterValueBase> _value;
 
+private:
+
     public:
         template <typename T_>
         static int typeid_for()
@@ -56,19 +58,19 @@ private:
         }
 
         template <typename T_>
-        T_ &as()
+        T_ &as() const
         {
             auto reqid = typeid_for<T_>();
-            if (reqid != _value->magic_number)
+            if (reqid != _value->id)
                 throw;
             return std::static_pointer_cast<CasterValue<T_>>(_value)->value;
         }
 
         template <typename T_>
-        bool is()
+        bool is() const
         {
             auto reqid = typeid_for<T_>();
-            if (reqid != _value->magic_number)
+            if (reqid != _value->id)
                 return false;
             return true;
         }

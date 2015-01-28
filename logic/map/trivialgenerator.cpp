@@ -4,11 +4,11 @@
 void TrivialGenerator::Generate(Sector &s)
 {
     DiamondSquare ds;
-    Array2D<float> *a = ds.DsGenerate(RX, RY, 40);
+    Array2D<float> *a = ds.DsGenerate(RX, RY, 1000);
 
     FORij
     {
-        char c = (char)((((*a)[i][j]/2.f)) * (float)RZ);
+        char c = (char)((((*a)[i][j])) * (float)RZ);
         if(c >= RZ) c = RZ - 1;
         s.ground[i][j] = c;
 
