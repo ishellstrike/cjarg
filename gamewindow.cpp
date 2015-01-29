@@ -109,8 +109,6 @@ bool GameWindow::Init()
     });
 
     batch = std::make_shared<SpriteBatch>();
-    batch->initFreeType();
-    batch->renderAtlas();
 
     fb = std::make_shared<FrameBuffer>();
     tex = std::make_shared<Texture>();
@@ -142,6 +140,14 @@ bool GameWindow::Init()
     me = std::make_shared<Creature>();
     me->pos.z = 32;
     level->active[Point(0,0)]->creatures.push_back(me.get());
+
+    f12 = std::make_shared<Font>();
+    f12->initFreeType(12);
+    f12->renderAtlas();
+
+    f48 = std::make_shared<Font>();
+    f48->initFreeType(48);
+    f48->renderAtlas();
 }
 
 bool GameWindow::Destroy()
@@ -215,13 +221,13 @@ void GameWindow::Draw()
 
 
 
-    //batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
+    batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, f48.get(), glm::vec4(1.f, 1.f, 1.f, 1.f));
     batch->renderText(string_format("%s %s %s",
                                     std::to_string(me->pos).c_str(),
                                     std::to_string(level->block(me->pos)).c_str(),
-                                    std::to_string(cam).c_str()).c_str(), 10, 10, 0.3, 0.3, WHITE);
-    batch->drawQuad({0,0}, {1024,1024}, *batch->fontatlas, WHITE);
-    glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
+                                    std::to_string(cam).c_str()).c_str(), 10, 100, f12.get(), WHITE);
+    //batch->drawQuad({0,0}, {1024,1024}, *batch->fontatlas, WHITE);
+    //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
     ws->Draw();
     batch->render();

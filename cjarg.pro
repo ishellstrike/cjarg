@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     logic/agents/agent.cpp \
     logic/agents/chest.cpp \
     logic/agents/gamepart.cpp \
-    logic/entity/item.cpp
+    logic/entity/item.cpp \
+    font.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -74,7 +75,8 @@ HEADERS += \
     logic/agents/agent.h \
     logic/agents/chest.h \
     logic/agents/gamepart.h \
-    logic/entity/item.h
+    logic/entity/item.h \
+    font.h
 
 
 

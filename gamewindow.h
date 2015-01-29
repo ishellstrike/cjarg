@@ -18,6 +18,7 @@
 #include "logic/map/level.h"
 #include "logic/map/levelworker.h"
 #include "logic/base/database.h"
+#include "font.h"
 
 class GameWindow {
 public:
@@ -47,6 +48,8 @@ public:
     std::shared_ptr<FrameBuffer> fb;
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
+
+    std::shared_ptr<Font> f12, f48;
 
     GameWindow();
     ~GameWindow();
