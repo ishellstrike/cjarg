@@ -6,6 +6,7 @@
 #include "ui/win.h"
 #include <list>
 #include <glm/glm.hpp>
+#include "font.h"
 
 class WinS{
 public:
@@ -19,7 +20,8 @@ public:
     void Draw();
     void Update();
     static void ToTop(Win* w);
-    static SpriteBatch* sb;
+    static SpriteBatch *sb;
+    static Font *f;
 };
 
 #endif // WinS_h__

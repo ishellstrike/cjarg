@@ -47,7 +47,9 @@ void Win::Draw() const
     sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, WHITE);
     sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, WHITE);
 
-    //text->DrawAt(atCenter(text->Size, pos, glm::vec2(size.x, 20)));
+    glm::vec2 s = sb.renderText("234234234", pos.x, pos.y, WinS::f, CLEAR);
+
+    sb.renderText("234234234", pos.x, pos.y + s.y, WinS::f, WHITE);
 
     if(Items.size() > 0){
         for(unsigned int i=0; i< Items.size(); i++){

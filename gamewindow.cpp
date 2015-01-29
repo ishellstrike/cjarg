@@ -34,6 +34,7 @@ GameWindow::~GameWindow()
 bool GameWindow::Init()
 {
     LOG(info) << "Jarg initialization start";
+    LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
     glfwSetErrorCallback([](int a,const char* description){LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
@@ -57,7 +58,7 @@ bool GameWindow::Init()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
     int err = glewInit();
     if (err != GLEW_OK)
@@ -148,6 +149,8 @@ bool GameWindow::Init()
     f48 = std::make_shared<Font>();
     f48->initFreeType(48);
     f48->renderAtlas();
+
+    ws->f = f12.get();
 }
 
 bool GameWindow::Destroy()
@@ -221,12 +224,14 @@ void GameWindow::Draw()
 
 
 
-    batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, f48.get(), glm::vec4(1.f, 1.f, 1.f, 1.f));
-    batch->renderText(string_format("%s %s %s",
+
+    batch->renderText(string_format("ываыва ываы а ыва ыва ыва ва %s %s %s",
                                     std::to_string(me->pos).c_str(),
                                     std::to_string(level->block(me->pos)).c_str(),
-                                    std::to_string(cam).c_str()).c_str(), 10, 100, f12.get(), WHITE);
-    //batch->drawQuad({0,0}, {1024,1024}, *batch->fontatlas, WHITE);
+                                    std::to_string(cam).c_str()), 10, 100, f12.get(), WHITE);
+
+    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f48.get(), RED);
+    //batch->drawQuad({0,0}, {1024,1024}, *f48->font.get(), WHITE);
     //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
     ws->Draw();

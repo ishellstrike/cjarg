@@ -62,7 +62,8 @@ void WinS::Update() {
 
 std::vector<Win*> WinS::windows;
 
-bool WinS::KeyboardHooked;
-bool WinS::MouseHooked;
-SpriteBatch* WinS::sb;
+bool WinS::KeyboardHooked = false;
+bool WinS::MouseHooked = false;
+SpriteBatch* WinS::sb = nullptr;
+Font* WinS::f = nullptr;
 

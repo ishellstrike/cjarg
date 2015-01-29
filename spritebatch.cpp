@@ -1,5 +1,9 @@
 #include "spritebatch.h"
 #include "logger.h"
+#include <locale>
+#include <utfcpp/utf8.h>
+
+typedef std::codecvt<wchar_t, char, mbstate_t> cvt;
 
 //#include <unistd.h>
 
@@ -63,33 +67,32 @@ void SpriteBatch::setUniform(const glm::mat4 &uni)
 }
 
 
-glm::vec2 SpriteBatch::renderText(const char *text, float x, float y, Font *font, const glm::vec4 &col_)
+glm::vec2 SpriteBatch::renderText(const std::string &text, float x, float y, Font *font, const glm::vec4 &col_)
 {
     float x_start = x;
     float y_start = y;
     float x_max = 0;
-    const char *p;
+    float y_max = 0;
+    const char32_t *p;
 
-    for(p = text; *p; p++)
+    std::locale loc (std::locale(), new cvt);
+
+    std::u32string text32;
+    utf8::utf8to32(text.begin(), text.end(), std::back_inserter(text32));
+
+    for(p = &text32[0]; *p; p++)
     {
         CharInfo cc = font->chars[*p];
         if(*p == '\n')
         {
-            y+=cc.advance.y;
+            y+=y_max;
             x=x_start;
             continue;
         }
 
-        if(*p == ' ')
-        {
-            x += 2;
-            continue;
-        }
-
         drawQuadText(glm::vec2(x, y), cc, *font->font, col_);
-        render();
 
-        x += cc.size.x*FDIM;
+        x += cc.advance.x;
         x_max = glm::max(x, x_max);
     }
     return glm::vec2(x_max - x_start, y - y_start);

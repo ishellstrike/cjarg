@@ -7,3 +7,6 @@
 [submodule "miniz"]
 	path = miniz
 	url = https://github.com/ishellstrike/miniz.git
+[submodule "utfcpp"]
+	path = utfcpp
+	url = https://github.com/ishellstrike/utfcpp.git

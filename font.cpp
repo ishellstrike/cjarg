@@ -21,7 +21,7 @@ void Font::initFreeType(int size)
     }
     else
         LOG(fatal) << "FT " << size << " init OK";
-    char fontPath[] = "data/fonts/Inconsolata.otf";
+    char fontPath[] = "data/fonts/DejaVuSansMono.ttf";
     if(FT_New_Face(ft, fontPath, 0, &m_ftFace))
     {
         LOG(fatal) << "Could not open font " << fontPath;
@@ -30,6 +30,7 @@ void Font::initFreeType(int size)
     else
         LOG(info) << "FT " << size << " face OK";
 
+    FT_Select_Charmap(m_ftFace, ft_encoding_unicode);
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);
 }
 
@@ -40,10 +41,13 @@ void Font::renderAtlas()
     float x_start = x;
     float y_start = y;
     float x_max = 0;
-    const char *p;
+    const char32_t *p;
     FT_GlyphSlot ftGlyph = m_ftFace->glyph;
-    char text[] = " `1234567890-=qwertyuiop[]asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?\\|";
-    int px=0,py=0;
+    std::u32string text(  U" `1234567890-=qwertyuiop[]asdfghjkl;'zxcvbnm,"
+                          U"./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?\\|"
+                          U"йцукенгшщзхъфывапролджэячсмитьбю"
+                          U"ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ123");
+    int px=0, py=0;
 
     glBindTexture(GL_TEXTURE_2D, font->textureId);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -53,7 +57,7 @@ void Font::renderAtlas()
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, FDIM, FDIM, 0, GL_ALPHA, GL_UNSIGNED_BYTE, (void*)0);
 
-    for(p = text; *p; p++)
+    for(p = &text[0]; *p; p++)
     {
         if(*p == '\n')
         {

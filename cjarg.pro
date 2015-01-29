@@ -76,7 +76,14 @@ HEADERS += \
     logic/agents/chest.h \
     logic/agents/gamepart.h \
     logic/entity/item.h \
-    font.h
+    font.h \
+    cpputf/utf8/core.h \
+    cpputf/utf8/unchecked.h \
+    cpputf/utf8.h \
+    utfcpp/utf8.h \
+    utfcpp/utf8/checked.h \
+    utfcpp/utf8/core.h \
+    utfcpp/utf8/unchecked.h
 
 
 

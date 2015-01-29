@@ -27,7 +27,7 @@ public:
     ~Font();
 
     std::shared_ptr<Texture> font;
-    std::unordered_map<char, CharInfo> chars;
+    std::unordered_map<char32_t, CharInfo> chars;
 
     FT_Library ft;
     FT_Face m_ftFace;
