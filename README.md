@@ -3,6 +3,8 @@
 submolules
   json
   lodepng
+  miniz
+  utfcpp
 
 dependencies
   GLEW
