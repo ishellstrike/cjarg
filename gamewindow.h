@@ -46,6 +46,7 @@ public:
     static GameWindow *wi;
     std::shared_ptr<FrameBuffer> fb;
     std::shared_ptr<Texture> tex;
+    std::shared_ptr<Creature> me;
 
     GameWindow();
     ~GameWindow();

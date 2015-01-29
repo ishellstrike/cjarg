@@ -1,5 +1,6 @@
 #define GLM_FORCE_RADIANS
 #define _USE_MATH_DEFINES
+#define GLM_SWIZZLE
 #include "gamewindow.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

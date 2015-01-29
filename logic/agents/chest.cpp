@@ -4,7 +4,7 @@ Chest::Chest()
 {
 }
 
-Chest::Chest(std::vector<int> items_)
+Chest::Chest(std::vector<Item> items_)
 {
     items = items_;
 }

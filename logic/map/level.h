@@ -16,6 +16,11 @@ public:
     void Draw(SpriteBatch &sb, const glm::vec3 &cam);
     void Preload(Point p, int r);
 
+    Block *block(const Point3 &p);
+    Block *block(const glm::vec3 &p);
+
+    unsigned char ground(const glm::vec3 &p);
+
     float zoom = 32;
 
     SectorMap active;

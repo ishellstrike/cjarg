@@ -24,10 +24,10 @@ struct DiamondSquare
     {
         Array2D<float> *points = new Array2D<float>(iWidth + 1, iHeight + 1);
 
-        double c1 = rand()/(float)RAND_MAX;
-        double c2 = rand()/(float)RAND_MAX;
-        double c3 = rand()/(float)RAND_MAX;
-        double c4 = rand()/(float)RAND_MAX;
+        double c1 = rand()/(double)RAND_MAX;
+        double c2 = rand()/(double)RAND_MAX;
+        double c3 = rand()/(double)RAND_MAX;
+        double c4 = rand()/(double)RAND_MAX;
         _dRoughness = iRoughness;
         _dBigSize = iWidth + iHeight;
         DsDivide(points, 0, 0, iWidth, iHeight, c1, c2, c3, c4);
@@ -38,29 +38,39 @@ private:
     double _dBigSize;
     double _dRoughness;
 
+    static double Normalize(double iNum) {
+        if (iNum < 0) {
+            iNum = 0;
+        }
+        else if (iNum > 1.0) {
+            iNum = 1.0;
+        }
+        return iNum;
+    }
+
     void DsDivide(Array2D<float> *points, double x, double y, double width, double height, double c1, double c2, double c3, double c4)
     {
-        double newWidth = glm::floor(width/2);
-        double newHeight = glm::floor(height/2);
+        double newWidth = glm::floor(width/2.0);
+        double newHeight = glm::floor(height/2.0);
 
         if (width > 1 || height > 1) {
-            double middle = ((c1 + c2 + c3 + c4)/4) + PMove(newWidth + newHeight);
-            double edge1 = ((c1 + c2)/2.f);
-            double edge2 = ((c2 + c3)/2.f);
-            double edge3 = ((c3 + c4)/2.f);
-            double edge4 = ((c4 + c1)/2.f);
-            middle = glm::normalize(middle);
-            edge1 = glm::normalize(edge1);
-            edge2 = glm::normalize(edge2);
-            edge3 = glm::normalize(edge3);
-            edge4 = glm::normalize(edge4);
+            double middle = ((c1 + c2 + c3 + c4)/4.0) + PMove(newWidth + newHeight);
+            double edge1 = ((c1 + c2)/2.0);
+            double edge2 = ((c2 + c3)/2.0);
+            double edge3 = ((c3 + c4)/2.0);
+            double edge4 = ((c4 + c1)/2.0);
+            middle = Normalize(middle);
+            edge1 = Normalize(edge1);
+            edge2 = Normalize(edge2);
+            edge3 = Normalize(edge3);
+            edge4 = Normalize(edge4);
             DsDivide(points, x, y, newWidth, newHeight, c1, edge1, middle, edge4);
             DsDivide(points, x + newWidth, y, width - newWidth, newHeight, edge1, c2, edge2, middle);
             DsDivide(points, x + newWidth, y + newHeight, width - newWidth, height - newHeight, middle, edge2, c3, edge3);
             DsDivide(points, x, y + newHeight, newWidth, height - newHeight, edge4, middle, edge3, c4);
         }
         else {
-            float c = (float) (c1 + c2 + c3 + c4)/4.f;
+            float c = (float) (c1 + c2 + c3 + c4)/4.0;
 
             (*points)[(int)x][(int)y] = c;
             if (width == 2) {

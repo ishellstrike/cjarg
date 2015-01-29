@@ -1,3 +1,4 @@
+#define GLM_SWIZZLE
 #include "level.h"
 #include "textureatlas.h"
 #include "colorextender.h"
@@ -14,8 +15,10 @@ Level::~Level()
 
 }
 
-void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam)
+void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam_)
 {
+    auto cam = cam_*glm::vec3(zoom,zoom,1) - glm::vec3(RESX/2.f, RESY/2.f, 0.f);
+    //cam.z /= (float)RZ;
     for(SectorMapPair pair: active)
     {
         Point off = pair.second->offset;
@@ -38,6 +41,11 @@ void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam)
                     sb.drawQuadAtlas({i*zoom + secpos.x - cam.x, j*zoom + secpos.y - cam.y},
                                      {zoom, zoom}, TextureAtlas::tex, jid, WHITE * (1 - glm::abs(cur - cam.z)/(float)RZ));
             }
+
+            for(Creature* c: pair.second->creatures)
+            {
+                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, TextureAtlas::tex, 22, WHITE);
+            }
         }
     }
 }
@@ -49,5 +57,35 @@ void Level::Preload(Point p, int r)
         {
             active[Point(i, j)] = lw.getSector({i, j});
         }
+}
+
+Block *Level::block(const Point3 &p)
+{
+    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
+    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    if(active.find({divx, divy}) == active.end())
+        return nullptr;
+    Sector *sect = active[Point(divx, divy)];
+    return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
+}
+
+Block *Level::block(const glm::vec3 &p)
+{
+    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
+    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    if(active.find({divx, divy}) == active.end())
+        return nullptr;
+    Sector *sect = active[Point(divx, divy)];
+    return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
+}
+
+unsigned char Level::ground(const glm::vec3 &p)
+{
+    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
+    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    if(active.find({divx, divy}) == active.end())
+        return RZ;
+    Sector *sect = active[Point(divx, divy)];
+    return sect->ground[(int)p.x - divx * RX][(int)p.y - divy * RY];
 }
 

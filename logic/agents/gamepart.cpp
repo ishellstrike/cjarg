@@ -3,3 +3,8 @@
 GamePart::GamePart()
 {
 }
+
+GamePart::~GamePart()
+{
+
+}

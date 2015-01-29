@@ -36,3 +36,8 @@ Jid Sector::blockId(const Point3 &p)
     return blocks[p.x][p.y][p.z]->id();
 }
 
+Block *Sector::block(const Point3 &p)
+{
+    return blocks[p.x][p.y][p.z];
+}
+

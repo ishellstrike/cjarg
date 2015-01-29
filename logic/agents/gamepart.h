@@ -10,6 +10,7 @@ class GamePart
 {
 public:
     GamePart();
+    ~GamePart();
 
     template <typename T>
     T *getAgent(){

@@ -1,3 +1,4 @@
+#define GLM_SWIZZLE
 #include "gamewindow.h"
 #include "mouse.h"
 #include "keyboard.h"
@@ -56,7 +57,7 @@ bool GameWindow::Init()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     int err = glewInit();
     if (err != GLEW_OK)
@@ -109,6 +110,7 @@ bool GameWindow::Init()
 
     batch = std::make_shared<SpriteBatch>();
     batch->initFreeType();
+    batch->renderAtlas();
 
     fb = std::make_shared<FrameBuffer>();
     tex = std::make_shared<Texture>();
@@ -126,7 +128,7 @@ bool GameWindow::Init()
 
     if( bb->getAgent<Chest>())
     {
-         bb->getAgent<Chest>()->items.push_back(123123);
+         bb->getAgent<Chest>()->items.push_back(Item());
     }
 
     database::instance()->registerBlock("block", bb);
@@ -135,11 +137,16 @@ bool GameWindow::Init()
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
-    level->Preload({0,0}, 5);
+    level->Preload({0,0}, 25);
+
+    me = std::make_shared<Creature>();
+    me->pos.z = 32;
+    level->active[Point(0,0)]->creatures.push_back(me.get());
 }
 
 bool GameWindow::Destroy()
 {
+   database::drop();
    glfwDestroyWindow(window);
    glfwTerminate();
    return true;
@@ -161,26 +168,27 @@ void GameWindow::Update()
 
 
     if(Keyboard::isKeyDown(GLFW_KEY_UP))
-        cam.y -= 10;
+        me->pos.y -= 0.1;
     if(Keyboard::isKeyDown(GLFW_KEY_DOWN))
-        cam.y += 10;
+        me->pos.y += 0.1;
     if(Keyboard::isKeyDown(GLFW_KEY_LEFT))
-        cam.x -= 10;
+        me->pos.x -= 0.1;
     if(Keyboard::isKeyDown(GLFW_KEY_RIGHT))
-        cam.x += 10;
+        me->pos.x += 0.1;
+
+    auto bl = level->block(me->pos);
+    //if(bl && bl->id() == 0)
+       // me->pos.z -= 0.1;
+    me->pos.z = level->ground(me->pos) + 1;
+    cam = me->pos;
 
     if(Mouse::isWheelUp())
     {
         level->zoom *= 1.1;
-
-        cam.x *= 1.1;
-        cam.y *= 1.1;
     }
     if(Mouse::isWheelDown())
     {
         level->zoom /= 1.1;
-        cam.x /= 1.1;
-        cam.y /= 1.1;
     }
 
     if(Keyboard::isKeyDown(GLFW_KEY_PERIOD))
@@ -208,9 +216,11 @@ void GameWindow::Draw()
 
 
     //batch->renderText(std::to_string(fps.GetCount()).c_str(), 50, 50, 1, 1, glm::vec4(1.f, 1.f, 1.f, 1.f));
-    batch->drawRect(glm::vec2(-50.f, -50.f), glm::vec2(100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
-    batch->drawQuad(glm::vec2(100.f,100.f), glm::vec2(1000.f,1000.f), atlas.tex, WHITE);
-    batch->drawQuadAtlas(glm::vec2(100.f,100.f), glm::vec2(100.f,100.f), atlas.tex, 65, WHITE);
+    batch->renderText(string_format("%s %s %s",
+                                    std::to_string(me->pos).c_str(),
+                                    std::to_string(level->block(me->pos)).c_str(),
+                                    std::to_string(cam).c_str()).c_str(), 10, 10, 0.3, 0.3, WHITE);
+    batch->drawQuad({0,0}, {1024,1024}, *batch->fontatlas, WHITE);
     glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
     ws->Draw();
@@ -270,7 +280,7 @@ void GameWindow::Mainloop()
     {
         Update();
         Draw();
-        std::this_thread::sleep_for(std::chrono::milliseconds(32));
+       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 

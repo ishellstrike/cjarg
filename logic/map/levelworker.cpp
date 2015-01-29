@@ -7,7 +7,10 @@ LevelWorker::LevelWorker()
 
 LevelWorker::~LevelWorker()
 {
-
+    for(SectorMapPair s: mem)
+    {
+        delete s.second;
+    }
 }
 
 Sector *LevelWorker::getSector(const Point &pos)

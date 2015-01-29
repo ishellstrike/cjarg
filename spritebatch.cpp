@@ -50,8 +50,6 @@ SpriteBatch::SpriteBatch() :
 
 
     font->IdOnly();
-
-    fontatlas->Empty(glm::vec2(512, 512));
 }
 
 SpriteBatch::~SpriteBatch()
@@ -139,7 +137,7 @@ glm::vec2 SpriteBatch::renderText(const char *text, float x, float y, float sx, 
     return glm::vec2(x_max - x_start, y - y_start);
 }
 
-glm::vec2 SpriteBatch::renderAtlas()
+void SpriteBatch::renderAtlas()
 {
     float x = 0, sx = 1;
     float y = 0, sy = 1;
@@ -149,6 +147,8 @@ glm::vec2 SpriteBatch::renderAtlas()
     const char *p;
     FT_GlyphSlot ftGlyph = m_ftFace->glyph;
     char text[] = "`1234567890-=qwertyuiop[]asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?\\|";
+    Pixmap a(glm::vec2(1024.f,1024.f));
+    int px=0,py=0;
 
     for(p = text; *p; p++)
     {
@@ -164,28 +164,27 @@ glm::vec2 SpriteBatch::renderAtlas()
             LOG(error) << "Could not load character" << *p;
             continue;
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, ftGlyph->bitmap.width,
-                     ftGlyph->bitmap.rows, 0, GL_ALPHA, GL_UNSIGNED_BYTE,
-                     ftGlyph->bitmap.buffer);
 
-        float w = ftGlyph->bitmap.width * sx;
-        float h = ftGlyph->bitmap.rows * sy;
-        float x2 = x + ftGlyph->bitmap_left * sx;
-        float y2 = y + 20 - ftGlyph->bitmap_top * sy;
-
-        drawQuadText(glm::vec2(x2, y2), glm::vec2(w, h), *font, glm::vec4(1,1,1,1));
-        render();
-
-        x += (ftGlyph->advance.x >> 6) * sx;
-        y += (ftGlyph->advance.y >> 6) * sy;
-        x_max = glm::max(x, x_max);
+        auto aa = ftGlyph->bitmap.pixel_mode;
+        Pixmap b(glm::vec2(ftGlyph->bitmap.width, ftGlyph->bitmap.rows*3));
+        px += b.width;
+        if(px > 800)
+        {
+            px = 0;
+            py += 100;
+        }
+        for(int i=0; i<b.width; i++)
+            for(int j=0; j<b.height; j++)
+        {
+            b.data.push_back(ftGlyph->bitmap.buffer[i*b.width + j]);
+            b.data.push_back(ftGlyph->bitmap.buffer[i*b.width + j]);
+            b.data.push_back(ftGlyph->bitmap.buffer[i*b.width + j]);
+            b.data.push_back(ftGlyph->bitmap.buffer[i*b.width + j]);
+        }
+        a.Blit(b, {px, py});
     }
-    return glm::vec2(x_max - x_start, y - y_start);
+    fontatlas = std::make_shared<Texture>();
+    fontatlas->Load(a);
 }
 
 void SpriteBatch::drawRect(const glm::vec2 &loc, const glm::vec2 &size, const glm::vec4 &_col)

@@ -31,7 +31,7 @@ void TextureAtlas::LoadAll(const std::string &a)
             y++;
         }
     }
-    tex.Load(atlas);
+    tex.Load(atlas, false, true);
 }
 
 

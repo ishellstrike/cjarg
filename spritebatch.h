@@ -46,7 +46,7 @@ public:
 
     void render();
     void drawRect(const glm::vec2 &loc, const glm::vec2 &size, const glm::vec4 &_col);
-    glm::vec2 renderAtlas();
+    void renderAtlas();
     void drawQuad(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, const glm::vec4 &col_);
     void drawQuadAtlas(const glm::vec2 &loc, const glm::vec2 &size, const Texture &tex, int apos, const glm::vec4 &col_);
     void drawLine(const glm::vec2 &start, const glm::vec2 &end, float width, const glm::vec4 &color);

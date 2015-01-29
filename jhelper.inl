@@ -8,6 +8,7 @@
 #include <string>
 #include <stdarg.h>
 #include <math.h>
+#include <logic/map/block.h>
 #include "colorextender.h"
 
 #ifdef NDEBUG
@@ -159,5 +160,11 @@ namespace std
     }
     inline std::string to_string(const glm::mat4& a){
         return string_format("{%g, %g, %g, %g}\n{%g, %g, %g, %g}\n{%g, %g, %g, %g}", a[0][0], a[1][0], a[2][0], a[3][0], a[0][1], a[1][1], a[2][1], a[3][1], a[0][2], a[1][2], a[2][2], a[3][2], a[0][3], a[1][3], a[2][3], a[3][3]);
+    }
+    inline std::string to_string(Block *b)
+    {
+        if(!b)
+            return "nullptr";
+        return string_format("id:%d", b->id());
     }
 }

@@ -1,5 +1,11 @@
 #include "logic/entity/creature.h"
 
-Creature::Creature()
+Creature::Creature() :
+    GamePart()
 {
+}
+
+Creature::~Creature()
+{
+
 }

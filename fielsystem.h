@@ -50,6 +50,7 @@
 
                 files.push_back(fn);
             }
+            closedir(direct);
         }
         else
             LOG(error) << "Error opening directory";
