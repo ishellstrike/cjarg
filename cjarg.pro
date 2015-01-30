@@ -214,7 +214,8 @@ DISTFILES += \
     data/textures/wearpolka1.png \
     data/textures/wearpolka2.png \
     data/textures/wearpolka3.png \
-    data/textures/wearpolka4.png
+    data/textures/wearpolka4.png \
+    data/fonts/DejaVuSansMono.ttf
 
 OTHER_FILES += \
     README.md \
