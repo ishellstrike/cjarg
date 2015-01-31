@@ -146,10 +146,6 @@ bool GameWindow::Init()
     f12->initFreeType(12);
     f12->renderAtlas();
 
-    f48 = std::make_shared<Font>();
-    f48->initFreeType(48);
-    f48->renderAtlas();
-
     ws->f = f12.get();
 }
 
@@ -230,7 +226,7 @@ void GameWindow::Draw()
                                     std::to_string(level->block(me->pos)).c_str(),
                                     std::to_string(cam).c_str()), 10, 100, f12.get(), WHITE);
 
-    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f48.get(), RED);
+    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f12.get(), RED);
     //batch->drawQuad({0,0}, {1024,1024}, *f48->font.get(), WHITE);
     //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
@@ -291,7 +287,7 @@ void GameWindow::Mainloop()
     {
         Update();
         Draw();
-       // std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 

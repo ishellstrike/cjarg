@@ -44,6 +44,8 @@ SOURCES += main.cpp \
     logic/agents/chest.cpp \
     logic/agents/gamepart.cpp \
     logic/entity/item.cpp \
+    font.cpp \
+    spritebatch.cpp \
     font.cpp
 
 HEADERS += \
@@ -83,7 +85,9 @@ HEADERS += \
     utfcpp/utf8.h \
     utfcpp/utf8/checked.h \
     utfcpp/utf8/core.h \
-    utfcpp/utf8/unchecked.h
+    utfcpp/utf8/unchecked.h \
+    spritebatch.h \
+    font.h
 
 
 

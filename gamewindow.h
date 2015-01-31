@@ -49,7 +49,7 @@ public:
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
 
-    std::shared_ptr<Font> f12, f48;
+    std::shared_ptr<Font> f12;
 
     GameWindow();
     ~GameWindow();
