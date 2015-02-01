@@ -3,7 +3,7 @@
 #include "sge/textureatlas.h"
 #include "sge/colorextender.h"
 #include "jhelper.inl"
-#include "settings.h"
+#include "sge/prefecences.h"
 
 Level::Level(LevelWorker &lw_) :
     lw(lw_)

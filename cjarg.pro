@@ -7,7 +7,6 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     gamewindow.cpp \
-    settings.cpp \
     logic/map/sector.cpp \
     logic/map/block.cpp \
     logic/map/level.cpp \
@@ -56,7 +55,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     gamewindow.h \
-    settings.h \
     jsonparser.h \
     logic/map/*.h \
     ui/*.h \
@@ -68,31 +66,7 @@ HEADERS += \
     logic/agents/chest.h \
     logic/agents/gamepart.h \
     logic/entity/item.h \
-    sge/basicjargshader.h \
-    sge/colorextender.h \
-    sge/cube.h \
-    sge/fielsystem.h \
-    sge/font.h \
-    sge/fpscounter.h \
-    sge/gametimer.h \
-    sge/gamewindow.h \
-    sge/icosahedron.h \
-    sge/keyboard.h \
-    sge/logger.h \
-    sge/material.h \
-    sge/mesh.h \
-    sge/mouse.h \
-    sge/pixmap.h \
-    sge/prefecences.h \
-    sge/sge.h \
-    sge/shader.h \
-    sge/singleton.h \
-    sge/SphereTesselator.h \
-    sge/spritebatch.h \
-    sge/tangentcalc.h \
-    sge/texture.h \
-    sge/textureatlas.h \
-    sge/vpnt.h \
+    sge/*.h \
     sge/json/autolink.h \
     sge/json/config.h \
     sge/json/features.h \
@@ -106,7 +80,8 @@ HEADERS += \
     sge/utfcpp/utf8.h \
     sge/utfcpp/utf8/checked.h \
     sge/utfcpp/utf8/core.h \
-    sge/utfcpp/utf8/unchecked.h
+    sge/utfcpp/utf8/unchecked.h \
+    sge/sge_geometry.h
 
 
 

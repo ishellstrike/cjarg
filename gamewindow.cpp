@@ -2,7 +2,7 @@
 #include "gamewindow.h"
 #include "sge/mouse.h"
 #include "sge/keyboard.h"
-#include "settings.h"
+#include "sge/prefecences.h"
 #include "sge/shader.h"
 #include "sge/spritebatch.h"
 #include "glm/gtx/transform.hpp"
@@ -15,6 +15,7 @@
 #include "jhelper.inl"
 #include "logic/agents/agent.h"
 #include "logic/agents/chest.h"
+#include <future>
 
 #define MAJOR 2
 #define MINOR 1
@@ -135,7 +136,7 @@ bool JargGameWindow::BaseInit()
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
-    level->Preload({0,0}, 25);
+    level->Preload({0,0}, 3);
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
@@ -144,6 +145,7 @@ bool JargGameWindow::BaseInit()
     f12 = std::make_shared<Font>();
     f12->initFreeType(12);
     f12->renderAtlas();
+
 
     ws->f = f12.get();
 }
@@ -220,12 +222,12 @@ void JargGameWindow::BaseDraw()
 
 
 
-    batch->renderText(string_format("ываыва ываы а ыва ыва ыва ва %s %s %s",
+    batch->drawText(string_format("ываыва ываы а ыва ыва ыва ва %s %s %s",
                                     std::to_string(me->pos).c_str(),
                                     std::to_string(level->block(me->pos)).c_str(),
                                     std::to_string(cam).c_str()), 10, 100, f12.get(), Color::White);
 
-    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
+    batch->drawText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
     //batch->drawQuad({0,0}, {1024,1024}, *f48->font.get(), WHITE);
     //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
@@ -294,7 +296,7 @@ void JargGameWindow::Resize(int w, int h)
 {
     if(h == 0)
         h = 1;
-    Settings::instance()->resolution = glm::vec2(w, h);
+    Prefecences::Instance()->resolution = glm::vec2(w, h);
     glViewport(0, 0, w, h);
     JargGameWindow::wi->proj = glm::mat4(1.f);
     JargGameWindow::wi->proj = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
