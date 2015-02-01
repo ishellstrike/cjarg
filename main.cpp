@@ -10,8 +10,8 @@ int wmain(int argc, wchar_t *argv[])
 int main()
 #endif
 {
-    GameWindow gw;
-    gw.Init();
+    JargGameWindow gw;
+    gw.BaseInit();
     gw.Mainloop();
     return 0;
 }

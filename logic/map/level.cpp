@@ -39,12 +39,12 @@ void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam_)
                 int cur = glm::min(cam.z, (float)top);
                 if(id)
                     sb.drawQuadAtlas({i*zoom + secpos.x - cam.x, j*zoom + secpos.y - cam.y},
-                                     {zoom, zoom}, TextureAtlas::tex, jid, WHITE * (1 - glm::abs(cur - cam.z)/(float)RZ));
+                                     {zoom, zoom}, TextureAtlas::tex, jid, Color::White * (1 - glm::abs(cur - cam.z)/(float)RZ));
             }
 
             for(Creature* c: pair.second->creatures)
             {
-                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, TextureAtlas::tex, 22, WHITE);
+                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, TextureAtlas::tex, 22, Color::White);
             }
         }
     }

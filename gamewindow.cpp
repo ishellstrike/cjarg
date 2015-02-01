@@ -1,14 +1,14 @@
 #define GLM_SWIZZLE
 #include "gamewindow.h"
-#include "mouse.h"
-#include "keyboard.h"
+#include "sge/mouse.h"
+#include "sge/keyboard.h"
 #include "settings.h"
-#include "jargshader.h"
-#include "spritebatch.h"
+#include "sge/shader.h"
+#include "sge/spritebatch.h"
 #include "glm/gtx/transform.hpp"
 #include "ui/win.h"
-#include "colorextender.h"
-#include "textureatlas.h"
+#include "sge/colorextender.h"
+#include "sge/textureatlas.h"
 #include <thread>
 #include <chrono>
 #include "logic/map/trivialgenerator.h"
@@ -19,19 +19,19 @@
 #define MAJOR 2
 #define MINOR 1
 
-GameWindow::GameWindow()
+JargGameWindow::JargGameWindow()
 {
-    GameWindow::wi = this;
+    JargGameWindow::wi = this;
 }
 
-GameWindow::~GameWindow()
+JargGameWindow::~JargGameWindow()
 {
     Destroy();
 }
 
 
 
-bool GameWindow::Init()
+bool JargGameWindow::BaseInit()
 {
     LOG(info) << "Jarg initialization start";
     LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
@@ -103,7 +103,7 @@ bool GameWindow::Init()
         Mouse::SetButton(a, b, c);
     });
     glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int a, int b){
-        GameWindow::Resize(a, b); Mouse::SetWindowSize(a, b);
+        JargGameWindow::Resize(a, b); Mouse::SetWindowSize(a, b);
     });
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset){
         Mouse::Scroll(yoffset);
@@ -111,13 +111,12 @@ bool GameWindow::Init()
 
     batch = std::make_shared<SpriteBatch>();
 
-    fb = std::make_shared<FrameBuffer>();
     tex = std::make_shared<Texture>();
 
     ws = std::make_shared<WinS>(batch.get());
     ws->windows.push_back(new Win());
 
-    atlas.LoadAll("data/textures/");
+    atlas.LoadAll();
 
     auto bb = new Block({Chest()}, "block");
 
@@ -149,7 +148,7 @@ bool GameWindow::Init()
     ws->f = f12.get();
 }
 
-bool GameWindow::Destroy()
+bool JargGameWindow::Destroy()
 {
    database::drop();
    glfwDestroyWindow(window);
@@ -157,17 +156,17 @@ bool GameWindow::Destroy()
    return true;
 }
 
-bool GameWindow::Load()
+bool JargGameWindow::Load()
 {
     return true;
 }
 
-bool GameWindow::Unload()
+bool JargGameWindow::Unload()
 {
     return true;
 }
 
-void GameWindow::Update()
+void JargGameWindow::BaseUpdate()
 {
     glfwPollEvents();
 
@@ -209,7 +208,7 @@ void GameWindow::Update()
     Mouse::resetDelta();
 }
 
-void GameWindow::Draw()
+void JargGameWindow::BaseDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0,0,0,0);
@@ -224,9 +223,9 @@ void GameWindow::Draw()
     batch->renderText(string_format("ываыва ываы а ыва ыва ыва ва %s %s %s",
                                     std::to_string(me->pos).c_str(),
                                     std::to_string(level->block(me->pos)).c_str(),
-                                    std::to_string(cam).c_str()), 10, 100, f12.get(), WHITE);
+                                    std::to_string(cam).c_str()), 10, 100, f12.get(), Color::White);
 
-    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f12.get(), RED);
+    batch->renderText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
     //batch->drawQuad({0,0}, {1024,1024}, *f48->font.get(), WHITE);
     //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
@@ -280,26 +279,26 @@ void GameWindow::Draw()
     fps.Update(gt);
 }
 
-void GameWindow::Mainloop()
+void JargGameWindow::Mainloop()
 {
     int i =0;
     while(!glfwWindowShouldClose(window))
     {
-        Update();
-        Draw();
+        BaseUpdate();
+        BaseDraw();
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 
-void GameWindow::Resize(int w, int h)
+void JargGameWindow::Resize(int w, int h)
 {
     if(h == 0)
         h = 1;
     Settings::instance()->resolution = glm::vec2(w, h);
     glViewport(0, 0, w, h);
-    GameWindow::wi->proj = glm::mat4(1.f);
-    GameWindow::wi->proj = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
-    GameWindow::wi->model = glm::mat4(1.f);
+    JargGameWindow::wi->proj = glm::mat4(1.f);
+    JargGameWindow::wi->proj = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
+    JargGameWindow::wi->model = glm::mat4(1.f);
 }
 
-GameWindow *GameWindow::wi = nullptr;
+JargGameWindow *JargGameWindow::wi = nullptr;

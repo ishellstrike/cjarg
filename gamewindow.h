@@ -1,5 +1,5 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
+#ifndef JARGGAMEWINDOW_H
+#define JARGGAMEWINDOW_H
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -19,15 +19,15 @@
 #include "logic/base/database.h"
 #include "sge/font.h"
 
-class GameWindow {
+class JargGameWindow {
 public:
-    bool Init();
+    bool BaseInit();
     bool Destroy();
     bool Load();
     bool Unload();
 
-    void Update();
-    void Draw();
+    void BaseUpdate();
+    void BaseDraw();
 
     void Mainloop();
     GameTimer gt;
@@ -43,14 +43,14 @@ public:
     glm::vec3 cam;
 
     glm::mat4 view, proj, model;
-    static GameWindow *wi;
+    static JargGameWindow *wi;
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
 
     std::shared_ptr<Font> f12;
 
-    GameWindow();
-    ~GameWindow();
+    JargGameWindow();
+    ~JargGameWindow();
 
     std::shared_ptr<WinS> ws;
 
@@ -58,4 +58,4 @@ public:
     std::shared_ptr<SpriteBatch> batch;
 };
 
-#endif // GAMEWINDOW_H
+#endif // JARGGAMEWINDOW_H
