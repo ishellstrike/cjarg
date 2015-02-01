@@ -1,9 +1,9 @@
 #include "ui/win.h"
 #include <glm/glm.hpp>
 #include "ui/wins.h"
-#include "mouse.h"
+#include "sge/mouse.h"
 #include <vector>
-#include "colorextender.h"
+#include "sge/colorextender.h"
 #include "jhelper.inl"
 
 Win::Win(void) :
@@ -40,16 +40,16 @@ void Win::Draw() const
     SpriteBatch& sb = *WinS::sb;
 
     sb.drawRect(pos, size, col);
-    sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, WHITE);
+    sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, Color::White);
 
-    sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, WHITE);
-    sb.drawLine(pos + glm::vec2(0,20), glm::vec2(pos.x + size.x, pos.y + 20), 2, WHITE);
-    sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, WHITE);
-    sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, WHITE);
+    sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, Color::White);
+    sb.drawLine(pos + glm::vec2(0,20), glm::vec2(pos.x + size.x, pos.y + 20), 2, Color::White);
+    sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, Color::White);
+    sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, Color::White);
 
-    glm::vec2 s = sb.renderText("234234234", pos.x, pos.y, WinS::f, CLEAR);
+    glm::vec2 s = sb.renderText("234234234", pos.x, pos.y, WinS::f, Color::Clear);
 
-    sb.renderText("234234234", pos.x, pos.y + s.y, WinS::f, WHITE);
+    sb.renderText("234234234", pos.x, pos.y + s.y, WinS::f, Color::White);
 
     if(Items.size() > 0){
         for(unsigned int i=0; i< Items.size(); i++){

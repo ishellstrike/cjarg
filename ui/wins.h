@@ -1,12 +1,12 @@
 #ifndef WinS_h__
 #define WinS_h__
-#include "spritebatch.h"
-#include "jtexture.h"
+#include "sge/spritebatch.h"
+#include "sge/texture.h"
 #include <vector>
 #include "ui/win.h"
 #include <list>
 #include <glm/glm.hpp>
-#include "font.h"
+#include "sge/font.h"
 
 class WinS{
 public:

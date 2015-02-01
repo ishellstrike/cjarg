@@ -1,7 +1,7 @@
 #include "ui/wins.h"
 #include <vector>
 #include <list>
-#include "mouse.h"
+#include "sge/mouse.h"
 #include <string>
 
 WinS::WinS()

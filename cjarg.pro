@@ -7,28 +7,7 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     gamewindow.cpp \
-    mouse.cpp \
-    logger.cpp \
-    keyboard.cpp \
     settings.cpp \
-    jtexture.cpp \
-    spritebatch.cpp \
-    gametimer.cpp \
-    fpscounter.cpp \
-    jsonparser.cpp \
-    framebuffer.cpp \
-    jargshader.cpp \
-    texturegenerator.cpp \
-    json/json_internalarray.inl \
-    json/json_internalmap.inl \
-    json/json_valueiterator.inl \
-    json/json_reader.cpp \
-    json/json_value.cpp \
-    json/json_writer.cpp \
-    lodepng/lodepng.cpp \
-    pixmap.cpp \
-    textureatlas.cpp \
-    jhelper.inl \
     logic/map/sector.cpp \
     logic/map/block.cpp \
     logic/map/level.cpp \
@@ -38,36 +17,47 @@ SOURCES += main.cpp \
     ui/win.cpp \
     logic/base/database.cpp \
     logic/map/trivialgenerator.cpp \
-    miniz/miniz.c \
     logic/entity/creature.cpp \
     logic/agents/agent.cpp \
     logic/agents/chest.cpp \
     logic/agents/gamepart.cpp \
     logic/entity/item.cpp \
-    font.cpp \
-    spritebatch.cpp \
-    font.cpp
+    sge/basicjargshader.cpp \
+    sge/colorextender.cpp \
+    sge/cube.cpp \
+    sge/font.cpp \
+    sge/fpscounter.cpp \
+    sge/gametimer.cpp \
+    sge/gamewindow.cpp \
+    sge/helper.inl \
+    sge/icosahedron.cpp \
+    sge/keyboard.cpp \
+    sge/logger.cpp \
+    sge/main.cpp \
+    sge/material.cpp \
+    sge/mesh.cpp \
+    sge/mouse.cpp \
+    sge/pixmap.cpp \
+    sge/prefecences.cpp \
+    sge/shader.cpp \
+    sge/singleton.cpp \
+    sge/SphereTesselator.cpp \
+    sge/spritebatch.cpp \
+    sge/texture.cpp \
+    sge/textureatlas.cpp \
+    sge/vpnt.cpp \
+    sge/json/json_internalarray.inl \
+    sge/json/json_internalmap.inl \
+    sge/json/json_reader.cpp \
+    sge/json/json_value.cpp \
+    sge/json/json_valueiterator.inl \
+    sge/json/json_writer.cpp \
+    sge/lodepng/lodepng.cpp
 
 HEADERS += \
     gamewindow.h \
-    mouse.h \
-    keyboard.h \
-    logger.h \
     settings.h \
-    jtexture.h \
-    spritebatch.h \
-    gametimer.h \
-    fpscounter.h \
     jsonparser.h \
-    texturegenerator.h \
-    colorextender.h \
-    framebuffer.h \
-    jargshader.h \
-    json/*.h \
-    lodepng/lodepng.h \
-    pixmap.h \
-    textureatlas.h \
-    fielsystem.h \
     logic/map/*.h \
     ui/*.h \
     logic/base/database.h \
@@ -78,16 +68,45 @@ HEADERS += \
     logic/agents/chest.h \
     logic/agents/gamepart.h \
     logic/entity/item.h \
-    font.h \
-    cpputf/utf8/core.h \
-    cpputf/utf8/unchecked.h \
-    cpputf/utf8.h \
-    utfcpp/utf8.h \
-    utfcpp/utf8/checked.h \
-    utfcpp/utf8/core.h \
-    utfcpp/utf8/unchecked.h \
-    spritebatch.h \
-    font.h
+    sge/basicjargshader.h \
+    sge/colorextender.h \
+    sge/cube.h \
+    sge/fielsystem.h \
+    sge/font.h \
+    sge/fpscounter.h \
+    sge/gametimer.h \
+    sge/gamewindow.h \
+    sge/icosahedron.h \
+    sge/keyboard.h \
+    sge/logger.h \
+    sge/material.h \
+    sge/mesh.h \
+    sge/mouse.h \
+    sge/pixmap.h \
+    sge/prefecences.h \
+    sge/sge.h \
+    sge/shader.h \
+    sge/singleton.h \
+    sge/SphereTesselator.h \
+    sge/spritebatch.h \
+    sge/tangentcalc.h \
+    sge/texture.h \
+    sge/textureatlas.h \
+    sge/vpnt.h \
+    sge/json/autolink.h \
+    sge/json/config.h \
+    sge/json/features.h \
+    sge/json/forwards.h \
+    sge/json/json.h \
+    sge/json/json_batchallocator.h \
+    sge/json/reader.h \
+    sge/json/value.h \
+    sge/json/writer.h \
+    sge/lodepng/lodepng.h \
+    sge/utfcpp/utf8.h \
+    sge/utfcpp/utf8/checked.h \
+    sge/utfcpp/utf8/core.h \
+    sge/utfcpp/utf8/unchecked.h
 
 
 
@@ -227,3 +246,7 @@ OTHER_FILES += \
     data/json/basic.json \
     data/json/aaa.json \
     data/json/error.json
+
+SUBDIRS += \
+    sge/sge.pro \
+    sge/json/json.pro

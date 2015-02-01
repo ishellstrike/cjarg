@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "sector.h"
 #include "sectormap.h"
-#include "spritebatch.h"
+#include "sge/spritebatch.h"
 #include "levelworker.h"
 
 class Level

@@ -3,7 +3,7 @@
 
 #include <mutex>
 #include <glm/glm.hpp>
-#include "logger.h"
+#include "sge/logger.h"
 
 #define RESX (int)Settings::instance()->resolution.x
 #define RESY (int)Settings::instance()->resolution.y

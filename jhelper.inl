@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <logic/map/block.h>
-#include "colorextender.h"
+#include "sge/colorextender.h"
 
 #ifdef NDEBUG
 #define OPENGL_CHECK_ERRORS() \

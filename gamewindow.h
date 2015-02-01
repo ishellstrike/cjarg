@@ -7,18 +7,17 @@
 
 #include <memory>
 #include <string>
-#include "logger.h"
-#include "jargshader.h"
-#include "spritebatch.h"
-#include "framebuffer.h"
+#include "sge/logger.h"
+#include "sge/shader.h"
+#include "sge/spritebatch.h"
 #include "ui/wins.h"
-#include "fpscounter.h"
-#include "gametimer.h"
-#include "textureatlas.h"
+#include "sge/fpscounter.h"
+#include "sge/gametimer.h"
+#include "sge/textureatlas.h"
 #include "logic/map/level.h"
 #include "logic/map/levelworker.h"
 #include "logic/base/database.h"
-#include "font.h"
+#include "sge/font.h"
 
 class GameWindow {
 public:
@@ -45,7 +44,6 @@ public:
 
     glm::mat4 view, proj, model;
     static GameWindow *wi;
-    std::shared_ptr<FrameBuffer> fb;
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
 

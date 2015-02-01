@@ -1,6 +1,6 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-#include "logger.h"
+#include "sge/logger.h"
 #include <mutex>
 #include "logic/map/block.h"
 #include <unordered_map>

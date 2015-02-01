@@ -1,7 +1,7 @@
 #define GLM_SWIZZLE
 #include "level.h"
-#include "textureatlas.h"
-#include "colorextender.h"
+#include "sge/textureatlas.h"
+#include "sge/colorextender.h"
 #include "jhelper.inl"
 #include "settings.h"
 

@@ -1,5 +1,5 @@
 #include "database.h"
-#include "logger.h"
+#include "sge/logger.h"
 
 void database::registerBlock(std::string s, Block *b)
 {
