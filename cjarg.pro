@@ -27,12 +27,10 @@ SOURCES += main.cpp \
     sge/font.cpp \
     sge/fpscounter.cpp \
     sge/gametimer.cpp \
-    sge/gamewindow.cpp \
     sge/helper.inl \
     sge/icosahedron.cpp \
     sge/keyboard.cpp \
     sge/logger.cpp \
-    sge/main.cpp \
     sge/material.cpp \
     sge/mesh.cpp \
     sge/mouse.cpp \
@@ -86,7 +84,7 @@ HEADERS += \
 
 
 win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew32 -lglfw3dll -lfreetype
-unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread
+unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -lXcursor -lXinerama
 unix:INCLUDEPATH += /usr/include/freetype2
 INCLUDEPATH += $$PWD
 
