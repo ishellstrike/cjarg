@@ -43,7 +43,7 @@ bool JargGameWindow::BaseInit()
         LOG(error) << "glfwInit error " << glfwErrorCode;
         return false;
     }
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 16);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
@@ -229,7 +229,6 @@ void JargGameWindow::BaseDraw()
     glClearColor(0,0,0,0);
 
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
 
 

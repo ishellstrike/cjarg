@@ -15,10 +15,10 @@ void TrivialGenerator::Generate(Sector &s)
         float c = (((
                      simplexnoise(ii/32.f,jj/32.f) +
                      simplexnoise(ii/16.f,jj/16.f)/2.f +
-                     simplexnoise(ii/8.f,jj/8.f)/4.f)) * (float)RZ) + 5;
+                     simplexnoise(ii/8.f,jj/8.f)/4.f)) * (float)RZ) * 3.333f;
 
-        c = glm::max((char)c, (char)0);
-        c = glm::min((char)c, char(RZ - 2));
+        c = glm::max(c, 0.f);
+        c = glm::min(c, RZ - 2.f);
         s.ground[i][j] = c;
 
         for(int k=c; k>=0; k--)

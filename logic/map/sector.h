@@ -1,8 +1,8 @@
 #ifndef SECTOR_H
 #define SECTOR_H
-#define RX 64
-#define RY 64
-#define RZ 16
+#define RX 16
+#define RY 16
+#define RZ 256
 #define RXYZ RX*RY*RZ
 #include "block.h"
 #include <glm/glm.hpp>

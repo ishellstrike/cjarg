@@ -1,5 +1,6 @@
 #include "sector.h"
 #include "glm/gtx/transform.hpp"
+#include "sge/textureatlas.h"
 
 Sector::Sector()
 {
@@ -62,7 +63,7 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
 
         Jtex apos = blocks[i][j][k]->id();
         if(apos) continue;
-        apos = 73;
+        apos = TextureAtlas::refs["briwall1.png"];
         float qq = 32 / (float) mesh.material->texture->width;
         float ww = 32 / (float) mesh.material->texture->height;
         int inrow = mesh.material->texture->width / 32;
