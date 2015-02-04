@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include "sge/ClassicNoise.h"
 
 template<typename T> class Array2D
 {

@@ -49,7 +49,9 @@ SOURCES += main.cpp \
     sge/json/json_value.cpp \
     sge/json/json_valueiterator.inl \
     sge/json/json_writer.cpp \
-    sge/lodepng/lodepng.cpp
+    sge/lodepng/lodepng.cpp \
+    sge/camera.cpp \
+    sge/ClassicNoise.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -79,7 +81,9 @@ HEADERS += \
     sge/utfcpp/utf8/checked.h \
     sge/utfcpp/utf8/core.h \
     sge/utfcpp/utf8/unchecked.h \
-    sge/sge_geometry.h
+    sge/sge_geometry.h \
+    sge/camera.h \
+    sge/ClassicNoise.h
 
 
 
@@ -218,7 +222,8 @@ OTHER_FILES += \
     data/json/test_recipe.json \
     data/json/basic.json \
     data/json/aaa.json \
-    data/json/error.json
+    data/json/error.json \
+    data/shaders/minimal.glsl
 
 SUBDIRS += \
     sge/sge.pro \

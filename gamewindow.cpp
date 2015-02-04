@@ -59,7 +59,7 @@ bool JargGameWindow::BaseInit()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     int err = glewInit();
     if (err != GLEW_OK)
@@ -89,6 +89,9 @@ bool JargGameWindow::BaseInit()
         Keyboard::SetKey(key, scancode, action, mods);
     });
     Mouse::Initialize(window);
+    cam = std::make_shared<Camera>();
+    cam->SetPosition({40,40,-30});
+    cam->SetLookAt({0,0,0});
     Resize(RESX, RESY);
     //Mouse::SetFixedPosState(true);
     glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos){
@@ -136,7 +139,7 @@ bool JargGameWindow::BaseInit()
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
-    level->Preload({0,0}, 3);
+    level->Preload({0,0}, 10);
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
@@ -145,7 +148,6 @@ bool JargGameWindow::BaseInit()
     f12 = std::make_shared<Font>();
     f12->initFreeType(12);
     f12->renderAtlas();
-
 
     ws->f = f12.get();
 }
@@ -172,7 +174,6 @@ void JargGameWindow::BaseUpdate()
 {
     glfwPollEvents();
 
-
     if(Keyboard::isKeyDown(GLFW_KEY_UP))
         me->pos.y -= 0.1;
     if(Keyboard::isKeyDown(GLFW_KEY_DOWN))
@@ -182,11 +183,32 @@ void JargGameWindow::BaseUpdate()
     if(Keyboard::isKeyDown(GLFW_KEY_RIGHT))
         me->pos.x += 0.1;
 
+    if(Keyboard::isKeyDown(GLFW_KEY_W)){
+        cam->Move(FORWARD, &gt);
+    }
+    if(Keyboard::isKeyDown(GLFW_KEY_S)){
+        cam->Move(BACK, &gt);
+    }
+    if(Keyboard::isKeyDown(GLFW_KEY_A)){
+        cam->Move(LEFT, &gt);
+    }
+    if(Keyboard::isKeyDown(GLFW_KEY_D)){
+        cam->Move(RIGHT, &gt);
+    }
+
+    if(Keyboard::isKeyPress(GLFW_KEY_LEFT_CONTROL)){
+        Mouse::SetFixedPosState(!Mouse::GetFixedPosState());
+    }
+
+    if(Mouse::GetFixedPosState())
+        cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
+
+    cam->Update();
+
     auto bl = level->block(me->pos);
     //if(bl && bl->id() == 0)
        // me->pos.z -= 0.1;
     me->pos.z = level->ground(me->pos) + 1;
-    cam = me->pos;
 
     if(Mouse::isWheelUp())
     {
@@ -197,16 +219,7 @@ void JargGameWindow::BaseUpdate()
         level->zoom /= 1.1;
     }
 
-    if(Keyboard::isKeyDown(GLFW_KEY_PERIOD))
-        cam.z += 1;
-    if(Keyboard::isKeyDown(GLFW_KEY_COMMA))
-        cam.z -= 1;
-
-    cam.z = glm::max(cam.z, 0.f);
-    cam.z = glm::min(cam.z, (float)RZ);
-
     ws->Update();
-
     Mouse::resetDelta();
 }
 
@@ -214,67 +227,24 @@ void JargGameWindow::BaseDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0,0,0,0);
-    model = glm::mat4(1.f);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+
+
+    level->Render(cam->MVP);
+
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
     batch->setUniform(proj * model);
-
-    level->Draw(*batch, cam);
-
-
-
-
-    batch->drawText(string_format("ываыва ываы а ыва ыва ыва ва %s %s %s",
-                                    std::to_string(me->pos).c_str(),
-                                    std::to_string(level->block(me->pos)).c_str(),
-                                    std::to_string(cam).c_str()), 10, 100, f12.get(), Color::White);
+    batch->drawText(cam->getFullDebugDescription(), 10, 100, f12.get(), Color::White);
 
     batch->drawText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
-    //batch->drawQuad({0,0}, {1024,1024}, *f48->font.get(), WHITE);
-    //glfwSetWindowTitle(window, string_format("%d %g", fps.GetCount(), cam.z).c_str());
 
     ws->Draw();
     batch->render();
-
-    //Mesh m = Quad::GetMesh();
-
-//    BasicShader->Use();
-//    CameraSetup(BasicShader->program, *camera);
-//    PointLightSetup(BasicShader->program, light);
-//    light.position = glm::vec4(sin(gt->current/20.f)*800, 2, cos(gt->current/20.f)*800, 1);
-
-//    icos->World = glm::scale(mat4(1), vec3(0.0,0.0,0.0));
-//    icos->Render();
-
-//    //if(!rs->Loaded) {
-//        rs->Update(camera->position);
-//        glViewport(0, 0, width, height);
-//    //    rs->Loaded = true;
-//    //}//
-
-//    rs->Draw();
-
-
-//    glDisable(GL_DEPTH_TEST);
-//    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-
-//    auto MVP = camera->GetOrthoProjection();
-//    TextureShader->Use();
-//    glUniformMatrix4fv(mvpTex, 1, GL_FALSE, &MVP[0][0]);
-//    LinesShader->Use();
-//    glUniformMatrix4fv(mvpLine, 1, GL_FALSE, &MVP[0][0]);
-
-//    batched->DrawLine2d(glm::vec2(1), glm::vec2(10), Colors::White);
-//    batched->DrawCube3d(vec3(0), vec3(1), Colors::Red);
-//    batched->DrawString(vec2(100,100), MetersSpeedString(spd), Colors::Red, *font);
-//    spd *= 1.001;
-
-//    LinesShader->Use();
-//    glUniformMatrix4fv(mvpLine, 1, GL_FALSE, &camera->VP()[0][0]);
-//    test.RenderBounding(*batched);
-//    batched->RenderFinallyWorld();
-
-//    ws->Draw();
-
-//    batched->RenderFinally();
 
     glfwSwapBuffers(window);
     gt.Update(glfwGetTime());
@@ -288,7 +258,7 @@ void JargGameWindow::Mainloop()
     {
         BaseUpdate();
         BaseDraw();
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 
@@ -298,9 +268,12 @@ void JargGameWindow::Resize(int w, int h)
         h = 1;
     Prefecences::Instance()->resolution = glm::vec2(w, h);
     glViewport(0, 0, w, h);
-    JargGameWindow::wi->proj = glm::mat4(1.f);
+    cam->SetViewport(0, 0, w, h);
     JargGameWindow::wi->proj = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
+    JargGameWindow::wi->proj_per = glm::perspective(45.0f, w /(float) h, 0.1f, 1000.f);
     JargGameWindow::wi->model = glm::mat4(1.f);
+    JargGameWindow::wi->view = glm::lookAt(glm::vec3(70,70,-30), glm::vec3(0,0,0), glm::vec3(0,0,-1));
 }
 
 JargGameWindow *JargGameWindow::wi = nullptr;
+std::shared_ptr<Camera> JargGameWindow::cam;

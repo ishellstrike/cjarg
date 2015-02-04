@@ -39,23 +39,45 @@ void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam_)
                 int cur = glm::min(cam.z, (float)top);
                 if(id)
                     sb.drawQuadAtlas({i*zoom + secpos.x - cam.x, j*zoom + secpos.y - cam.y},
-                                     {zoom, zoom}, TextureAtlas::tex, jid, Color::White * (1 - glm::abs(cur - cam.z)/(float)RZ));
+                                     {zoom, zoom}, *TextureAtlas::tex, jid, Color::White * (1 - glm::abs(cur - cam.z)/(float)RZ));
             }
 
             for(Creature* c: pair.second->creatures)
             {
-                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, TextureAtlas::tex, 22, Color::White);
+                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, *TextureAtlas::tex, 22, Color::White);
             }
         }
     }
 }
 
+void Level::Render(const glm::mat4 &cam)
+{
+    for(SectorMapPair pair: active)
+    {
+        pair.second->mesh.Render(cam);
+    }
+}
+
 void Level::Preload(Point p, int r)
 {
+    basic = std::make_shared<BasicJargShader>();
+    basic->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/minimal.glsl");
+    basic->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/minimal.glsl");
+    basic->Link();
+    basic->Use();
+    basic->Afterlink();
+
+    mat = std::make_shared<Material>();
+    mat->texture = TextureAtlas::tex;
+    mat->normal = TextureAtlas::tex;
+
     for(int i=0;i<r;i++)
         for(int j=0;j<r;j++)
         {
-            active[Point(i, j)] = lw.getSector({i, j});
+            Sector *s = lw.getSector({i, j});
+            active[Point(i, j)] = s;
+            s->Rebuild(mat, basic);
+
         }
 }
 

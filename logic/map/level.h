@@ -6,6 +6,8 @@
 #include "sectormap.h"
 #include "sge/spritebatch.h"
 #include "levelworker.h"
+#include "sge/material.h"
+#include "sge/basicjargshader.h"
 
 class Level
 {
@@ -25,6 +27,9 @@ public:
 
     SectorMap active;
     LevelWorker &lw;
+    void Render(const glm::mat4 &cam);
+    std::shared_ptr<Material> mat;
+    std::shared_ptr<BasicJargShader> basic;
 };
 
 #endif // LEVEL_H

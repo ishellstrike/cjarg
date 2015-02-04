@@ -18,6 +18,7 @@
 #include "logic/map/levelworker.h"
 #include "logic/base/database.h"
 #include "sge/font.h"
+#include "sge/camera.h"
 
 class JargGameWindow {
 public:
@@ -40,12 +41,12 @@ public:
     TextureAtlas atlas;
     std::shared_ptr<Level> level;
     std::shared_ptr<LevelWorker> lworker;
-    glm::vec3 cam;
 
-    glm::mat4 view, proj, model;
+    glm::mat4 view, proj, proj_per, model = glm::mat4(1);
     static JargGameWindow *wi;
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
+    static std::shared_ptr<Camera> cam;
 
     std::shared_ptr<Font> f12;
 
@@ -54,7 +55,7 @@ public:
 
     std::shared_ptr<WinS> ws;
 
-    std::shared_ptr<JargShader> basic, font;
+    std::shared_ptr<BasicJargShader> basic, font;
     std::shared_ptr<SpriteBatch> batch;
 };
 
