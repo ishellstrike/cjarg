@@ -190,7 +190,7 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
     }
     mesh.Unindex();
     mesh.computeNormal();
-    mesh.CalcTB();
+    //mesh.CalcTB();
 
     state = UNBINDED;
     //mutex.unlock();

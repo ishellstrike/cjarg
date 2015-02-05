@@ -29,6 +29,7 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
             if(generator)
                 generator(*s);
             s->Rebuild(mat, basic);
+            std::this_thread::sleep_for(std::chrono::microseconds(10));
             LevelWorker::has_thread = false;
         });
         s->state = Sector::BUILDING;

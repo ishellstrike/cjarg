@@ -43,7 +43,7 @@ bool JargGameWindow::BaseInit()
         LOG(error) << "glfwInit error " << glfwErrorCode;
         return false;
     }
-    glfwWindowHint(GLFW_SAMPLES, 1);
+    glfwWindowHint(GLFW_SAMPLES, 16);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
@@ -127,7 +127,7 @@ bool JargGameWindow::BaseInit()
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
-    level->Preload({0,0}, 10);
+    level->Preload({0,0}, 6);
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
@@ -198,7 +198,7 @@ void JargGameWindow::BaseUpdate()
         cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
 
     cam->Update();
-    level->Preload({cam->position.x / RX, cam->position.y / RY}, 10);
+    level->Preload({cam->position.x / RX, cam->position.y / RY}, 6);
 
     auto bl = level->block(me->pos);
     //if(bl && bl->id() == 0)

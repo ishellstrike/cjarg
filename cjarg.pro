@@ -234,7 +234,9 @@ OTHER_FILES += \
     data/textures/grass4.png \
     data/textures/grass6.png \
     data/textures/grass7.png \
-    data/textures/conk1.png
+    data/textures/conk1.png \
+    data/shaders/normal.glsl \
+    data/textures/grass_m.png
 
 SUBDIRS += \
     sge/sge.pro \

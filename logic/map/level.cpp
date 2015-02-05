@@ -11,8 +11,8 @@ Level::Level(LevelWorker &lw_) :
     lw(lw_)
 {
     basic = std::make_shared<BasicJargShader>();
-    basic->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/minimal.glsl");
-    basic->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/minimal.glsl");
+    basic->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/normal.glsl");
+    basic->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/normal.glsl");
     basic->Link();
     basic->Use();
     basic->Afterlink();
@@ -42,7 +42,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
 
     for(auto beg = lw.mem.begin(); beg != lw.mem.end(); )
     {
-        if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 20)
+        if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 6)
         {
             lw.mem.erase(beg);
             break;
