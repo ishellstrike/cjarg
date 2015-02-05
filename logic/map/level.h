@@ -8,6 +8,7 @@
 #include "levelworker.h"
 #include "sge/material.h"
 #include "sge/basicjargshader.h"
+#include "sge/camera.h"
 
 class Level
 {
@@ -27,7 +28,7 @@ public:
 
     SectorMap active;
     LevelWorker &lw;
-    void Render(const glm::mat4 &cam);
+    void Render(std::shared_ptr<Camera> cam);
     std::shared_ptr<Material> mat;
     std::shared_ptr<BasicJargShader> basic;
 };

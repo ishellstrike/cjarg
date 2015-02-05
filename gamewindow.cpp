@@ -43,7 +43,7 @@ bool JargGameWindow::BaseInit()
         LOG(error) << "glfwInit error " << glfwErrorCode;
         return false;
     }
-    glfwWindowHint(GLFW_SAMPLES, 16);
+    glfwWindowHint(GLFW_SAMPLES, 1);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
@@ -90,7 +90,7 @@ bool JargGameWindow::BaseInit()
     });
     Mouse::Initialize(window);
     cam = std::make_shared<Camera>();
-    cam->SetPosition({40,40,-30});
+    cam->SetPosition({40,40,30});
     cam->SetLookAt({0,0,0});
     Resize(RESX, RESY);
     //Mouse::SetFixedPosState(true);
@@ -122,18 +122,6 @@ bool JargGameWindow::BaseInit()
 
     atlas.LoadAll();
 
-    auto bb = new Block({Chest()}, "block");
-
-    AGENT(bb, Chest)
-       LOG(info) << 123;
-    AGENTEND()
-
-    if( bb->getAgent<Chest>())
-    {
-         bb->getAgent<Chest>()->items.push_back(Item());
-    }
-
-    database::instance()->registerBlock("block", bb);
     //LOG(info) << bb->getAgent<Chest>()->items[0];
 
     lworker = std::make_shared<LevelWorker>();
@@ -143,7 +131,7 @@ bool JargGameWindow::BaseInit()
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
-    level->active[Point(0,0)]->creatures.push_back(me.get());
+    //level->active[Point(0,0)]->creatures.push_back(me.get());
 
     f12 = std::make_shared<Font>();
     f12->initFreeType(12);
@@ -200,10 +188,17 @@ void JargGameWindow::BaseUpdate()
         Mouse::SetFixedPosState(!Mouse::GetFixedPosState());
     }
 
+    if(Keyboard::isKeyDown(GLFW_KEY_LEFT_SHIFT)){
+        cam->camera_scale = 50.0F;
+    } else {
+        cam->camera_scale = 10.0F;
+    }
+
     if(Mouse::GetFixedPosState())
         cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
 
     cam->Update();
+    level->Preload({cam->position.x / RX, cam->position.y / RY}, 10);
 
     auto bl = level->block(me->pos);
     //if(bl && bl->id() == 0)
@@ -232,7 +227,7 @@ void JargGameWindow::BaseDraw()
     glEnable(GL_DEPTH_TEST);
 
 
-    level->Render(cam->MVP);
+    level->Render(cam);
 
 
     glDisable(GL_DEPTH_TEST);

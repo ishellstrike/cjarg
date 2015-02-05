@@ -2,7 +2,7 @@
 #define SECTOR_H
 #define RX 16
 #define RY 16
-#define RZ 256
+#define RZ 16
 #define RXYZ RX*RY*RZ
 #include "block.h"
 #include <glm/glm.hpp>
@@ -17,6 +17,13 @@
 
 struct Sector
 {
+    enum {
+        READY,
+        BUILDING,
+        EMPTY,
+        UNBINDED
+    };
+
     Sector();
     Sector(const Point &p);
     ~Sector();
@@ -28,12 +35,12 @@ struct Sector
     void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_);
 
     Block *blocks[RX][RY][RZ];
-    unsigned char ground[RX][RY];
     Point offset;
     std::vector<Creature*> creatures;
     std::vector<Item*> items;
 
     Mesh mesh;
+    int state = EMPTY;
 private:
 
     friend struct Generator;

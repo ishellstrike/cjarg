@@ -1,8 +1,16 @@
 #include "sector.h"
 #include "glm/gtx/transform.hpp"
 #include "sge/textureatlas.h"
+#include <mutex>
+#include "sge/logger.h"
+#include <thread>
+#include <chrono>
 
-Sector::Sector()
+Sector::Sector() :
+    mesh(),
+    creatures(),
+    items(),
+    blocks()
 {
     FORijk
     {
@@ -12,7 +20,11 @@ Sector::Sector()
 }
 
 Sector::Sector(const Point &p) :
-    offset(p)
+    offset(p),
+    mesh(),
+    creatures(),
+    items(),
+    blocks()
 {
     FORijk
     {
@@ -45,6 +57,9 @@ Block *Sector::block(const Point3 &p)
 
 void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_)
 {
+    //static std::mutex mutex;
+    //mutex.lock();
+
     mesh.Vertices.clear();
     mesh.Indices.clear();
     mesh.World = glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
@@ -62,8 +77,7 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         // 6 z +
 
         Jtex apos = blocks[i][j][k]->id();
-        if(apos) continue;
-        apos = TextureAtlas::refs["briwall1.png"];
+        if(!apos) continue;
         float qq = 32 / (float) mesh.material->texture->width;
         float ww = 32 / (float) mesh.material->texture->height;
         int inrow = mesh.material->texture->width / 32;
@@ -71,12 +85,12 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         float w = (apos / inrow) * ww;
         qq += q; ww += w;
 
-        if(j == 0 || blocks[i][j - 1][k]->id() != 0)
+        if(j == 0 || blocks[i][j - 1][k]->id() == 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i,     j,     k    }, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j,     k    }, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j,     k + 1}, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i    , j,     k + 1}, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i,     j,     k    }, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j,     k    }, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j,     k + 1}, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j,     k + 1}, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -88,12 +102,12 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         c+=4;
         }
 
-        if(i == RX - 1 || blocks[i+1][j][k]->id() != 0)
+        if(i == RX - 1 || blocks[i+1][j][k]->id() == 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i + 1, j,     k + 1}, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j,     k    }, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k    }, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k + 1}, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j,     k + 1}, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j,     k    }, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k    }, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k + 1}, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -105,12 +119,12 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         c+=4;
         }
 
-        if(i == 0 || blocks[i - 1][j][k]->id() != 0)
+        if(i == 0 || blocks[i - 1][j][k]->id() == 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i    , j,     k    }, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i    , j,     k + 1}, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k + 1}, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k    }, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j,     k    }, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j,     k + 1}, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k + 1}, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k    }, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -122,12 +136,12 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         c+=4;
         }
 
-        if(j == RY - 1 || blocks[i][j+1][k]->id() != 0)
+        if(j == RY - 1 || blocks[i][j+1][k]->id() == 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k    }, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k + 1}, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k + 1}, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k    }, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k    }, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k + 1}, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k + 1}, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k    }, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -139,12 +153,13 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         c+=4;
         }
 
-        if(k == 0 || blocks[i][j][k - 1]->id() != 0)
+        if(k == 0 || blocks[i][j][k - 1]->id() == 0)
+        if(k != 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i + 1, j    , k    }, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i    , j    , k    }, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k    }, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k    }, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j    , k    }, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j    , k    }, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k    }, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k    }, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -156,13 +171,12 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
         c+=4;
         }
 
-        if(k == RZ - 1 || blocks[i][j][k + 1]->id() != 0)
-        if(k != RZ - 1)
+        if(k == RZ - 1 || blocks[i][j][k + 1]->id() == 0)
         {
-        mesh.Vertices.push_back(VPNTBT({i    , j    , k + 1}, {q, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j    , k + 1}, {qq, w}));
-        mesh.Vertices.push_back(VPNTBT({i + 1, j + 1, k + 1}, {qq, ww}));
-        mesh.Vertices.push_back(VPNTBT({i    , j + 1, k + 1}, {q, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j    , k + 1}, {q, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j    , k + 1}, {qq, w}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i + 1, j + 1, k + 1}, {qq, ww}));
+        mesh.Vertices.push_back(VertPosNormTanBiTex({i    , j + 1, k + 1}, {q, ww}));
 
         mesh.Indices.push_back(c + 0);
         mesh.Indices.push_back(c + 1);
@@ -177,6 +191,8 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
     mesh.Unindex();
     mesh.computeNormal();
     mesh.CalcTB();
-    mesh.Bind();
+
+    state = UNBINDED;
+    //mutex.unlock();
 }
 

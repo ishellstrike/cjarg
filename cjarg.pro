@@ -223,7 +223,18 @@ OTHER_FILES += \
     data/json/basic.json \
     data/json/aaa.json \
     data/json/error.json \
-    data/shaders/minimal.glsl
+    data/shaders/minimal.glsl \
+    data/textures/asfalt.png \
+    data/textures/dirt1.png \
+    data/textures/grass1.png \
+    data/textures/asfalt_br.png \
+    data/textures/grass5.png \
+    data/textures/grass2.png \
+    data/textures/grass3.png \
+    data/textures/grass4.png \
+    data/textures/grass6.png \
+    data/textures/grass7.png \
+    data/textures/conk1.png
 
 SUBDIRS += \
     sge/sge.pro \

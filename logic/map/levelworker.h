@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include "sectormap.h"
 #include <functional>
+#include <future>
+#include <list>
 
 class LevelWorker
 {
@@ -12,12 +14,14 @@ public:
     LevelWorker();
     ~LevelWorker();
 
-    Sector *getSector(const Point &pos);
+    Sector *getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic);
     void SetGenerator(std::function<void(Sector&)> gen);
-
-private:
     SectorMap mem;
+private:
+
     std::function<void(Sector&)> generator;
+    std::future<void> threads;
+    static bool has_thread;
 };
 
 #endif // LEVELWORKER_H

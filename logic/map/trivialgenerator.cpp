@@ -2,6 +2,8 @@
 #include "diamondsquare.h"
 #include <glm/glm.hpp>
 #include "sge/ClassicNoise.h"
+#include <thread>
+#include "sge/textureatlas.h"
 
 void TrivialGenerator::Generate(Sector &s)
 {
@@ -12,16 +14,13 @@ void TrivialGenerator::Generate(Sector &s)
     {
         int ii = i + s.offset.x * RX;
         int jj = j + s.offset.y * RY;
-        float c = (((
-                     simplexnoise(ii/32.f,jj/32.f) +
-                     simplexnoise(ii/16.f,jj/16.f)/2.f +
-                     simplexnoise(ii/8.f,jj/8.f)/4.f)) * (float)RZ) * 3.333f;
+        float c = ((((simplexnoise(ii/32.f,jj/32.f) + simplexnoise(ii/8.f,jj/8.f) + simplexnoise(ii/16.f,jj/16.f) + simplexnoise(ii/64.f,jj/64.f)*3)/6.f)+1) * (float)RZ / 2.f);
 
         c = glm::max(c, 0.f);
         c = glm::min(c, RZ - 2.f);
-        s.ground[i][j] = c;
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
         for(int k=c; k>=0; k--)
-            s.blocks[i][j][k]->id(1);
+            s.blocks[i][j][k]->id((simplexnoise(ii,jj)+1) * TextureAtlas::refs.size()/2.f);
     }
 }

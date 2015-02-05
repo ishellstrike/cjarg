@@ -4,61 +4,11 @@
 #include "sge/colorextender.h"
 #include "jhelper.inl"
 #include "sge/prefecences.h"
+#include <future>
+#include "logic/map/trivialgenerator.h"
 
 Level::Level(LevelWorker &lw_) :
     lw(lw_)
-{
-}
-
-Level::~Level()
-{
-
-}
-
-void Level::Draw(SpriteBatch &sb, const glm::vec3 &cam_)
-{
-    auto cam = cam_*glm::vec3(zoom,zoom,1) - glm::vec3(RESX/2.f, RESY/2.f, 0.f);
-    //cam.z /= (float)RZ;
-    for(SectorMapPair pair: active)
-    {
-        Point off = pair.second->offset;
-        Point secpos = {off.x*zoom*RX, off.y*zoom*RY};
-        if(inLimsV(glm::vec2(secpos.x, secpos.y),
-                   glm::vec2(cam.x - zoom*RX,       cam.y - zoom*RY),
-                   glm::vec2(cam.x + RESX,        cam.y + RESY)))
-        {
-            FORij
-            {
-                int top = pair.second->ground[i][j];
-                int id = pair.second->blockId({i, j, top});
-                Jid jid = id;
-                if(cam.z <= top)
-                {
-                    jid = 5;
-                }
-                int cur = glm::min(cam.z, (float)top);
-                if(id)
-                    sb.drawQuadAtlas({i*zoom + secpos.x - cam.x, j*zoom + secpos.y - cam.y},
-                                     {zoom, zoom}, *TextureAtlas::tex, jid, Color::White * (1 - glm::abs(cur - cam.z)/(float)RZ));
-            }
-
-            for(Creature* c: pair.second->creatures)
-            {
-                sb.drawQuadAtlas(c->pos.xy() * zoom - cam.xy(), {zoom ,zoom}, *TextureAtlas::tex, 22, Color::White);
-            }
-        }
-    }
-}
-
-void Level::Render(const glm::mat4 &cam)
-{
-    for(SectorMapPair pair: active)
-    {
-        pair.second->mesh.Render(cam);
-    }
-}
-
-void Level::Preload(Point p, int r)
 {
     basic = std::make_shared<BasicJargShader>();
     basic->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/minimal.glsl");
@@ -70,14 +20,49 @@ void Level::Preload(Point p, int r)
     mat = std::make_shared<Material>();
     mat->texture = TextureAtlas::tex;
     mat->normal = TextureAtlas::tex;
+}
 
-    for(int i=0;i<r;i++)
-        for(int j=0;j<r;j++)
+Level::~Level()
+{
+
+}
+
+void Level::Render(std::shared_ptr<Camera> cam)
+{
+    int x = cam->position.x / RX;
+    int y = cam->position.y / RY;
+
+    for(auto &pair: lw.mem)
+    {
+        if(pair.second->state == Sector::READY)
         {
-            Sector *s = lw.getSector({i, j});
-            active[Point(i, j)] = s;
-            s->Rebuild(mat, basic);
+            pair.second->mesh.Render(cam->MVP);
+        }
+    }
 
+    for(auto beg = lw.mem.begin(); beg != lw.mem.end(); )
+    {
+        if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 20)
+        {
+            lw.mem.erase(beg);
+            break;
+        }
+        else
+        {
+            ++beg;
+        }
+    }
+}
+
+void Level::Preload(Point p, int r)
+{
+    for(int i=-r;i<r;i++)
+        for(int j=-r;j<r;j++)
+        {
+            if(glm::length(glm::vec2((float)i,(float)j) - glm::vec2(0.f, 0.f)) > r) continue;
+            Sector *s = lw.getSector({i + p.x, j + p.y}, mat, basic);
+            if(!s) continue;
+            //active[Point(i + p.x, j + p.y)] = s;
         }
 }
 
@@ -87,7 +72,7 @@ Block *Level::block(const Point3 &p)
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
     if(active.find({divx, divy}) == active.end())
         return nullptr;
-    Sector *sect = active[Point(divx, divy)];
+    auto &sect = active[Point(divx, divy)];
     return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
 }
 
@@ -97,7 +82,7 @@ Block *Level::block(const glm::vec3 &p)
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
     if(active.find({divx, divy}) == active.end())
         return nullptr;
-    Sector *sect = active[Point(divx, divy)];
+    auto &sect = active[Point(divx, divy)];
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
 }
 
@@ -107,7 +92,7 @@ unsigned char Level::ground(const glm::vec3 &p)
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
     if(active.find({divx, divy}) == active.end())
         return RZ;
-    Sector *sect = active[Point(divx, divy)];
-    return sect->ground[(int)p.x - divx * RX][(int)p.y - divy * RY];
+    auto &sect = active[Point(divx, divy)];
+    return 0;
 }
 
