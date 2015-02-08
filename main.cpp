@@ -12,10 +12,7 @@ int main()
 #endif
 {
     Dynamic a;
-    a.agents.push_back(Chest());
-    a.getDynamic<Chest>()->items.push_back(Item());
-    auto b = a;
-    b.getDynamic<Chest>()->items.push_back(Item());
+    a.agents.push_back(new Agent());
 
     JargGameWindow gw;
     gw.BaseInit();
