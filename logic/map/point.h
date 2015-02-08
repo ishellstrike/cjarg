@@ -72,6 +72,13 @@ public:
     }
 };
 
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 namespace std {
 
   template <>
@@ -79,8 +86,10 @@ namespace std {
   {
     std::size_t operator()(const Point& k) const
     {
-      return (hash<int>()(k.x)
-               ^ (hash<int>()(k.y) << 1));
+      size_t seed = 0;
+      hash_combine(seed, k.x);
+      hash_combine(seed, k.y);
+      return seed;
     }
   };
 

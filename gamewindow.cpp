@@ -36,6 +36,7 @@ bool JargGameWindow::BaseInit()
 {
     LOG(info) << "Jarg initialization start";
     LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
+    LOG(info) << "Hardware concurrency " << std::thread::hardware_concurrency();
     glfwSetErrorCallback([](int a,const char* description){LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
@@ -234,6 +235,7 @@ void JargGameWindow::BaseDraw()
     glDisable(GL_CULL_FACE);
     batch->setUniform(proj * model);
     batch->drawText(cam->getFullDebugDescription(), 10, 100, f12.get(), Color::White);
+    batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), 200, 100, f12.get(), Color::White);
 
     batch->drawText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
 

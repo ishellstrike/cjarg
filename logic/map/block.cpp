@@ -3,12 +3,11 @@
 
 Block::Block()
 {
-
 }
 
 Block::Block(std::vector<Caster> agents_, const std::string &id)
 {
-   agents = agents_;
+   dynamic_agents = agents_;
 }
 
 Block::~Block()

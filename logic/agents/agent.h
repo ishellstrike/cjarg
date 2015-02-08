@@ -3,86 +3,40 @@
 #include <string>
 #include <memory>
 
-class Caster
+class AgentBase
 {
 private:
-        static int next_typeid()
-        {
-            static int magic(0);
-            return magic++;
-        }
+    int id;
 
-        struct CasterValueBase
-        {
-            int id;
+    static int next_typeid()
+    {
+        static int static_id(0);
+        return static_id++;
+    }
+public:
 
-            CasterValueBase(const int m) :
-                id(m)
-            {
-            }
-
-            virtual ~CasterValueBase()
-            {
-            }
-        };
-
-        template <typename T_>
-        struct CasterValue :
-            CasterValueBase
-        {
-            T_ value;
-
-            CasterValue(const T_ & v) :
-                CasterValueBase(typeid_for<T_>()),
-                value(v)
-            {
-            }
-        };
-
-        std::shared_ptr<CasterValueBase> _value;
-
-private:
-
-    public:
-        template <typename T_>
-        static int typeid_for()
-        {
-            static int result(next_typeid());
-            return result;
-        }
-
-        template <typename T_>
-        Caster(const T_ &t) :
-            _value(new CasterValue<T_>(t))
-        {
-        }
-
-        template <typename T_>
-        T_ &as() const
-        {
-            auto reqid = typeid_for<T_>();
-            if (reqid != _value->id)
-                throw;
-            return std::static_pointer_cast<CasterValue<T_>>(_value)->value;
-        }
-
-        template <typename T_>
-        bool is() const
-        {
-            auto reqid = typeid_for<T_>();
-            if (reqid != _value->id)
-                return false;
-            return true;
-        }
+    template <typename T_>
+    static int typeid_for()
+    {
+        static int result(next_typeid());
+        return result;
+    }
 };
 
-class Agent
+class Agent : public  AgentBase
 {
 public:
-    Agent();
-    ~Agent();
 
-    //virtual const std::string type = "";
+
+    virtual Agent* instantiate();
+    static const std::string type = "Agent";
+};
+
+
+class StaticAgent : public  AgentBase
+{
+public:
+    static const std::string type = "StaticAgent";
 };
 
 #endif // AGENT_H

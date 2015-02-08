@@ -3,6 +3,7 @@
 #include "sge/logger.h"
 #include <mutex>
 #include "logic/map/block.h"
+#include "logic/entity/item.h"
 #include <unordered_map>
 
 class database
@@ -42,15 +43,16 @@ public:
     std::vector<Block*> block_db;
     void registerBlock(std::string s, Block* b);
 
+    std::unordered_map<std::string, Jid> item_pointer;
+    std::vector<Item*> item_db;
+    void registerItem(std::string s, Item* i);
+
+    void Load();
+
 private:
     static database *m_inst;
-    database(){}
-    ~database()
-    {
-        for(Block* block: block_db){
-            delete block;
-        }
-    }
+    database();
+    ~database();
     database(const database &root){}
     database &operator=(const database &){}
 };

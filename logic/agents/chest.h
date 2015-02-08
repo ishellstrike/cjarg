@@ -4,12 +4,10 @@
 #include "../entity/item.h"
 #include <vector>
 
-class Chest : public Agent
+struct Chest : public Agent
 {
-public:
     Chest();
     Chest(std::vector<Item> items_);
-    ~Chest();
 
     std::vector<Item> items;
 };

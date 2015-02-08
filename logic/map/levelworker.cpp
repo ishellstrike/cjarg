@@ -3,7 +3,7 @@
 
 LevelWorker::LevelWorker()
 {
-    threads = std::async([](){int i; i++;}); //stub
+    //threads = std::thread([](){int i; i++; return;}); //stub
 }
 
 LevelWorker::~LevelWorker()
@@ -12,6 +12,7 @@ LevelWorker::~LevelWorker()
 
 Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic)
 {
+
     SectorMap::iterator f = mem.find(pos);
     if(f == mem.end())
     {
@@ -21,17 +22,20 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     }
     auto &s = f->second;
 
-    if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY && !has_thread)
+    if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY)
     {
-        has_thread = true;
-        threads.get();
-        threads = std::async(std::launch::async, [&, mat, basic](){
+        threads = std::thread([&, mat, basic](){
+            static std::mutex lock;
+            lock.lock();
+
             if(generator)
                 generator(*s);
             s->Rebuild(mat, basic);
-            std::this_thread::sleep_for(std::chrono::microseconds(10));
-            LevelWorker::has_thread = false;
+            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            lock.unlock();
+            return;
         });
+        threads.detach();
         s->state = Sector::BUILDING;
         return nullptr;
     }
@@ -49,5 +53,5 @@ void LevelWorker::SetGenerator(std::function<void(Sector &)> gen)
     generator = gen;
 }
 
-bool LevelWorker::has_thread = false;
+volatile bool LevelWorker::has_thread = false;
 

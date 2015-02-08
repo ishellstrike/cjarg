@@ -31,12 +31,15 @@ void Level::Render(std::shared_ptr<Camera> cam)
 {
     int x = cam->position.x / RX;
     int y = cam->position.y / RY;
+    facecount = vertcount = 0;
 
     for(auto &pair: lw.mem)
     {
         if(pair.second->state == Sector::READY)
         {
             pair.second->mesh.Render(cam->MVP);
+            facecount += pair.second->facecount;
+            vertcount += pair.second->vertcount;
         }
     }
 
@@ -61,7 +64,7 @@ void Level::Preload(Point p, int r)
         {
             if(glm::length(glm::vec2((float)i,(float)j) - glm::vec2(0.f, 0.f)) > r) continue;
             Sector *s = lw.getSector({i + p.x, j + p.y}, mat, basic);
-            if(!s) continue;
+            //if(!s) continue;
             //active[Point(i + p.x, j + p.y)] = s;
         }
 }

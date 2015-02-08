@@ -20,8 +20,8 @@ public:
 private:
 
     std::function<void(Sector&)> generator;
-    std::future<void> threads;
-    static bool has_thread;
+    std::thread threads;
+    volatile static bool has_thread;
 };
 
 #endif // LEVELWORKER_H

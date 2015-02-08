@@ -3,7 +3,7 @@
 #include "../agents/gamepart.h"
 #include <glm/glm.hpp>
 
-class Creature : public GamePart
+class Creature : public Dynamic
 {
 public:
     Creature();

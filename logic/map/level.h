@@ -31,6 +31,8 @@ public:
     void Render(std::shared_ptr<Camera> cam);
     std::shared_ptr<Material> mat;
     std::shared_ptr<BasicJargShader> basic;
+
+    int vertcount, facecount;
 };
 
 #endif // LEVEL_H

@@ -21,6 +21,6 @@ void TrivialGenerator::Generate(Sector &s)
         //std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
         for(int k=c; k>=0; k--)
-            s.blocks[i][j][k]->id(TextureAtlas::refs["gravel.png"]);
+            s.blocks[i][j][k]->id(TextureAtlas::refs["grass_m.png"]);
     }
 }

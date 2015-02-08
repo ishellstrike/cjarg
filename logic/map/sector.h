@@ -29,6 +29,7 @@ struct Sector
     ~Sector();
     void blockId(const Point3 &p, Jid i);
     Jid blockId(const Point3 &p);
+    void Init();
 
     Block *block(const Point3 &p);
 
@@ -41,6 +42,7 @@ struct Sector
 
     Mesh mesh;
     int state = EMPTY;
+    int facecount = 0, vertcount = 0;
 private:
 
     friend struct Generator;

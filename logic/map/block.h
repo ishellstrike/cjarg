@@ -6,7 +6,7 @@
 typedef int Jid;
 typedef int Jtex;
 
-class Block : public GamePart
+class Block
 {
 public:
     Block();
@@ -23,6 +23,8 @@ public:
 
     void id(Jid id_);
     void tex(Jid tex_);
+
+    Dynamic *parts;
 
 private:
     Jid m_id = 0;

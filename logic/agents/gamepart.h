@@ -2,27 +2,29 @@
 #define GAMEPART_H
 #include "agent.h"
 #include <vector>
+#include "caster.h"
 
-#define AGENT(container, type) { auto part = container->getAgent<type>(); if (part) {
-#define AGENTEND() }}
+#define STATIC(container, type) { auto part = container->getStatic<type>(); if (part) {
+#define DYNAMIC(container, type) { auto part = container->getDynamic<type>(); if (part) {
+#define ACTIVE(container, type) { auto part = container->getActive<type>(); if (part) {
+#define END() }}
 
-class GamePart
+class Dynamic
 {
 public:
-    GamePart();
-    ~GamePart();
+    Dynamic();
+    ~Dynamic();
 
-    template <typename T>
-    T *getAgent(){
-        for(const Caster &c: agents)
-        {
-            if(c.is<T>())
-                return &c.as<T>();
-        }
-        return nullptr;
-    }
+    std::vector<Agent*> agents;
+};
 
-    std::vector<Caster> agents;
+class Static
+{
+public:
+    Static();
+    ~Static();
+
+    std::vector<StaticAgent*> static_agents;
 };
 
 #endif // GAMEPART_H

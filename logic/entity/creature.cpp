@@ -1,7 +1,7 @@
 #include "logic/entity/creature.h"
 
 Creature::Creature() :
-    GamePart()
+    Dynamic()
 {
 }
 

@@ -1,7 +1,7 @@
 #include "item.h"
 
 Item::Item() :
-    GamePart()
+    Dynamic()
 {
 }
 

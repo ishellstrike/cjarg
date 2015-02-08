@@ -1,10 +1,23 @@
-#include "gamepart.h"
 
 GamePart::GamePart()
 {
+
 }
 
+
 GamePart::~GamePart()
+{
+
+}
+
+
+StaticGamePart::StaticGamePart()
+{
+
+}
+
+
+StaticGamePart::~StaticGamePart()
 {
 
 }

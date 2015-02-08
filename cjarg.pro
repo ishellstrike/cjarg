@@ -51,7 +51,9 @@ SOURCES += main.cpp \
     sge/json/json_writer.cpp \
     sge/lodepng/lodepng.cpp \
     sge/camera.cpp \
-    sge/ClassicNoise.cpp
+    sge/ClassicNoise.cpp \
+    logic/agents/staticitem.cpp \
+    logic/agents/caster.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -83,7 +85,9 @@ HEADERS += \
     sge/utfcpp/utf8/unchecked.h \
     sge/sge_geometry.h \
     sge/camera.h \
-    sge/ClassicNoise.h
+    sge/ClassicNoise.h \
+    logic/agents/staticitem.h \
+    logic/agents/caster.h
 
 
 
