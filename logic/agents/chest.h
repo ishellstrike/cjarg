@@ -7,9 +7,11 @@
 struct Chest : public Agent
 {
     Chest();
-    Chest(std::vector<Item> items_);
+    Chest(std::vector<Item *> items_);
 
-    std::vector<Item> items;
+    std::vector<Item *> items;
+
+    Agent *instantiate() const;
 };
 
 #endif // CHEST_H

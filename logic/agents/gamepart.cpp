@@ -1,23 +1,39 @@
+#include "logic/agents/gamepart.h"
+Static::~Static()
+{
+    for(StaticAgent *a: static_agents)
+    {
+        delete a;
+    }
+}
 
-GamePart::GamePart()
+
+Static::Static()
 {
 
 }
 
 
-GamePart::~GamePart()
+Dynamic::Dynamic()
 {
 
 }
 
 
-StaticGamePart::StaticGamePart()
+Dynamic::~Dynamic()
 {
-
+    for(Agent *a: agents)
+    {
+        delete a;
+    }
 }
 
-
-StaticGamePart::~StaticGamePart()
+Dynamic *Dynamic::instantiate() const
 {
-
+    Dynamic *dyn = new Dynamic();
+    for(Agent *ag : agents)
+    {
+        dyn->agents.push_back(ag->instantiate());
+    }
+    return dyn;
 }

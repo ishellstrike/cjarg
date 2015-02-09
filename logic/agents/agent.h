@@ -3,15 +3,15 @@
 #include <string>
 #include <memory>
 
-class AgentBase
+class Agent
 {
 private:
     int id;
 
     static int next_typeid()
     {
-        static int static_id(0);
-        return static_id++;
+        static int next_id(0);
+        return next_id++;
     }
 public:
 
@@ -21,22 +21,17 @@ public:
         static int result(next_typeid());
         return result;
     }
-};
 
-class Agent : public  AgentBase
-{
-public:
-
-
-    virtual Agent* instantiate();
-    static const std::string type = "Agent";
+    virtual Agent* instantiate() const = 0;
+    const std::string type = "Agent";
 };
 
 
-class StaticAgent : public  AgentBase
+class StaticAgent : public  Agent
 {
 public:
-    static const std::string type = "StaticAgent";
+    const std::string type = "StaticAgent";
+    Agent *instantiate() const;
 };
 
 #endif // AGENT_H

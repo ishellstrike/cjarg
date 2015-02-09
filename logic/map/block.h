@@ -15,7 +15,7 @@ public:
      * \param a
      * \param agents_
      */
-    Block(std::vector<Caster> agents_, const std::string &id);
+    Block(std::vector<Agent *> &&agents_, const std::string &id);
     ~Block();
 
     Jid id();

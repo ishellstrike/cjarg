@@ -5,13 +5,16 @@ Block::Block()
 {
 }
 
-Block::Block(std::vector<Caster> agents_, const std::string &id)
+Block::Block(std::vector<Agent*> &&agents_, const std::string &id)
 {
-   dynamic_agents = agents_;
+   parts = new Dynamic();
+   parts->agents = agents_;
 }
 
 Block::~Block()
 {
+    if(parts)
+        delete parts;
 }
 
 Jid Block::id()

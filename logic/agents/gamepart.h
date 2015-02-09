@@ -9,18 +9,17 @@
 #define ACTIVE(container, type) { auto part = container->getActive<type>(); if (part) {
 #define END() }}
 
-class Dynamic
+struct Dynamic
 {
-public:
     Dynamic();
     ~Dynamic();
 
     std::vector<Agent*> agents;
+    Dynamic *instantiate() const;
 };
 
-class Static
+struct Static
 {
-public:
     Static();
     ~Static();
 

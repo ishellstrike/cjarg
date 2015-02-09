@@ -2,7 +2,7 @@
 #define ITEM_H
 #include "../agents/gamepart.h"
 
-class Item : public Dynamic
+class Item
 {
 public:
     Item();
