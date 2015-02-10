@@ -7,6 +7,10 @@ class Item
 public:
     Item();
     ~Item();
+
+    Jid id();
+
+private:
 };
 
 #endif // ITEM_H

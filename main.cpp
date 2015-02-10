@@ -11,12 +11,6 @@ int wmain(int argc, wchar_t *argv[])
 int main()
 #endif
 {
-    Dynamic *a = new Dynamic();
-    Chest *ch1 = new Chest();
-    a->agents.push_back(ch1);
-    Dynamic *b = a->instantiate();
-    ch1->items.push_back(new Item());
-
     JargGameWindow gw;
     gw.BaseInit();
     gw.Mainloop();

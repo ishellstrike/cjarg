@@ -52,8 +52,7 @@ SOURCES += main.cpp \
     sge/lodepng/lodepng.cpp \
     sge/camera.cpp \
     sge/ClassicNoise.cpp \
-    logic/agents/staticitem.cpp \
-    logic/agents/caster.cpp
+    logic/agents/staticitem.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -86,8 +85,7 @@ HEADERS += \
     sge/sge_geometry.h \
     sge/camera.h \
     sge/ClassicNoise.h \
-    logic/agents/staticitem.h \
-    logic/agents/caster.h
+    logic/agents/staticitem.h
 
 
 

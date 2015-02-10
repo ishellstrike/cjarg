@@ -5,16 +5,17 @@ Block::Block()
 {
 }
 
-Block::Block(std::vector<Agent*> &&agents_, const std::string &id)
+Block::Block(const std::vector<Agent*> &agents_, const std::string &id)
 {
    parts = new Dynamic();
-   parts->agents = agents_;
+   for(Agent* ag : agents_)
+   {
+       parts->agents.push_back(std::shared_ptr<Agent>(ag));
+   }
 }
 
 Block::~Block()
 {
-    if(parts)
-        delete parts;
 }
 
 Jid Block::id()

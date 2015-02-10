@@ -3,8 +3,6 @@
 #include <vector>
 #include <logic/agents/gamepart.h>
 #include "../agents/agent.h"
-typedef int Jid;
-typedef int Jtex;
 
 class Block
 {
@@ -15,7 +13,7 @@ public:
      * \param a
      * \param agents_
      */
-    Block(std::vector<Agent *> &&agents_, const std::string &id);
+    Block(const std::vector<Agent *> &agents_, const std::string &id);
     ~Block();
 
     Jid id();

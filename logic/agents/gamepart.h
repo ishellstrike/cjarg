@@ -2,19 +2,17 @@
 #define GAMEPART_H
 #include "agent.h"
 #include <vector>
-#include "caster.h"
+#include <memory>
 
-#define STATIC(container, type) { auto part = container->getStatic<type>(); if (part) {
-#define DYNAMIC(container, type) { auto part = container->getDynamic<type>(); if (part) {
-#define ACTIVE(container, type) { auto part = container->getActive<type>(); if (part) {
-#define END() }}
+typedef int Jid;
+typedef int Jtex;
 
 struct Dynamic
 {
     Dynamic();
     ~Dynamic();
 
-    std::vector<Agent*> agents;
+    std::vector<std::shared_ptr<Agent>> agents;
     Dynamic *instantiate() const;
 };
 
@@ -23,7 +21,7 @@ struct Static
     Static();
     ~Static();
 
-    std::vector<StaticAgent*> static_agents;
+    std::vector<std::shared_ptr<StaticAgent>> static_agents;
 };
 
 #endif // GAMEPART_H

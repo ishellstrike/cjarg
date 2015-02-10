@@ -25,14 +25,14 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY)
     {
         threads = std::thread([&, mat, basic](){
-            static std::mutex lock;
-            lock.lock();
+            //static std::mutex lock;
+            //lock.lock();
 
             if(generator)
                 generator(*s);
             s->Rebuild(mat, basic);
             //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            lock.unlock();
+            //lock.unlock();
             return;
         });
         threads.detach();
