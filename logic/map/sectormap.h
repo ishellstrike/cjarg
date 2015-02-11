@@ -5,7 +5,7 @@
 #include "point.h"
 #include <memory>
 
-typedef std::unordered_map<Point, std::unique_ptr<Sector>> SectorMap;
-typedef std::pair<Point, std::unique_ptr<Sector>> SectorMapPair;
+typedef std::unordered_map<Point, std::shared_ptr<Sector>> SectorMap;
+typedef std::pair<Point, std::shared_ptr<Sector>> SectorMapPair;
 
 #endif // SECTORMAP_H

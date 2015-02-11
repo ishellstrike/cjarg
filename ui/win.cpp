@@ -50,7 +50,7 @@ void Win::Draw() const
     sb.drawText("234234234", pos.x, pos.y, WinS::f, Color::White);
 
     if(Items.size() > 0){
-        for(unsigned int i=0; i< Items.size(); i++){
+        for(unsigned int i=0; i< Items.size(); ++i){
             Items[i]->Draw();
         }
     }
@@ -72,7 +72,7 @@ void Win::Update()
         dragged = false;
 
     if(Items.size() > 0){
-        for(unsigned int i=0; i< Items.size(); i++){
+        for(unsigned int i=0; i< Items.size(); ++i){
             Items[i]->Update(); 
         }
     }

@@ -57,16 +57,25 @@ const float cutoff = 0.9f;
 varying vec2 texcoordout;
 varying vec3 lightVec;
 varying vec3 normalout;
+const vec4 fog = vec4(100/255.f, 149/255.f, 237/255.f, 1.f);
+float density = 0.009;
+const float LOG2 = 1.442695;
 
 void main(void)
 {
-    float DiffuseFactor = dot(normalize(normalout), -lightVec) + 0.3;
+    float DiffuseFactor = dot(normalize(normalout), -lightVec);
+    vec4 col;
     if (DiffuseFactor > 0) {
-        gl_FragColor = DiffuseFactor * texture2D (material_texture, texcoordout);
+        col =  texture2D (material_texture, texcoordout)  * DiffuseFactor;
     }
     else {
-        gl_FragColor = vec4(0, 0, 0, 0);
+        col = texture2D (material_texture, texcoordout) * 0.3;
     }
-    gl_FragColor.a = 1;
+    float z = gl_FragCoord.z / gl_FragCoord.w;
+    float fogFactor = exp2( -density * density * z * z * LOG2 );
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+    col = mix(fog, col, fogFactor);
+    col.a = 1;
+    gl_FragColor = col;
 }
 #endif

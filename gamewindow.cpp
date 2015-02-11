@@ -128,7 +128,6 @@ bool JargGameWindow::BaseInit()
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
-    level->Preload({0,0}, 6);
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
@@ -139,6 +138,29 @@ bool JargGameWindow::BaseInit()
     f12->renderAtlas();
 
     ws->f = f12.get();
+
+    StaticBlock *ss = new StaticBlock();
+    ss->setTexture(0);
+    database::instance()->registerBlock("air", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture("mc_dirt.png");
+    database::instance()->registerBlock("dirt", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture(StaticBlock::SIDE_TOP, "mc_grass.png");
+    ss->setTexture(StaticBlock::SIDE_BOTTOM, "mc_dirt.png");
+    ss->setSideTexture("mc_grass_side.png");
+    database::instance()->registerBlock("grass", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture(StaticBlock::SIDE_FRONT, "f.png");
+    ss->setTexture(StaticBlock::SIDE_BACK, "b.png");
+    ss->setTexture(StaticBlock::SIDE_TOP, "t.png");
+    ss->setTexture(StaticBlock::SIDE_BOTTOM, "bot.png");
+    ss->setTexture(StaticBlock::SIDE_LEFT, "l.png");
+    ss->setTexture(StaticBlock::SIDE_RIGHT, "r.png");
+    database::instance()->registerBlock("test", ss);
 }
 
 bool JargGameWindow::Destroy()
@@ -173,16 +195,16 @@ void JargGameWindow::BaseUpdate()
         me->pos.x += 0.1;
 
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        cam->Move(FORWARD, &gt);
+        cam->Move(Camera::FORWARD, &gt);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        cam->Move(BACK, &gt);
+        cam->Move(Camera::BACK, &gt);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-        cam->Move(LEFT, &gt);
+        cam->Move(Camera::LEFT, &gt);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        cam->Move(RIGHT, &gt);
+        cam->Move(Camera::RIGHT, &gt);
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_LEFT_CONTROL)){
@@ -199,7 +221,8 @@ void JargGameWindow::BaseUpdate()
         cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
 
     cam->Update();
-    level->Preload({cam->position.x / RX, cam->position.y / RY}, 6);
+    cam->CalculateFrustum(cam->projection, cam->view * cam->model);
+    level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
 
     auto bl = level->block(me->pos);
     //if(bl && bl->id() == 0)
@@ -222,7 +245,7 @@ void JargGameWindow::BaseUpdate()
 void JargGameWindow::BaseDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0,0,0,0);
+    glClearColor(Color::CornflowerBlue.r,Color::CornflowerBlue.g,Color::CornflowerBlue.b,0);
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
@@ -237,7 +260,7 @@ void JargGameWindow::BaseDraw()
     batch->drawText(cam->getFullDebugDescription(), 10, 100, f12.get(), Color::White);
     batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), 200, 100, f12.get(), Color::White);
 
-    batch->drawText(std::to_string(fps.GetCount()), 50, 50, f12.get(), Color::Red);
+    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), 50, 50, f12.get(), Color::Red);
 
     ws->Draw();
     batch->render();

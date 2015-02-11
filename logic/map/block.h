@@ -17,12 +17,10 @@ public:
     ~Block();
 
     Jid id();
-    Jtex tex();
 
     void id(Jid id_);
-    void tex(Jid tex_);
 
-    Dynamic *parts;
+    Dynamic *parts = nullptr;
 
 private:
     Jid m_id = 0;

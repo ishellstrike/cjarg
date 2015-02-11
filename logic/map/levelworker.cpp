@@ -3,7 +3,7 @@
 
 LevelWorker::LevelWorker()
 {
-    //threads = std::thread([](){int i; i++; return;}); //stub
+    //threads = std::thread([](){int i; ++i; return;}); //stub
 }
 
 LevelWorker::~LevelWorker()
@@ -16,23 +16,19 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     SectorMap::iterator f = mem.find(pos);
     if(f == mem.end())
     {
-        Sector *s = new Sector(pos);
-        mem[pos] = std::unique_ptr<Sector>(s);
+        mem[pos] = std::make_shared<Sector>(pos);
         return nullptr;
     }
-    auto &s = f->second;
+    auto s = f->second;
 
-    if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY)
+    if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY && !has_thread)
     {
-        threads = std::thread([&, mat, basic](){
-            //static std::mutex lock;
-            //lock.lock();
-
+        has_thread = true;
+        threads = std::thread([&, mat, basic, s](){
             if(generator)
                 generator(*s);
             s->Rebuild(mat, basic);
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            //lock.unlock();
+            has_thread = false;
             return;
         });
         threads.detach();

@@ -37,6 +37,8 @@ void Level::Render(std::shared_ptr<Camera> cam)
     {
         if(pair.second->state == Sector::READY)
         {
+            glm::vec3 pos = glm::vec3(pair.second->offset.x*RX, pair.second->offset.y*RY, 0);
+            if(!cam->BoxWithinFrustum(pos,pos + glm::vec3(RX,RY,RZ))) continue;
             pair.second->mesh.Render(cam->MVP);
             facecount += pair.second->facecount;
             vertcount += pair.second->vertcount;
@@ -45,7 +47,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
 
     for(auto beg = lw.mem.begin(); beg != lw.mem.end(); )
     {
-        if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 6)
+        if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 7)
         {
             lw.mem.erase(beg);
             break;
@@ -59,8 +61,8 @@ void Level::Render(std::shared_ptr<Camera> cam)
 
 void Level::Preload(Point p, int r)
 {
-    for(int i=-r;i<r;i++)
-        for(int j=-r;j<r;j++)
+    for(int i=-r;i<r;++i)
+        for(int j=-r;j<r;++j)
         {
             if(glm::length(glm::vec2((float)i,(float)j) - glm::vec2(0.f, 0.f)) > r) continue;
             Sector *s = lw.getSector({i + p.x, j + p.y}, mat, basic);

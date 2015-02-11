@@ -1,7 +1,7 @@
 #ifndef SECTOR_H
 #define SECTOR_H
-#define RX 16
-#define RY 16
+#define RX 32
+#define RY 32
 #define RZ 16
 #define RXYZ RX*RY*RZ
 #include "block.h"
@@ -12,8 +12,8 @@
 #include "sge/mesh.h"
 #include "GL/glew.h"
 #include <memory>
-#define FORijk for(int i=0; i<RX; i++) for(int j=0; j<RY; j++) for (int k=0; k<RZ; k++)
-#define FORij for(int i=0; i<RX; i++) for(int j=0; j<RY; j++)
+#define FORijk for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j) for (int k=0; k<RZ; ++k)
+#define FORij for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j)
 
 struct Sector
 {

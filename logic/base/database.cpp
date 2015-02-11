@@ -2,9 +2,10 @@
 #include "sge/logger.h"
 #include "sge/prefecences.h"
 
-void database::registerBlock(std::string s, Block *b)
+void database::registerBlock(std::string s, StaticBlock *b)
 {
-    block_db.push_back(b);
+    block_db.push_back(std::unique_ptr<StaticBlock>(b));
+    block_back_pointer[block_db.size() - 1] = s;
     block_pointer[s] = block_db.size() - 1;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
@@ -28,10 +29,7 @@ database::database()
 
 database::~database()
 {
-    for(Block* block: block_db){
-        delete block;
-    }
-    for(Item* item: item_db){
+    for(Item *item: item_db){
         delete item;
     }
 }
