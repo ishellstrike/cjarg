@@ -256,7 +256,7 @@ void JargGameWindow::BaseDraw()
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    batch->setUniform(proj * model);
+    batch->setUniform(ortho_PM);
     batch->drawText(cam->getFullDebugDescription(), 10, 100, f12.get(), Color::White);
     batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), 200, 100, f12.get(), Color::White);
 
@@ -288,10 +288,7 @@ void JargGameWindow::Resize(int w, int h)
     Prefecences::Instance()->resolution = glm::vec2(w, h);
     glViewport(0, 0, w, h);
     cam->SetViewport(0, 0, w, h);
-    JargGameWindow::wi->proj = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
-    JargGameWindow::wi->proj_per = glm::perspective(45.0f, w /(float) h, 0.1f, 1000.f);
-    JargGameWindow::wi->model = glm::mat4(1.f);
-    JargGameWindow::wi->view = glm::lookAt(glm::vec3(70,70,-30), glm::vec3(0,0,0), glm::vec3(0,0,-1));
+    JargGameWindow::wi->ortho_PM = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
 }
 
 JargGameWindow *JargGameWindow::wi = nullptr;

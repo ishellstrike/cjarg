@@ -42,7 +42,7 @@ public:
     std::shared_ptr<Level> level;
     std::shared_ptr<LevelWorker> lworker;
 
-    glm::mat4 view, proj, proj_per, model = glm::mat4(1);
+    glm::mat4 ortho_PM;
     static JargGameWindow *wi;
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;

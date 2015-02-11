@@ -27,7 +27,6 @@ SOURCES += main.cpp \
     sge/font.cpp \
     sge/fpscounter.cpp \
     sge/gametimer.cpp \
-    sge/helper.inl \
     sge/icosahedron.cpp \
     sge/keyboard.cpp \
     sge/logger.cpp \
@@ -87,7 +86,8 @@ HEADERS += \
     sge/camera.h \
     sge/ClassicNoise.h \
     logic/agents/staticitem.h \
-    logic/map/staticblock.h
+    logic/map/staticblock.h \
+    sge/helper.h
 
 
 
