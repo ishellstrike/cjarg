@@ -12,10 +12,10 @@
 #include <thread>
 #include <chrono>
 #include "logic/map/trivialgenerator.h"
-#include "jhelper.inl"
 #include "logic/agents/agent.h"
 #include "logic/agents/chest.h"
 #include <future>
+#include "sge/helper.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -223,6 +223,7 @@ void JargGameWindow::BaseUpdate()
     cam->Update();
     cam->CalculateFrustum(cam->projection, cam->view * cam->model);
     level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
+    level->Update(cam);
 
     auto bl = level->block(me->pos);
     //if(bl && bl->id() == 0)

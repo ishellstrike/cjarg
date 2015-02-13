@@ -29,10 +29,14 @@ public:
     SectorMap active;
     LevelWorker &lw;
     void Render(std::shared_ptr<Camera> cam);
+    void Update(std::shared_ptr<Camera> cam);
     std::shared_ptr<Material> mat;
     std::shared_ptr<BasicJargShader> basic;
 
     int vertcount, facecount;
+    glm::vec3 selected;
+    bool finded;
+    Mesh selection;
 };
 
 #endif // LEVEL_H

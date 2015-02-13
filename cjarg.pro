@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     sge/camera.cpp \
     sge/ClassicNoise.cpp \
     logic/agents/staticitem.cpp \
-    logic/map/staticblock.cpp
+    logic/map/staticblock.cpp \
+    sge/helper.cpp
 
 HEADERS += \
     gamewindow.h \

@@ -43,6 +43,7 @@ struct Sector
     Mesh mesh;
     int state = EMPTY;
     int facecount = 0, vertcount = 0;
+    int is_outoffrustum = false;
 private:
 
     friend struct Generator;

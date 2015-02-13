@@ -4,7 +4,7 @@
 #include "sge/mouse.h"
 #include <vector>
 #include "sge/colorextender.h"
-#include "jhelper.inl"
+#include "sge/helper.h"
 
 Win::Win(void) :
     size(100, 100),

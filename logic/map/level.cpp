@@ -2,10 +2,15 @@
 #include "level.h"
 #include "sge/textureatlas.h"
 #include "sge/colorextender.h"
-#include "jhelper.inl"
 #include "sge/prefecences.h"
 #include <future>
 #include "logic/map/trivialgenerator.h"
+#include "sge/helper.h"
+#include "sge/logger.h"
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include "sge/mouse.h"
+#include "sge/cube.h"
 
 Level::Level(LevelWorker &lw_) :
     lw(lw_)
@@ -20,6 +25,11 @@ Level::Level(LevelWorker &lw_) :
     mat = std::make_shared<Material>();
     mat->texture = TextureAtlas::tex;
     mat->normal = TextureAtlas::tex;
+
+    selection = Cube::getMesh();
+    selection.material = mat;
+    selection.shader = basic;
+    selection.Bind();
 }
 
 Level::~Level()
@@ -37,8 +47,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
     {
         if(pair.second->state == Sector::READY)
         {
-            glm::vec3 pos = glm::vec3(pair.second->offset.x*RX, pair.second->offset.y*RY, 0);
-            if(!cam->BoxWithinFrustum(pos,pos + glm::vec3(RX,RY,RZ))) continue;
+            if(pair.second->is_outoffrustum) continue;
             pair.second->mesh.Render(cam->MVP);
             facecount += pair.second->facecount;
             vertcount += pair.second->vertcount;
@@ -57,6 +66,56 @@ void Level::Render(std::shared_ptr<Camera> cam)
             ++beg;
         }
     }
+    if(finded)
+    {
+        selection.World = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
+        selection.World = glm::translate(selection.World, selected);
+        selection.World = glm::scale(selection.World, glm::vec3(32,32,32));
+        selection.Render(cam->projection);
+    }
+}
+
+void Level::Update(std::shared_ptr<Camera> cam)
+{
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f), cam->model * cam->view, cam->projection,
+                                    cam->viewport);
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f), cam->model * cam->view, cam->projection,
+                                    cam->viewport);
+    glm::ray ray(near, far - near);
+
+    finded = false;
+    float len = INT_MAX;
+    for(auto &s: lw.mem)
+    {
+        glm::vec3 pos = glm::vec3(s.second->offset.x*RX, s.second->offset.y*RY, 0);
+        s.second->is_outoffrustum = !cam->BoxWithinFrustum(pos, pos + glm::vec3(RX,RY,RZ));
+        if(!s.second->is_outoffrustum)
+        {
+            bool inter = glm::intersect(ray, 0, 100000, pos, pos + glm::vec3(RX,RY,RZ));
+            if(inter) {
+                finded = true;
+                float t_len = glm::length(pos - cam->position);
+                if(t_len < len)
+                {
+                    len = t_len;
+                    selected = pos;
+                }
+            }
+        }
+    }
+
+//    if(inter) {
+//        FORijk
+//        {
+//            glm::vec3 pos2 = pos + glm::vec3(i,j,k);
+//            bool inter2 = glm::intersect(ray, 0, 100000, pos, pos + glm::vec3(1,1,1));
+//            if(inter2) {
+//            finded = true;
+//            selected = pos;
+//            LOG(info) << std::to_string(pos);
+//            }
+//        }
+//    }
 }
 
 void Level::Preload(Point p, int r)
