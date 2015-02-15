@@ -81,6 +81,8 @@ void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargSh
 
 void Sector::Rebuild()
 {
+    mesh.Vertices.clear();
+    mesh.Indices.clear();
     int c = 0;
     FORijk
     {

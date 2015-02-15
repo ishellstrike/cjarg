@@ -177,9 +177,9 @@ void PutLine3D(glm::vec3 &min, glm::vec3 &max, std::vector<glm::vec3> &points)
 
 void Level::Update(std::shared_ptr<Camera> cam)
 {
-    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f),  cam->model * cam->view, cam->projection,
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f),  cam->view * cam->model, cam->projection,
                                     cam->viewport);
-    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f),  cam->model * cam->view, cam->projection,
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f),  cam->view * cam->model , cam->projection,
                                     cam->viewport);
     glm::ray ray(near, far - near);
 
@@ -191,7 +191,7 @@ void Level::Update(std::shared_ptr<Camera> cam)
     }
 
     std::vector<glm::vec3> points;
-    auto farpos = ray.origin + ray.dir * (float) RX * 10.f;
+    auto farpos = ray.origin + ray.dir * (float) RX;
     PutLine3D(ray.origin, farpos, points);
 
     for(glm::vec3 &point : points)
