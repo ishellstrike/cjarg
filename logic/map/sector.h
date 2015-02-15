@@ -34,6 +34,7 @@ struct Sector
     Block *block(const Point3 &p);
 
     void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_);
+    void Rebuild();
 
     Block *blocks[RX][RY][RZ];
     Point offset;
@@ -43,7 +44,8 @@ struct Sector
     Mesh mesh;
     int state = EMPTY;
     int facecount = 0, vertcount = 0;
-    int is_outoffrustum = false;
+    bool is_outoffrustum = false;
+    bool rebuilding = false;
 private:
 
     friend struct Generator;

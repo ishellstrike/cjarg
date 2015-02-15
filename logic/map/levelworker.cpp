@@ -21,11 +21,11 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     }
     auto s = f->second;
 
-    if(s->mesh.Vertices.size() == 0 && s->state == Sector::EMPTY && !has_thread)
+    if(s->state == Sector::EMPTY && !has_thread)
     {
         has_thread = true;
         threads = std::thread([&, mat, basic, s](){
-            if(generator)
+            if(generator && !s->rebuilding)
                 generator(*s);
             s->Rebuild(mat, basic);
             has_thread = false;
@@ -38,6 +38,7 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     if(s->state == Sector::UNBINDED)
     {
         s->mesh.ForgetBind();
+        s->rebuilding = false;
         s->state = Sector::READY;
     }
 

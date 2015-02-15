@@ -154,6 +154,10 @@ bool JargGameWindow::BaseInit()
     database::instance()->registerBlock("grass", ss);
 
     ss = new StaticBlock();
+    ss->setTexture("error.png");
+    database::instance()->registerBlock("error", ss);
+
+    ss = new StaticBlock();
     ss->setTexture(StaticBlock::SIDE_FRONT, "f.png");
     ss->setTexture(StaticBlock::SIDE_BACK, "b.png");
     ss->setTexture(StaticBlock::SIDE_TOP, "t.png");
@@ -220,15 +224,15 @@ void JargGameWindow::BaseUpdate()
     if(Mouse::GetFixedPosState())
         cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
 
+    if(Mouse::IsLeftDown()){
+        //level->change_at({rand()%302,rand()%302,rand()%15}, 1);
+        level->change_at(level->selected, 3);
+    }
+
     cam->Update();
     cam->CalculateFrustum(cam->projection, cam->view * cam->model);
     level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
     level->Update(cam);
-
-    auto bl = level->block(me->pos);
-    //if(bl && bl->id() == 0)
-       // me->pos.z -= 0.1;
-    me->pos.z = level->ground(me->pos) + 1;
 
     if(Mouse::isWheelUp())
     {

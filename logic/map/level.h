@@ -21,6 +21,9 @@ public:
 
     Block *block(const Point3 &p);
     Block *block(const glm::vec3 &p);
+    std::shared_ptr<Sector> sectorContains(const glm::vec3 &p);
+    bool change_at(const Point3 &p, const std::string &id);
+    bool change_at(const Point3 &p, Jid id);
 
     unsigned char ground(const glm::vec3 &p);
 

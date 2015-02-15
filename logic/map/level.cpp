@@ -1,4 +1,4 @@
-#define GLM_SWIZZLE
+//#define GLM_SWIZZLE
 #include "level.h"
 #include "sge/textureatlas.h"
 #include "sge/colorextender.h"
@@ -11,6 +11,7 @@
 #include <glm/gtx/transform.hpp>
 #include "sge/mouse.h"
 #include "sge/cube.h"
+#include "logic/base/database.h"
 
 Level::Level(LevelWorker &lw_) :
     lw(lw_)
@@ -19,14 +20,15 @@ Level::Level(LevelWorker &lw_) :
     basic->loadShaderFromSource(GL_VERTEX_SHADER, "data/shaders/normal.glsl");
     basic->loadShaderFromSource(GL_FRAGMENT_SHADER, "data/shaders/normal.glsl");
     basic->Link();
-    basic->Use();
     basic->Afterlink();
 
     mat = std::make_shared<Material>();
     mat->texture = TextureAtlas::tex;
     mat->normal = TextureAtlas::tex;
 
-    selection = Cube::getMesh();
+    selection = Mesh(*Cube::getMesh());
+    //selection.Unindex();
+    //selection.computeNormal();
     selection.material = mat;
     selection.shader = basic;
     selection.Bind();
@@ -45,7 +47,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
 
     for(auto &pair: lw.mem)
     {
-        if(pair.second->state == Sector::READY)
+        if(pair.second->state == Sector::READY || pair.second->rebuilding)
         {
             if(pair.second->is_outoffrustum) continue;
             pair.second->mesh.Render(cam->MVP);
@@ -68,54 +70,140 @@ void Level::Render(std::shared_ptr<Camera> cam)
     }
     if(finded)
     {
-        selection.World = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
-        selection.World = glm::translate(selection.World, selected);
-        selection.World = glm::scale(selection.World, glm::vec3(32,32,32));
-        selection.Render(cam->projection);
+
+        //selection.World = glm::scale(glm::mat4(1), glm::vec3(1.01f,1.01f,1.01f));
+        selection.World = glm::translate(glm::mat4(1), selected);
+        //selection.World = glm::scale(selection.World, glm::vec3(1.01f,1.01f,1.01f));
+        //selection.Render(cam->MVP);
     }
 }
 
+glm::vec3 SubdivideCheck(const glm::vec3 &min, const glm::vec3 &max, const glm::ray &ray)
+{
+    if(glm::length(min - max) < 2) return min;
+
+    auto halfsize =  (max - min) / 2.f;
+
+    // -- top layer
+    // (0,0,0)
+    glm::vec3 new_min = min;
+    glm::vec3 new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (1,0,0)
+    new_min = min + glm::vec3(halfsize.x, 0, 0);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (0,1,0)
+    new_min = min + glm::vec3(0, halfsize.y, 0);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (1,1,0)
+    new_min = min + glm::vec3(halfsize.x, halfsize.y, 0);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+
+    // -- bottom layer
+    // (0,0,1)
+    new_min = min;
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (1,0,1)
+    new_min = min + glm::vec3(halfsize.x, 0, halfsize.z);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (0,1,1)
+    new_min = min + glm::vec3(0, halfsize.y, halfsize.z);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+    // (1,1,1)
+    new_min = min + glm::vec3(halfsize.x, halfsize.y, halfsize.z);
+    new_max = new_min + halfsize;
+    if(glm::intersect(ray, 0, RX, new_min, new_max))
+        return SubdivideCheck(new_min, new_max, ray);
+
+    return glm::vec3(0);
+}
+void PutLine3D(glm::vec3 &min, glm::vec3 &max, std::vector<glm::vec3> &points)
+{
+    int x1 = (int)min.x;
+    int y1 = (int)min.y;
+    int z1 = (int)min.z;
+    int x2 = (int)max.x;
+    int y2 = (int)max.y;
+    int z2 = (int)max.z;
+    int dx = abs(x2-x1);
+    int dy = abs(y2-y1);
+    int dz = abs(z2-z1);
+    int sx = (x2>=x1)?1:-1;
+    int sy = (y2>=y1)?1:-1;
+    int sz = (z2>=z1)?1:-1;
+    int d1,d2,d;
+    int dd1,dd2,dd;
+    int x,y,z,i;
+    points.push_back(glm::vec3(x1,y1,z1));
+    d = (dy<<1)-dx;
+    d1 = dy<<1;
+    d2 = (dy-dx)<<1;
+    dd = (dz<<1)-dy;
+    dd1 = dz<<1;
+    dd2 = (dz-dy)<<1;
+    x=x1+sx; y=y1; z=z1;
+    for (i=1; i<=dx; i++, x+=sx)
+    {
+        if (d>0)
+        {
+            d+=d2; y+=sy;
+            if (dd>0)
+            {
+                dd+=dd2;
+                z+=sz;
+            }
+            else
+                dd+=dd1;
+        }
+        else
+            d+=d1;
+        points.push_back(glm::vec3(x,y,z));
+    };
+}
+
+
 void Level::Update(std::shared_ptr<Camera> cam)
 {
-    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f), cam->model * cam->view, cam->projection,
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
-    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f), cam->model * cam->view, cam->projection,
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
     glm::ray ray(near, far - near);
 
     finded = false;
-    float len = INT_MAX;
     for(auto &s: lw.mem)
     {
         glm::vec3 pos = glm::vec3(s.second->offset.x*RX, s.second->offset.y*RY, 0);
         s.second->is_outoffrustum = !cam->BoxWithinFrustum(pos, pos + glm::vec3(RX,RY,RZ));
-        if(!s.second->is_outoffrustum)
-        {
-            bool inter = glm::intersect(ray, 0, 100000, pos, pos + glm::vec3(RX,RY,RZ));
-            if(inter) {
-                finded = true;
-                float t_len = glm::length(pos - cam->position);
-                if(t_len < len)
-                {
-                    len = t_len;
-                    selected = pos;
-                }
-            }
-        }
     }
 
-//    if(inter) {
-//        FORijk
-//        {
-//            glm::vec3 pos2 = pos + glm::vec3(i,j,k);
-//            bool inter2 = glm::intersect(ray, 0, 100000, pos, pos + glm::vec3(1,1,1));
-//            if(inter2) {
-//            finded = true;
-//            selected = pos;
-//            LOG(info) << std::to_string(pos);
-//            }
-//        }
-//    }
+    std::vector<glm::vec3> points;
+    auto farpos = ray.origin + ray.dir * (float) RX * 10.f;
+    PutLine3D(ray.origin, farpos, points);
+
+    for(glm::vec3 &point : points)
+    {
+        if(point.z >= RZ - 1 || point.z < 0) continue;
+        if(block(point) && block(point)->id() != 0)
+        {
+            finded = true;
+            selected = point;
+            break;
+        }
+    }
 }
 
 void Level::Preload(Point p, int r)
@@ -134,9 +222,9 @@ Block *Level::block(const Point3 &p)
 {
     int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
-    if(active.find({divx, divy}) == active.end())
+    if(lw.mem.find({divx, divy}) == lw.mem.end())
         return nullptr;
-    auto &sect = active[Point(divx, divy)];
+    auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
 }
 
@@ -144,19 +232,49 @@ Block *Level::block(const glm::vec3 &p)
 {
     int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
-    if(active.find({divx, divy}) == active.end())
+    if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
         return nullptr;
-    auto &sect = active[Point(divx, divy)];
+    auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
+}
+
+std::shared_ptr<Sector> Level::sectorContains(const glm::vec3 &p)
+{
+    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
+    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
+        return nullptr;
+    return lw.mem[Point(divx, divy)];
+}
+
+bool Level::change_at(const Point3 &p, const std::string &id)
+{
+    return change_at(p, database::instance()->block_pointer(id));
+}
+
+bool Level::change_at(const Point3 &p, Jid id)
+{
+    if(block(p)) {
+        int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
+        int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+        if(lw.mem.find({divx, divy}) == lw.mem.end())
+            return false;
+        auto sect = lw.mem[Point(divx, divy)];
+        sect->block({p.x - divx * RX, p.y - divy * RY, p.z})->id(id);
+        sect->rebuilding = true;
+        sect->state = Sector::EMPTY;
+
+        return true;
+    }
+    return false;
 }
 
 unsigned char Level::ground(const glm::vec3 &p)
 {
     int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
     int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
-    if(active.find({divx, divy}) == active.end())
+    if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
         return RZ;
-    auto &sect = active[Point(divx, divy)];
+    auto &sect = lw.mem[Point(divx, divy)];
     return 0;
 }
-

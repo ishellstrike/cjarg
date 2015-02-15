@@ -18,7 +18,7 @@ public:
     StaticBlock();
     ~StaticBlock();
 
-    Jtex tex[6] = {0,0,0,0,0,0};
+    Jtex tex[6];
     std::unique_ptr<Block> etalon;
 
     void setTexture(SIDE side, std::string tex_);
