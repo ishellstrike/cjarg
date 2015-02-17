@@ -46,6 +46,7 @@ struct Sector
     int facecount = 0, vertcount = 0;
     bool is_outoffrustum = false;
     bool rebuilding = false;
+    bool rebuild_later = false;
 private:
 
     friend struct Generator;

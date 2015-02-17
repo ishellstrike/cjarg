@@ -38,8 +38,12 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     if(s->state == Sector::UNBINDED)
     {
         s->mesh.ForgetBind();
-        s->rebuilding = false;
         s->state = Sector::READY;
+        if(!s->rebuild_later)
+            s->rebuilding = false;
+        else
+            s->state = Sector::EMPTY;
+        s->rebuild_later = false;
     }
 
     return s->state == Sector::READY ? s.get() : nullptr;

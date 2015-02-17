@@ -37,7 +37,6 @@ SOURCES += main.cpp \
     sge/prefecences.cpp \
     sge/shader.cpp \
     sge/singleton.cpp \
-    sge/SphereTesselator.cpp \
     sge/spritebatch.cpp \
     sge/texture.cpp \
     sge/textureatlas.cpp \
@@ -53,7 +52,8 @@ SOURCES += main.cpp \
     sge/ClassicNoise.cpp \
     logic/agents/staticitem.cpp \
     logic/map/staticblock.cpp \
-    sge/helper.cpp
+    sge/helper.cpp \
+    sge/spheretesselator.cpp
 
 HEADERS += \
     gamewindow.h \

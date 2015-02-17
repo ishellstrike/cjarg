@@ -53,6 +53,8 @@ public:
     JargGameWindow();
     ~JargGameWindow();
 
+    std::chrono::steady_clock::time_point tiker;
+
     std::shared_ptr<WinS> ws;
 
     std::shared_ptr<BasicJargShader> basic, font;

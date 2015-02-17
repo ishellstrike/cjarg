@@ -165,6 +165,8 @@ bool JargGameWindow::BaseInit()
     ss->setTexture(StaticBlock::SIDE_LEFT, "l.png");
     ss->setTexture(StaticBlock::SIDE_RIGHT, "r.png");
     database::instance()->registerBlock("test", ss);
+
+    tiker = std::chrono::steady_clock::now();
 }
 
 bool JargGameWindow::Destroy()
@@ -282,7 +284,8 @@ void JargGameWindow::Mainloop()
     {
         BaseUpdate();
         BaseDraw();
-        //std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        tiker += std::chrono::microseconds(100000/6);
+        std::this_thread::sleep_until(tiker);
     }
 }
 

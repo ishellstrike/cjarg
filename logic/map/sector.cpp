@@ -83,7 +83,7 @@ void Sector::Rebuild()
 {
     mesh.Vertices.clear();
     mesh.Indices.clear();
-    int c = 0;
+    register int c = 0;
     FORijk
     {
         // 1 y -
@@ -93,9 +93,9 @@ void Sector::Rebuild()
         // 5 z -
         // 6 z +
 
-        Jtex apos = blocks[i][j][k]->id();
+        register Jtex apos = blocks[i][j][k]->id();
         if(!apos) continue;
-        float qq,ww,q,w;
+        register float qq,ww,q,w;
 
         if(j == 0 || blocks[i][j - 1][k]->id() == 0)
         {

@@ -1,4 +1,4 @@
-//#define GLM_SWIZZLE
+#define GLM_SWIZZLE
 #include "level.h"
 #include "sge/textureatlas.h"
 #include "sge/colorextender.h"
@@ -70,11 +70,13 @@ void Level::Render(std::shared_ptr<Camera> cam)
     }
     if(finded)
     {
-
+        selection.Bind();
         //selection.World = glm::scale(glm::mat4(1), glm::vec3(1.01f,1.01f,1.01f));
-        selection.World = glm::translate(glm::mat4(1), selected);
-        //selection.World = glm::scale(selection.World, glm::vec3(1.01f,1.01f,1.01f));
-        //selection.Render(cam->MVP);
+        selection.World = glm::translate(glm::mat4(1), selected + glm::vec3(0.5,0.5,0.5));
+        selection.World = glm::scale(selection.World, glm::vec3(1.1f,1.1f,1.1f));
+        glDisable(GL_DEPTH_TEST);
+        selection.Render(cam->MVP);
+        glEnable(GL_DEPTH_TEST);
     }
 }
 
@@ -130,56 +132,120 @@ glm::vec3 SubdivideCheck(const glm::vec3 &min, const glm::vec3 &max, const glm::
 
     return glm::vec3(0);
 }
-void PutLine3D(glm::vec3 &min, glm::vec3 &max, std::vector<glm::vec3> &points)
+
+void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
 {
-    int x1 = (int)min.x;
-    int y1 = (int)min.y;
-    int z1 = (int)min.z;
-    int x2 = (int)max.x;
-    int y2 = (int)max.y;
-    int z2 = (int)max.z;
-    int dx = abs(x2-x1);
-    int dy = abs(y2-y1);
-    int dz = abs(z2-z1);
-    int sx = (x2>=x1)?1:-1;
-    int sy = (y2>=y1)?1:-1;
-    int sz = (z2>=z1)?1:-1;
-    int d1,d2,d;
-    int dd1,dd2,dd;
-    int x,y,z,i;
-    points.push_back(glm::vec3(x1,y1,z1));
-    d = (dy<<1)-dx;
-    d1 = dy<<1;
-    d2 = (dy-dx)<<1;
-    dd = (dz<<1)-dy;
-    dd1 = dz<<1;
-    dd2 = (dz-dy)<<1;
-    x=x1+sx; y=y1; z=z1;
-    for (i=1; i<=dx; i++, x+=sx)
+    int x = p1.x;
+    int y = p1.y;
+    int z = p1.z;
+    int dx = glm::abs(p2.x-x);
+    int dy = glm::abs(p2.y-y);
+    int dz = glm::abs(p2.z-z);
+    int sx = glm::sign(p2.x-x);
+    int sy = glm::sign(p2.y-y);
+    int sz = glm::sign(p2.z-z);
+
+    if( (dy>=dx) && (dy>=dz) )
     {
-        if (d>0)
+        register int e_yx = (dx-dy) << 1;
+        register int e_yz = (dz-dy) << 1;
+
+        e_yx -= (e_yx >> 1);
+        e_yz -= (e_yz >> 1);
+
+        for(register int i=0;i<dy;i++)
         {
-            d+=d2; y+=sy;
-            if (dd>0)
+            points.push_back(glm::vec3(x,y,z));
+            if(e_yx>=0)
             {
-                dd+=dd2;
-                z+=sz;
+                x += sx;
+                e_yx -= (dy << 1);
+                points.push_back(glm::vec3(x,y,z));
             }
-            else
-                dd+=dd1;
+
+            if(e_yz>=0)
+            {
+                z += sz;
+                e_yz -= (dy << 1);
+                points.push_back(glm::vec3(x,y,z));
+            }
+
+            y += sy;
+            e_yx += (dx << 1);
+            e_yz += (dz << 1);
         }
-        else
-            d+=d1;
-        points.push_back(glm::vec3(x,y,z));
-    };
+    }
+    else if( (dx>=dy) && (dx>=dz) )
+    {
+        register int e_xy = (dy-dx) << 1;
+        register int e_xz = (dz-dx) << 1;
+
+        e_xz -= (e_xz >> 1);
+        e_xy -= (e_xy >> 1);
+
+        for(register int i=0;i<dx;i++)
+        {
+            points.push_back(glm::vec3(x,y,z));
+
+            if(e_xy>=0)
+            {
+                y += sy;
+                e_xy -= (dx << 1);
+                points.push_back(glm::vec3(x,y,z));
+            }
+
+            if(e_xz>=0)
+            {
+                z += sz;
+                e_xz -= (dx << 1);
+                points.push_back(glm::vec3(x,y,z));
+            }
+            x += sx;
+            e_xy +=(dy << 1);
+            e_xz +=(dz << 1);
+        }
+    }
+    else // (dz>=dy) && (dz>=dx)
+    {
+        register int e_zx = (dx-dz) << 1;
+        register int e_zy = (dy-dz) << 1;
+
+        e_zx -= (e_zx >> 1);
+        e_zy -= (e_zy >> 1);
+
+        for(register int i=0;i<dz;i++)
+        {
+            points.push_back(glm::vec3(x,y,z));
+
+            if(e_zx>=0)
+            {
+                x += sx;
+                e_zx -= (dz << 1);
+                points.push_back(glm::vec3(x,y,z));
+            }
+            if(e_zy>=0)
+            {
+                y += sy;
+                e_zy -= (dz << 1);
+                points.push_back(glm::vec3(x,y,z));
+            }
+
+            z += sz;
+            e_zx +=(dx << 1);
+            e_zy +=(dy << 1);
+        }
+
+
+    }
+    points.push_back(glm::vec3(x,y,z));
 }
 
 
 void Level::Update(std::shared_ptr<Camera> cam)
 {
-    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 0.f),  cam->view * cam->model, cam->projection,
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos().x, RESY-Mouse::GetCursorPos().y, 0.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
-    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos(), 1.f),  cam->view * cam->model , cam->projection,
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos().x, RESY-Mouse::GetCursorPos().y, 1.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
     glm::ray ray(near, far - near);
 
@@ -191,8 +257,8 @@ void Level::Update(std::shared_ptr<Camera> cam)
     }
 
     std::vector<glm::vec3> points;
-    auto farpos = ray.origin + ray.dir * (float) RX;
-    PutLine3D(ray.origin, farpos, points);
+    auto farpos = ray.origin + ray.dir * (float) RX * 10.f;
+    Bresencham3D(ray.origin, farpos, points);
 
     for(glm::vec3 &point : points)
     {
@@ -249,7 +315,7 @@ std::shared_ptr<Sector> Level::sectorContains(const glm::vec3 &p)
 
 bool Level::change_at(const Point3 &p, const std::string &id)
 {
-    return change_at(p, database::instance()->block_pointer(id));
+    //return change_at(p, database::instance()->block_pointer(id));
 }
 
 bool Level::change_at(const Point3 &p, Jid id)
@@ -261,8 +327,13 @@ bool Level::change_at(const Point3 &p, Jid id)
             return false;
         auto sect = lw.mem[Point(divx, divy)];
         sect->block({p.x - divx * RX, p.y - divy * RY, p.z})->id(id);
-        sect->rebuilding = true;
-        sect->state = Sector::EMPTY;
+        if(!sect->rebuilding)
+        {
+            sect->rebuilding = true;
+            sect->state = Sector::EMPTY;
+        } else {
+            sect->rebuild_later = true;
+        }
 
         return true;
     }
