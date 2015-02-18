@@ -14,6 +14,24 @@ struct Dynamic
 
     std::vector<std::shared_ptr<Agent>> agents;
     Dynamic *instantiate() const;
+
+    template <typename T>
+    T *getAgent()
+    {
+        return nullptr;
+    }
+
+    template <typename T>
+    bool forAgent(std::function<void(T*)> a)
+    {
+        T *agent = getAgent<T>();
+        if(agent)
+        {
+            a(agent);
+            return true;
+        }
+        return false;
+    }
 };
 
 struct Static

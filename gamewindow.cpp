@@ -167,6 +167,9 @@ bool JargGameWindow::BaseInit()
     database::instance()->registerBlock("test", ss);
 
     tiker = std::chrono::steady_clock::now();
+
+    Dynamic d;
+    d.forAgent<Chest>([](Chest *a){a->items.push_back(new Item());});
 }
 
 bool JargGameWindow::Destroy()

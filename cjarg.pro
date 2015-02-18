@@ -53,7 +53,8 @@ SOURCES += main.cpp \
     logic/agents/staticitem.cpp \
     logic/map/staticblock.cpp \
     sge/helper.cpp \
-    sge/spheretesselator.cpp
+    sge/spheretesselator.cpp \
+    sge/abstracttexture.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -88,7 +89,8 @@ HEADERS += \
     sge/ClassicNoise.h \
     logic/agents/staticitem.h \
     logic/map/staticblock.h \
-    sge/helper.h
+    sge/helper.h \
+    sge/abstracttexture.h
 
 
 
