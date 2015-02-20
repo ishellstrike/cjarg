@@ -54,7 +54,9 @@ SOURCES += main.cpp \
     logic/map/staticblock.cpp \
     sge/helper.cpp \
     sge/spheretesselator.cpp \
-    sge/abstracttexture.cpp
+    sge/abstracttexture.cpp \
+    sge/textgeometry.cpp \
+    sge/cachedbatchgeometry.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -90,7 +92,9 @@ HEADERS += \
     logic/agents/staticitem.h \
     logic/map/staticblock.h \
     sge/helper.h \
-    sge/abstracttexture.h
+    sge/abstracttexture.h \
+    sge/textgeometry.h \
+    sge/cachedbatchgeometry.h
 
 
 

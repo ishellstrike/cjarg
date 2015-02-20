@@ -119,6 +119,13 @@ bool JargGameWindow::BaseInit()
     tex = std::make_shared<Texture>();
 
     ws = std::make_shared<WinS>(batch.get());
+
+    f12 = std::make_shared<Font>();
+    f12->initFreeType(12);
+    f12->renderAtlas();
+
+    ws->f = f12.get();
+
     ws->windows.push_back(new Win());
 
     atlas.LoadAll();
@@ -132,12 +139,6 @@ bool JargGameWindow::BaseInit()
     me = std::make_shared<Creature>();
     me->pos.z = 32;
     //level->active[Point(0,0)]->creatures.push_back(me.get());
-
-    f12 = std::make_shared<Font>();
-    f12->initFreeType(12);
-    f12->renderAtlas();
-
-    ws->f = f12.get();
 
     StaticBlock *ss = new StaticBlock();
     ss->setTexture(0);
@@ -267,10 +268,10 @@ void JargGameWindow::BaseDraw()
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     batch->setUniform(ortho_PM);
-    batch->drawText(cam->getFullDebugDescription(), 10, 100, f12.get(), Color::White);
-    batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), 200, 100, f12.get(), Color::White);
+    batch->drawText(cam->getFullDebugDescription(), {10.f, 100.f}, f12.get(), Color::White);
+    batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), {200.f, 100.f}, f12.get(), Color::White);
 
-    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), 50, 50, f12.get(), Color::Red);
+    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), {50.f, 50.f}, f12.get(), Color::Red);
 
     ws->Draw();
     batch->render();

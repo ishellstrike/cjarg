@@ -11,7 +11,8 @@ Win::Win(void) :
     pos(0),
     col(0,0,0,0.75)
 {
-    //text = new TextGeometry("azazazaadasdasd");
+    text = std::unique_ptr<TextGeometry>(new TextGeometry(WinS::sb, WinS::f));
+    text->setString("asdasdasd");
 }
 
 Win::Win(glm::vec2 &p, glm::vec2 &s) :
@@ -19,7 +20,8 @@ Win::Win(glm::vec2 &p, glm::vec2 &s) :
     pos(p),
     col(0,0,0,0.75f)
 {
-    //text = new TextGeometry("azazazaadasdasd");
+    text = std::unique_ptr<TextGeometry>(new TextGeometry(WinS::sb, WinS::f));
+    text->setString("asdasdasd");
 }
 
 Win::Win(glm::vec2 &p, glm::vec2 &s, glm::vec4 &t_col) :
@@ -27,7 +29,8 @@ Win::Win(glm::vec2 &p, glm::vec2 &s, glm::vec4 &t_col) :
     pos(p),
     col(t_col)
 {
-    //text = new TextGeometry("azazazaadasdasd");
+    text = std::unique_ptr<TextGeometry>(new TextGeometry(WinS::sb, WinS::f));
+    text->setString("asdasdasd");
 }
 
 
@@ -43,14 +46,16 @@ void Win::Draw() const
     sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, Color::White);
 
     sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, Color::White);
-    sb.drawLine(pos + glm::vec2(0,20), glm::vec2(pos.x + size.x, pos.y + 20), 2, Color::White);
+    sb.drawLine(pos + glm::vec2(0, 20), glm::vec2(pos.x + size.x, pos.y + 20), 2, Color::White);
     sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, Color::White);
     sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, Color::White);
 
-    sb.drawText("234234234", pos.x, pos.y, WinS::f, Color::White);
+    text->Draw({pos.x + 5, pos.y});
 
-    if(Items.size() > 0){
-        for(unsigned int i=0; i< Items.size(); ++i){
+    if(Items.size() > 0)
+    {
+        for(unsigned int i = 0; i< Items.size(); ++i)
+        {
             Items[i]->Draw();
         }
     }
@@ -59,7 +64,8 @@ void Win::Draw() const
 void Win::Update()
 {
     glm::vec2 wpos = GlobalPos();
-    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + glm::vec2(size.x,20))){
+    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + glm::vec2(size.x, 20)))
+    {
         if(Mouse::IsLeftPressed())
         {
             drag_point = Mouse::GetCursorLastPos() - pos;
@@ -72,13 +78,16 @@ void Win::Update()
         dragged = false;
 
     if(Items.size() > 0){
-        for(unsigned int i=0; i< Items.size(); ++i){
+        for(unsigned int i=0; i< Items.size(); ++i)
+        {
             Items[i]->Update(); 
         }
     }
 
-    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + size)){
-        if(Mouse::IsLeftDown()){
+    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + size))
+    {
+        if(Mouse::IsLeftDown())
+        {
             WinS::ToTop(this);
         }
         WinS::MouseHooked = true;

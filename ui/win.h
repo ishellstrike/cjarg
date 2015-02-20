@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include "sge/textgeometry.h"
 
 class Win : public WContainer
 {
@@ -23,7 +24,7 @@ public:
     glm::vec2 pos;
     glm::vec4 col;
     std::vector<std::unique_ptr<WComponent>> Items;
-    //TextGeometry* text;
+    std::unique_ptr<TextGeometry> text;
 };
 
 #endif // Win_h__
