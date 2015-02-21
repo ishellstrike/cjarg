@@ -3,6 +3,7 @@
 #include "agent.h"
 #include <vector>
 #include <memory>
+#include <functional>
 
 typedef int Jid;
 typedef int Jtex;

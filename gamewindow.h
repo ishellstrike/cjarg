@@ -19,6 +19,8 @@
 #include "logic/base/database.h"
 #include "sge/font.h"
 #include "sge/camera.h"
+#include "ui/cjarg_main_w.h"
+#include "ui/cjarg_list_test.h"
 
 class JargGameWindow {
 public:
@@ -56,6 +58,7 @@ public:
     std::chrono::steady_clock::time_point tiker;
 
     std::shared_ptr<WinS> ws;
+    cjarg_main_w *main_w;
 
     std::shared_ptr<BasicJargShader> basic, font;
     std::shared_ptr<SpriteBatch> batch;

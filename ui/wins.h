@@ -8,20 +8,20 @@
 #include <glm/glm.hpp>
 #include "sge/font.h"
 
-class WinS{
+class WinS : public WContainer{
 public:
     WinS();
     WinS(SpriteBatch* sb_);
     ~WinS();
-    static std::vector<Win*> windows;
     static bool MouseHooked;
     static bool KeyboardHooked;
 
-    void Draw();
     void Update();
-    static void ToTop(Win* w);
+    void ToTop(WComponent *w);
     static SpriteBatch *sb;
     static Font *f;
+    static WinS *ws;
+    void Draw() const;
 };
 
 #endif // WinS_h__

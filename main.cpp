@@ -1,10 +1,10 @@
 #define GLM_FORCE_RADIANS
 #define _USE_MATH_DEFINES
 #define GLM_SWIZZLE
-#include "gamewindow.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "logic/agents/chest.h"
+#include "gamewindow.h"
 #ifdef WIN32
 int wmain(int argc, wchar_t *argv[])
 #else

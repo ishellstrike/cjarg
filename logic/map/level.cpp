@@ -315,7 +315,7 @@ std::shared_ptr<Sector> Level::sectorContains(const glm::vec3 &p)
 
 bool Level::change_at(const Point3 &p, const std::string &id)
 {
-    //return change_at(p, database::instance()->block_pointer(id));
+    return change_at(p, database::instance()->block_pointer(id));
 }
 
 bool Level::change_at(const Point3 &p, Jid id)

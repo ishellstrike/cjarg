@@ -26,7 +26,7 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
         has_thread = true;
         threads = std::thread([&, mat, basic, s](){
             if(generator && !s->rebuilding)
-                generator(*s);
+                generator(s);
             s->Rebuild(mat, basic);
             has_thread = false;
             return;
@@ -49,7 +49,7 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     return s->state == Sector::READY ? s.get() : nullptr;
 }
 
-void LevelWorker::SetGenerator(std::function<void(Sector &)> gen)
+void LevelWorker::SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen)
 {
     generator = gen;
 }

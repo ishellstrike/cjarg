@@ -11,7 +11,7 @@ struct TrivialGenerator : public Generator
 {
     // LevelGenetarorStrategy interface
 public:
-    static void Generate(Sector &s);
+    static void Generate(std::shared_ptr<Sector> s);
 };
 
 #endif // TRIVIALGENERATOR

@@ -17,6 +17,7 @@
 #include <future>
 #include "sge/helper.h"
 
+
 #define MAJOR 2
 #define MINOR 1
 
@@ -85,6 +86,8 @@ bool JargGameWindow::BaseInit()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
     Keyboard::Initialize();
     glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods){
         Keyboard::SetKey(key, scancode, action, mods);
@@ -126,7 +129,11 @@ bool JargGameWindow::BaseInit()
 
     ws->f = f12.get();
 
-    ws->windows.push_back(new Win());
+    new Win(ws.get());
+    cjarg_main_w *ww = new cjarg_main_w(ws.get());
+    ww->size = glm::vec2(200,200);
+    auto www = new cjarg_list_test(ws.get());
+    www->size = glm::vec2(200,200);
 
     atlas.LoadAll();
 
@@ -274,6 +281,12 @@ void JargGameWindow::BaseDraw()
     batch->drawText(std::to_string(fps.GetCount()).append(" fps"), {50.f, 50.f}, f12.get(), Color::Red);
 
     ws->Draw();
+    if(!Mouse::GetFixedPosState())
+        if(Mouse::state == Mouse::STATE_MOUSE)
+            batch->drawQuadAtlas(Mouse::GetCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_mouse.png"], Color::White);
+        else
+            batch->drawQuadAtlas(Mouse::GetCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_resize.png"], Color::White);
+    Mouse::state = Mouse::STATE_MOUSE;
     batch->render();
 
     glfwSwapBuffers(window);

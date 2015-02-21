@@ -54,9 +54,13 @@ SOURCES += main.cpp \
     logic/map/staticblock.cpp \
     sge/helper.cpp \
     sge/spheretesselator.cpp \
-    sge/abstracttexture.cpp \
-    sge/textgeometry.cpp \
-    sge/cachedbatchgeometry.cpp
+    ui/button.cpp \
+    ui/label.cpp \
+    ui/component.cpp \
+    ui/cjarg_main_w.cpp \
+    ui/panel.cpp \
+    ui/cjarg_list_test.cpp \
+    ui/list_container.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -93,8 +97,13 @@ HEADERS += \
     logic/map/staticblock.h \
     sge/helper.h \
     sge/abstracttexture.h \
-    sge/textgeometry.h \
-    sge/cachedbatchgeometry.h
+    ui/button.h \
+    ui/label.h \
+    ui/wcontainer.h \
+    ui/cjarg_main_w.h \
+    ui/panel.h \
+    ui/cjarg_list_test.h \
+    ui/list_container.h
 
 
 
@@ -226,7 +235,9 @@ DISTFILES += \
     data/textures/wearpolka2.png \
     data/textures/wearpolka3.png \
     data/textures/wearpolka4.png \
-    data/fonts/DejaVuSansMono.ttf
+    data/fonts/DejaVuSansMono.ttf \
+    data/textures/cur_mouse.png \
+    data/textures/cur_resize.png
 
 OTHER_FILES += \
     README.md \

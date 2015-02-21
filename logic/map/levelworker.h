@@ -15,11 +15,11 @@ public:
     ~LevelWorker();
 
     Sector *getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic);
-    void SetGenerator(std::function<void(Sector&)> gen);
+    void SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen);
     SectorMap mem;
 private:
 
-    std::function<void(Sector&)> generator;
+    std::function<void(std::shared_ptr<Sector>)> generator;
     std::thread threads;
     volatile static bool has_thread;
 };

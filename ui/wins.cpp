@@ -3,43 +3,45 @@
 #include <list>
 #include "sge/mouse.h"
 #include <string>
+#include <memory>
+#include <algorithm>
 
-WinS::WinS()
+WinS::WinS() :
+    WContainer()
 {
 
 }
 
-WinS::WinS(SpriteBatch *sb_)
+WinS::WinS(SpriteBatch *sb_) :
+    WContainer()
 {
     WinS::sb = sb_;
+    ws = this;
 }
 
 WinS::~WinS()
 {
-    if(windows.size() > 0) {
-        for(unsigned int i=0 ;i< windows.size(); i++)
-            delete windows.at(i);
-    }
-    windows.clear();
+    Items.clear();
 }
 
-void WinS::Draw()
+void WinS::Draw() const
 {
-    if(windows.size() > 0) {
-        for (unsigned int i =0; i< windows.size(); i++)
-            windows.at(i)->Draw();
+    if(Items.size() > 0) {
+        for (unsigned int i =0; i< Items.size(); i++)
+        {
+            if(!Items.at(i)->hidden)
+                Items.at(i)->Draw();
+            WinS::sb->resetScissor();
+        }
     }
 }
 
-void WinS::ToTop(Win* w) {
-    std::vector<Win*>::iterator iter;
+void WinS::ToTop(WComponent* w) {
     bool b = false;
-    int i =0;  
-    for (iter = windows.begin() ; iter != --windows.end(); ++iter) {
-        if(*iter == w || b) {
-            Win* temp = w;
-            windows[i] = windows[i+1];
-            windows[i+1] = temp;
+    int i = 0;
+    for (auto iter = Items.begin(); iter != --Items.end(); ++iter) {
+        if(iter->get() == w || b) {
+            Items[i].swap(Items[i+1]);
             b = true;
         }
         i++;
@@ -50,20 +52,20 @@ void WinS::Update() {
     MouseHooked = false;
 
     KeyboardHooked = false;
-    if(windows.size() > 0)
-        windows[windows.size() - 1]->Update();
+    if(Items.size() > 0)
+        Items[Items.size() - 1]->Update();
     KeyboardHooked = true;
 
-    if(windows.size() > 0) {
-        for (int i =windows.size() - 2; i >= 0; i--)
-            windows[i]->Update();
+    for (auto i = Items.rbegin(); i != Items.rend(); ++i)
+    {
+        if(!(*i)->hidden)
+            (*i)->Update();
     }
 }
 
-std::vector<Win*> WinS::windows;
-
 bool WinS::KeyboardHooked = false;
 bool WinS::MouseHooked = false;
-SpriteBatch* WinS::sb = nullptr;
-Font* WinS::f = nullptr;
+WinS *WinS::ws;
+SpriteBatch *WinS::sb = nullptr;
+Font *WinS::f = nullptr;
 
