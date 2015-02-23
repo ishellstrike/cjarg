@@ -60,7 +60,10 @@ SOURCES += main.cpp \
     ui/cjarg_main_w.cpp \
     ui/panel.cpp \
     ui/cjarg_list_test.cpp \
-    ui/list_container.cpp
+    ui/list_container.cpp \
+    ui/vertical_bar.cpp \
+    logic/entity/physic.cpp \
+    logic/map/physicssolver.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -103,7 +106,10 @@ HEADERS += \
     ui/cjarg_main_w.h \
     ui/panel.h \
     ui/cjarg_list_test.h \
-    ui/list_container.h
+    ui/list_container.h \
+    ui/vertical_bar.h \
+    logic/entity/physic.h \
+    logic/map/physicssolver.h
 
 
 

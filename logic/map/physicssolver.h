@@ -7,6 +7,8 @@ class PhysicsSolver
 public:
     PhysicsSolver();
     ~PhysicsSolver();
+
+    //static
 };
 
 #endif // PHYSICSSOLVER_H

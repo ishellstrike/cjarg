@@ -44,32 +44,32 @@ void Win::Draw() const
 
 void Win::Update()
 {
-    glm::vec2 wpos = GlobalPos();
-    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + glm::vec2(size.x, header)))
+    glm::vec2 wpos = globalPos();
+    if(!WinS::MouseHooked && inLimsV(Mouse::getCursorLastPos(), wpos, wpos + glm::vec2(size.x - 20, header)))
     {
-        if(Mouse::IsLeftPressed())
+        if(Mouse::isLeftPressed())
         {
-            drag_point = Mouse::GetCursorLastPos() - pos;
+            drag_point = Mouse::getCursorLastPos() - pos;
             dragged = true;
         }
     }
     if(Mouse::IsLeftDown() && dragged)
-        pos = glm::vec2(Mouse::GetCursorPos().x, Mouse::GetCursorLastPos().y) - drag_point;
+        pos = glm::vec2(Mouse::getCursorPos().x, Mouse::getCursorLastPos().y) - drag_point;
     else
         dragged = false;
 
-    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos + glm::vec2(size.x - 10, size.y - 10), wpos + size))
+    if(!WinS::MouseHooked && inLimsV(Mouse::getCursorLastPos(), wpos + glm::vec2(size.x - 10, size.y - 10), wpos + size))
     {
         Mouse::state = Mouse::STATE_RESIZE;
-        if(Mouse::IsLeftPressed())
+        if(Mouse::isLeftPressed())
         {
-            resize_point = Mouse::GetCursorLastPos() - size;
+            resize_point = Mouse::getCursorLastPos() - size;
             resizing = true;
         }
     }
     if(Mouse::IsLeftDown() && resizing)
     {
-        size = glm::vec2(Mouse::GetCursorPos().x, Mouse::GetCursorLastPos().y) - resize_point;
+        size = glm::vec2(Mouse::getCursorPos().x, Mouse::getCursorLastPos().y) - resize_point;
         if(size.y < 40)
             size.y = 40;
         if(size.x < 100)
@@ -80,7 +80,7 @@ void Win::Update()
 
     WContainer::Update();
 
-    if(!WinS::MouseHooked && inLimsV(Mouse::GetCursorLastPos(), wpos, wpos + size))
+    if(!WinS::MouseHooked && inLimsV(Mouse::getCursorLastPos(), wpos, wpos + size))
     {
         if(Mouse::IsLeftDown())
         {

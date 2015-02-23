@@ -7,7 +7,7 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
 
     panel = new Panel(this);
     panel->anchor = ANCHOR_CENTER;
-    panel->size = {150, 150};
+    panel->size = {170,170};
 
     new_game = new Button(panel);
     new_game->anchor = ANCHOR_CENTER;
@@ -21,7 +21,7 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
     options->text = "Options";
 
     title = new Label(panel);
-    title->text = "Label";
+    title->text("Label");
     title->pos = {3, 3};
     title->anchor = ANCHOR_TOP_LEFT;
 }
@@ -29,5 +29,15 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
 cjarg_main_w::~cjarg_main_w()
 {
 
+}
+
+void cjarg_main_w::Draw() const
+{
+    Win::Draw();
+}
+
+void cjarg_main_w::Update()
+{
+    Win::Update();
 }
 

@@ -8,10 +8,15 @@ class Label : public WComponent
 public:
     Label(WContainer *par);
     ~Label();
-    std::string text;
-public:
+
+    void text(const std::string &__s);
+    const std::string text() const;
+    void append(const std::string &__s);
+
     void Draw() const;
     void Update();
+private:
+    std::string m_text;
 };
 
 #endif // LABEL_H

@@ -10,6 +10,10 @@ public:
     ~cjarg_list_test();
 
     ListContainer *lc;
+    ListContainer *lc2;
+
+    void Draw() const;
+    void Update();
 };
 
 #endif // CJARG_LIST_TEST_H

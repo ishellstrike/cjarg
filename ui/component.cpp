@@ -26,25 +26,39 @@ void WComponent::Update()
 
 }
 
-glm::vec2 WComponent::GlobalPos() const
+glm::vec2 WComponent::globalPos() const
 {
     glm::vec2 p = pos;
     if(parent)
-        p += parent->GlobalPos();
+        p += parent->globalPos();
 
     switch (anchor) {
         case ANCHOR_TOP_RIGHT:
             if(parent)
                 p += glm::vec2(parent->size.x, parent->header);
             return p;
+
         case ANCHOR_TOP_LEFT:
             if(parent)
                 p += glm::vec2(0, parent->header);
             return p;
+
+        case ANCHOR_DOWN_RIGHT:
+            if(parent)
+                p += parent->size;
+            return p;
+
+        case ANCHOR_DOWN_LEFT:
+            if(parent)
+                p += glm::vec2(0, parent->size.y);
+            return p;
+
         case ANCHOR_CENTER:
-            return parent->GlobalPos() + glm::vec2(0, parent->header) - size / 2.f + (parent->size - glm::vec2(0, parent->header)) / 2.f + pos;
+            return parent->globalPos() + glm::vec2(0, parent->header) - size / 2.f + (parent->size - glm::vec2(0, parent->header)) / 2.f + pos;
+
         case ANCHOR_CENTER_HOR:
-            return parent->GlobalPos() - glm::vec2(0, parent->header) - glm::vec2(size.x, 0) / 2.f + glm::vec2(parent->size.x, 0) / 2.f + pos;
+            return parent->globalPos() - glm::vec2(0, parent->header) - glm::vec2(size.x, 0) / 2.f + glm::vec2(parent->size.x, 0) / 2.f + pos;
+
         default: //ANCHOR_NO
             return pos;
     }
@@ -64,13 +78,14 @@ WContainer::~WContainer()
 
 void WContainer::Draw() const
 {
-    WinS::sb->reduceScissor(GlobalPos() + glm::vec2(0,header), size - glm::vec2(0,header));
+    WinS::sb->reduceScissor(globalPos() + glm::vec2(0,header), size - glm::vec2(0,header));
     for(auto &i : Items)
     {
         if(i->hidden) continue;
 
         i->Draw();
     }
+    WComponent::Draw();
 }
 
 void WContainer::Update()
@@ -82,17 +97,28 @@ void WContainer::Update()
 
         i->Update();
 
-        if(!mouse_hook && inLimsV(Mouse::GetCursorPos(), i->GlobalPos(), i->GlobalPos() + i->size))
+        if(!mouse_hook && inLimsV(Mouse::getCursorPos(), i->globalPos(), i->globalPos() + i->size))
         {
             i->aimed = true;
-            if(Mouse::IsLeftPressed() && i->onLeftPress)
+            if(Mouse::isLeftPressed() && i->onLeftPress)
             {
                 i->onLeftPress();
                 mouse_hook = true;
             }
-            if(Mouse::IsRightPressed() && i->onRightPress)
+            if(Mouse::isRightPressed() && i->onRightPress)
             {
                 i->onRightPress();
+                mouse_hook = true;
+            }
+
+            if(Mouse::isWheelUp() && i->onWheelUp)
+            {
+                i->onWheelUp();
+                mouse_hook = true;
+            }
+            if(Mouse::isWheelDown() && i->onWheelDown)
+            {
+                i->onWheelDown();
                 mouse_hook = true;
             }
         }

@@ -14,6 +14,9 @@ public:
     Label *title;
     Button *new_game, *options;
     Panel *panel;
+
+    void Draw() const;
+    void Update();
 };
 
 #endif // CJARG_MAIN_W_H

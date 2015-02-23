@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include "sge/prefecences.h"
 
 WinS::WinS() :
     WContainer()
@@ -50,6 +51,9 @@ void WinS::ToTop(WComponent* w) {
 
 void WinS::Update() {
     MouseHooked = false;
+
+    pos = {0,0};
+    size = {RESX, RESY};
 
     KeyboardHooked = false;
     if(Items.size() > 0)

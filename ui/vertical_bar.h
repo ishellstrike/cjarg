@@ -1,12 +1,17 @@
 #ifndef VERTICAL_BAR_H
 #define VERTICAL_BAR_H
+#include "component.h"
 
-
-class vertical_bar
+class VerticalBar : public WComponent
 {
 public:
-    vertical_bar();
-    ~vertical_bar();
+    VerticalBar(WContainer *par);
+    ~VerticalBar();
+
+    float top = 0.1, bot = 0.9;
+
+    void Draw() const;
+    void Update();
 };
 
 #endif // VERTICAL_BAR_H

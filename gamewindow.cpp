@@ -92,7 +92,7 @@ bool JargGameWindow::BaseInit()
     glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods){
         Keyboard::SetKey(key, scancode, action, mods);
     });
-    Mouse::Initialize(window);
+    Mouse::initialize(window);
     cam = std::make_shared<Camera>();
     cam->SetPosition({40,40,30});
     cam->SetLookAt({0,0,0});
@@ -102,16 +102,16 @@ bool JargGameWindow::BaseInit()
         Mouse::SetCursorPos(xpos, ypos);
     });
     glfwSetCursorEnterCallback(window, [](GLFWwindow *window, int entered){
-        Mouse::CursorClientArea(entered);
+        Mouse::cursorClientArea(entered);
     });
     glfwSetWindowFocusCallback(window, [](GLFWwindow *window, int focused){
-        Mouse::WindowFocus(focused);
+        Mouse::windowFocus(focused);
     });
     glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int a, int b, int c){
         Mouse::SetButton(a, b, c);
     });
     glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int a, int b){
-        JargGameWindow::Resize(a, b); Mouse::SetWindowSize(a, b);
+        JargGameWindow::Resize(a, b); Mouse::setWindowSize(a, b);
     });
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset){
         Mouse::Scroll(yoffset);
@@ -145,7 +145,9 @@ bool JargGameWindow::BaseInit()
 
     me = std::make_shared<Creature>();
     me->pos.z = 32;
-    //level->active[Point(0,0)]->creatures.push_back(me.get());
+    level->lw.mem[Point(0,0)] = std::shared_ptr<Sector>(new Sector());
+    level->lw.mem[Point(0,0)]->Init();
+    level->lw.mem[Point(0,0)]->creatures.push_back(me.get());
 
     StaticBlock *ss = new StaticBlock();
     ss->setTexture(0);
@@ -212,21 +214,30 @@ void JargGameWindow::BaseUpdate()
         me->pos.x += 0.1;
 
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        cam->Move(Camera::FORWARD, &gt);
+        glm::vec3 t = (glm::vec3(0, 0, -1) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
+        me->pos += glm::vec3(t.x, t.y, 0);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        cam->Move(Camera::BACK, &gt);
+        glm::vec3 t = (glm::vec3(0, 0, 1) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
+        me->pos += glm::vec3(t.x, t.y, 0);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-        cam->Move(Camera::LEFT, &gt);
+        glm::vec3 t = (glm::vec3(-1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
+        me->pos += glm::vec3(t.x, t.y, 0);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        cam->Move(Camera::RIGHT, &gt);
+        glm::vec3 t = (glm::vec3(1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
+        me->pos += glm::vec3(t.x, t.y, 0);
+    }
+
+    if(Keyboard::isKeyPress(GLFW_KEY_SPACE)){
+        me->velocity += glm::vec3(0,0,100);
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_LEFT_CONTROL)){
         Mouse::SetFixedPosState(!Mouse::GetFixedPosState());
     }
+    cam->position = me->pos + glm::vec3(0,0,2);
 
     if(Keyboard::isKeyDown(GLFW_KEY_LEFT_SHIFT)){
         cam->camera_scale = 50.0F;
@@ -235,17 +246,21 @@ void JargGameWindow::BaseUpdate()
     }
 
     if(Mouse::GetFixedPosState())
-        cam->Move2D(Mouse::GetCursorDelta().x, Mouse::GetCursorDelta().y, &gt);
+    {
+        cam->Move2D(Mouse::getCursorDelta().x, Mouse::getCursorDelta().y, &gt);
+    }
+
 
     if(Mouse::IsLeftDown()){
-        //level->change_at({rand()%302,rand()%302,rand()%15}, 1);
         level->change_at(level->selected, 3);
     }
+
+
 
     cam->Update();
     cam->CalculateFrustum(cam->projection, cam->view * cam->model);
     level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
-    level->Update(cam);
+    level->Update(cam, gt);
 
     if(Mouse::isWheelUp())
     {
@@ -283,9 +298,9 @@ void JargGameWindow::BaseDraw()
     ws->Draw();
     if(!Mouse::GetFixedPosState())
         if(Mouse::state == Mouse::STATE_MOUSE)
-            batch->drawQuadAtlas(Mouse::GetCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_mouse.png"], Color::White);
+            batch->drawQuadAtlas(Mouse::getCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_mouse.png"], Color::White);
         else
-            batch->drawQuadAtlas(Mouse::GetCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_resize.png"], Color::White);
+            batch->drawQuadAtlas(Mouse::getCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_resize.png"], Color::White);
     Mouse::state = Mouse::STATE_MOUSE;
     batch->render();
 

@@ -12,7 +12,6 @@ public:
 
     void Draw() const;
     void Update();
-    glm::vec2 size = glm::vec2(50,20);
     std::string text;
 };
 

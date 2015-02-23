@@ -2,14 +2,14 @@
 #define CREATURE_H
 #include "../agents/gamepart.h"
 #include <glm/glm.hpp>
+#include "physic.h"
 
-class Creature : public Dynamic
+class Creature : public Dynamic, public Physic
 {
 public:
     Creature();
     ~Creature();
 
-    glm::vec3 pos;
 };
 
 #endif // CREATURE_H

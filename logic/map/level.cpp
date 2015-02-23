@@ -241,11 +241,11 @@ void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
 }
 
 
-void Level::Update(std::shared_ptr<Camera> cam)
+void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
 {
-    glm::vec3 near = glm::unProject(glm::vec3(Mouse::GetCursorPos().x, RESY-Mouse::GetCursorPos().y, 0.f),  cam->model * cam->view, cam->projection,
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 0.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
-    glm::vec3 far = glm::unProject(glm::vec3(Mouse::GetCursorPos().x, RESY-Mouse::GetCursorPos().y, 1.f),  cam->model * cam->view, cam->projection,
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 1.f),  cam->model * cam->view, cam->projection,
                                     cam->viewport);
     glm::ray ray(near, far - near);
 
@@ -268,6 +268,34 @@ void Level::Update(std::shared_ptr<Camera> cam)
             finded = true;
             selected = point;
             break;
+        }
+    }
+
+    for(auto &pair: lw.mem)
+    {
+        if(pair.second->state == Sector::READY || pair.second->rebuilding)
+        {
+            for(Creature *c : pair.second->creatures)
+            {
+                c->velocity += c->acseleration;
+                c->velocity.z += -9.8;
+
+                glm::vec3 npos = c->pos;
+                npos += c->velocity * (float)gt.elapsed;
+                if(npos.z > RZ || (npos.z > 0 && block(npos) && block(npos)->id() == 0))
+                {
+                    c->pos = npos;
+                }
+                else
+                {
+                    c->velocity = glm::vec3(0);
+                }
+
+                if(c->pos.z < 0)
+                {
+                    c->pos.z = 0;
+                }
+            }
         }
     }
 }
@@ -326,6 +354,8 @@ bool Level::change_at(const Point3 &p, Jid id)
         if(lw.mem.find({divx, divy}) == lw.mem.end())
             return false;
         auto sect = lw.mem[Point(divx, divy)];
+        if(sect->state != Sector::READY)
+            return false;
         sect->block({p.x - divx * RX, p.y - divy * RY, p.z})->id(id);
         if(!sect->rebuilding)
         {
