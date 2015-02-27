@@ -22,7 +22,6 @@ public:
 
     Dynamic *parts = nullptr;
 
-private:
     Jid m_id = 0;
     Jtex m_tex = 0;
 };

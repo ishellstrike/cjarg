@@ -6,6 +6,8 @@ cjarg_list_test::cjarg_list_test(WContainer *par) :
     lc = new ListContainer(this);
     lc->pos = {10,10};
     lc->size = {100,100};
+
+    size = {200, 200};
 }
 
 cjarg_list_test::~cjarg_list_test()

@@ -9,6 +9,7 @@
 #include "sge/material.h"
 #include "sge/basicjargshader.h"
 #include "sge/camera.h"
+#include "logic/map/staticblock.h"
 
 class Level
 {
@@ -21,6 +22,13 @@ public:
 
     Block *block(const Point3 &p);
     Block *block(const glm::vec3 &p);
+    StaticBlock *block_base(const glm::vec3 &p);
+    StaticBlock *selected_base();
+    Block *selected();
+
+    void lClick();
+    void rClick();
+
     std::shared_ptr<Sector> sectorContains(const glm::vec3 &p);
     bool change_at(const Point3 &p, const std::string &id);
     bool change_at(const Point3 &p, Jid id);
@@ -37,7 +45,7 @@ public:
     std::shared_ptr<BasicJargShader> basic;
 
     int vertcount, facecount;
-    glm::vec3 selected;
+    glm::vec3 m_selected;
     bool finded;
     Mesh selection;
 };

@@ -26,10 +26,13 @@ Level::Level(LevelWorker &lw_) :
     mat->texture = TextureAtlas::tex;
     mat->normal = TextureAtlas::tex;
 
+    std::shared_ptr<Material> m = std::make_shared<Material>();
+    m->texture = std::make_shared<Texture>();
+    m->texture->Load(Prefecences::Instance()->getTexturesDir() + "frame.png");
+    m->normal = TextureAtlas::tex;
+
     selection = Mesh(*Cube::getMesh());
-    //selection.Unindex();
-    //selection.computeNormal();
-    selection.material = mat;
+    selection.material = m;
     selection.shader = basic;
     selection.Bind();
 }
@@ -72,11 +75,11 @@ void Level::Render(std::shared_ptr<Camera> cam)
     {
         selection.Bind();
         //selection.World = glm::scale(glm::mat4(1), glm::vec3(1.01f,1.01f,1.01f));
-        selection.World = glm::translate(glm::mat4(1), selected + glm::vec3(0.5,0.5,0.5));
+        selection.World = glm::translate(glm::mat4(1), m_selected + glm::vec3(0.5,0.5,0.5));
         selection.World = glm::scale(selection.World, glm::vec3(1.1f,1.1f,1.1f));
-        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
         selection.Render(cam->MVP);
-        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
     }
 }
 
@@ -241,6 +244,7 @@ void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
 }
 
 
+
 void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
 {
     glm::vec3 near = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 0.f),  cam->model * cam->view, cam->projection,
@@ -266,35 +270,87 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
         if(block(point) && block(point)->id() != 0)
         {
             finded = true;
-            selected = point;
+            m_selected = point;
             break;
         }
     }
 
     for(auto &pair: lw.mem)
     {
-        if(pair.second->state == Sector::READY || pair.second->rebuilding)
+        Sector *cur = pair.second.get();
+        if(cur->state == Sector::READY || cur->rebuilding)
         {
-            for(Creature *c : pair.second->creatures)
+            for(auto c_iter = cur->creatures.begin(); c_iter != cur->creatures.end();)
             {
+                Creature *c = *c_iter;
                 c->velocity += c->acseleration;
-                c->velocity.z += -9.8;
+                c->velocity.z += -9.8 *gt.elapsed;
 
                 glm::vec3 npos = c->pos;
                 npos += c->velocity * (float)gt.elapsed;
                 if(npos.z > RZ || (npos.z > 0 && block(npos) && block(npos)->id() == 0))
                 {
                     c->pos = npos;
+
+                    if(c->pos.z < 0)
+                    {
+                        c->pos.z = 0;
+                    }
+
+                    // если находится за границей сектора -- переносим в новый сектор, если он существует
+                    if(c->pos.x > (cur->offset.x + 1)*RX)
+                    {
+                        Sector* nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic);
+                        if(nsec)
+                        {
+                            cur->creatures.erase(c_iter);
+                            nsec->creatures.push_back(c);
+                            continue;
+                        }
+                    }
+                    if(c->pos.x < (cur->offset.x)*RX)
+                    {
+                        Sector* nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic);
+                        if(nsec)
+                        {
+                            cur->creatures.erase(c_iter);
+                            nsec->creatures.push_back(c);
+                            continue;
+                        }
+                    }
+                    if(c->pos.y > (cur->offset.y + 1)*RY)
+                    {
+                        Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic);
+                        if(nsec)
+                        {
+                            cur->creatures.erase(c_iter);
+                            nsec->creatures.push_back(c);
+                            continue;
+                        }
+                    }
+                    if(c->pos.y < (cur->offset.y)*RY)
+                    {
+                        Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic);
+                        if(nsec)
+                        {
+                            cur->creatures.erase(c_iter);
+                            nsec->creatures.push_back(c);
+                            continue;
+                        }
+                    }
                 }
                 else
                 {
                     c->velocity = glm::vec3(0);
+
+                    if(c->pos.z < 0)
+                    {
+                        c->pos.z = 0;
+                    }
                 }
 
-                if(c->pos.z < 0)
-                {
-                    c->pos.z = 0;
-                }
+                //передвигаем итератор, если существо не перемещено
+                ++c_iter;
             }
         }
     }
@@ -332,6 +388,35 @@ Block *Level::block(const glm::vec3 &p)
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
 }
 
+StaticBlock *Level::block_base(const glm::vec3 &p)
+{
+    return database::instance()->block_db[block(p)->id()].get();
+}
+
+Block *Level::selected()
+{
+    return block(m_selected);
+}
+
+StaticBlock *Level::selected_base()
+{
+    return database::instance()->block_db[selected()->id()].get();
+}
+
+void Level::lClick()
+{
+    Block *a = selected();
+    StaticBlock *b = database::instance()->block_db[a->id()].get();
+    b->lClick(a);
+}
+
+void Level::rClick()
+{
+    Block *a = selected();
+    StaticBlock *b = database::instance()->block_db[a->id()].get();
+    b->rClick(a);
+}
+
 std::shared_ptr<Sector> Level::sectorContains(const glm::vec3 &p)
 {
     int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
@@ -343,7 +428,7 @@ std::shared_ptr<Sector> Level::sectorContains(const glm::vec3 &p)
 
 bool Level::change_at(const Point3 &p, const std::string &id)
 {
-    return change_at(p, database::instance()->block_pointer(id));
+    return change_at(p, database::instance()->block_pointer[id]);
 }
 
 bool Level::change_at(const Point3 &p, Jid id)

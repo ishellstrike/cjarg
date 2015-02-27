@@ -18,6 +18,7 @@ public:
     bool dragged = false;
     bool resizing = false;
     glm::vec2 resize_point;
+    void MoveUnderCur();
 
     glm::vec4 col;
     std::string text;

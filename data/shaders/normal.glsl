@@ -63,6 +63,8 @@ const float LOG2 = 1.442695;
 
 void main(void)
 {
+    if(texture2D(material_texture, texcoordout).a < 0.1) discard;
+
     float DiffuseFactor = dot(normalize(normalout), -lightVec);
     vec4 col;
     if (DiffuseFactor > 0) {

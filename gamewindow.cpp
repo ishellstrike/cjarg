@@ -16,7 +16,7 @@
 #include "logic/agents/chest.h"
 #include <future>
 #include "sge/helper.h"
-
+#include "logic/agents/clickreaction.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -131,9 +131,9 @@ bool JargGameWindow::BaseInit()
 
     new Win(ws.get());
     cjarg_main_w *ww = new cjarg_main_w(ws.get());
-    ww->size = glm::vec2(200,200);
+    ww->size = {200,200};
     auto www = new cjarg_list_test(ws.get());
-    www->size = glm::vec2(200,200);
+    www->size = {200,200};
 
     atlas.LoadAll();
 
@@ -151,6 +151,7 @@ bool JargGameWindow::BaseInit()
 
     StaticBlock *ss = new StaticBlock();
     ss->setTexture(0);
+    ss->transparent = true;
     database::instance()->registerBlock("air", ss);
 
     ss = new StaticBlock();
@@ -161,11 +162,17 @@ bool JargGameWindow::BaseInit()
     ss->setTexture(StaticBlock::SIDE_TOP, "mc_grass.png");
     ss->setTexture(StaticBlock::SIDE_BOTTOM, "mc_dirt.png");
     ss->setSideTexture("mc_grass_side.png");
+    ss->r_click = std::unique_ptr<ClickReactionTest>(new ClickReactionTest());
     database::instance()->registerBlock("grass", ss);
 
     ss = new StaticBlock();
     ss->setTexture("error.png");
     database::instance()->registerBlock("error", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture("fence_s.png");
+    ss->transparent = true;
+    database::instance()->registerBlock("fence", ss);
 
     ss = new StaticBlock();
     ss->setTexture(StaticBlock::SIDE_FRONT, "f.png");
@@ -176,10 +183,14 @@ bool JargGameWindow::BaseInit()
     ss->setTexture(StaticBlock::SIDE_RIGHT, "r.png");
     database::instance()->registerBlock("test", ss);
 
-    tiker = std::chrono::steady_clock::now();
+    ss = new StaticBlock();
+    ss->setSideTexture("chest_side.png");
+    ss->setTexture(StaticBlock::SIDE_BOTTOM, "chest.png");
+    ss->setTexture(StaticBlock::SIDE_TOP, "chest.png");
+    ss->setTexture(StaticBlock::SIDE_FRONT, "chest_front.png");
+    database::instance()->registerBlock("chest", ss);
 
-    Dynamic d;
-    d.forAgent<Chest>([](Chest *a){a->items.push_back(new Item());});
+    tiker = std::chrono::steady_clock::now();
 }
 
 bool JargGameWindow::Destroy()
@@ -214,24 +225,24 @@ void JargGameWindow::BaseUpdate()
         me->pos.x += 0.1;
 
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        glm::vec3 t = (glm::vec3(0, 0, -1) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
-        me->pos += glm::vec3(t.x, t.y, 0);
+        glm::vec3 t = (glm::vec3(0, 0, -1) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
+        me->Push(glm::vec3(t.x, t.y, 0.2));
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        glm::vec3 t = (glm::vec3(0, 0, 1) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
-        me->pos += glm::vec3(t.x, t.y, 0);
+        glm::vec3 t = (glm::vec3(0, 0, 1) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
+        me->Push(glm::vec3(t.x, t.y, 0.2));
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-        glm::vec3 t = (glm::vec3(-1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
-        me->pos += glm::vec3(t.x, t.y, 0);
+        glm::vec3 t = (glm::vec3(-1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
+        me->Push(glm::vec3(t.x, t.y, 0.2));
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        glm::vec3 t = (glm::vec3(1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 5.f;
-        me->pos += glm::vec3(t.x, t.y, 0);
+        glm::vec3 t = (glm::vec3(1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
+        me->Push(glm::vec3(t.x, t.y, 0.2));
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_SPACE)){
-        me->velocity += glm::vec3(0,0,100);
+        me->Push(glm::vec3(0,0,10));
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_LEFT_CONTROL)){
@@ -249,12 +260,22 @@ void JargGameWindow::BaseUpdate()
     {
         cam->Move2D(Mouse::getCursorDelta().x, Mouse::getCursorDelta().y, &gt);
     }
-
-
-    if(Mouse::IsLeftDown()){
-        level->change_at(level->selected, 3);
+    if(Keyboard::isKeyPress(GLFW_KEY_1))
+    {
+        level->change_at(level->m_selected, "chest");
+    }
+    if(Keyboard::isKeyPress(GLFW_KEY_2))
+    {
+        level->change_at(level->m_selected, "fence");
     }
 
+
+    if(Mouse::isLeftPressed())
+    {
+        level->lClick();
+    }
+    if(Mouse::isRightPressed())
+        level->rClick();
 
 
     cam->Update();

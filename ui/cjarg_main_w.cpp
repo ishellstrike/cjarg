@@ -5,6 +5,8 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
 {
     text = "Main Window";
 
+    size = {200, 200};
+
     panel = new Panel(this);
     panel->anchor = ANCHOR_CENTER;
     panel->size = {170,170};

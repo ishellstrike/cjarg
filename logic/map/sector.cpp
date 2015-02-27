@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include "logic/base/database.h"
+#include "sge/helper.h"
 
 Sector::Sector() :
     mesh(),
@@ -57,16 +58,6 @@ Block *Sector::block(const Point3 &p)
     return blocks[p.x][p.y][p.z];
 }
 
-inline void get_uvs(Jtex apos, float &q, float &w, float &qq, float &ww)
-{
-    qq = 32 / 2048.f;
-    ww = 32 / 2048.f;
-    int inrow = 2048 / 32;
-    q = (apos % inrow) * qq;
-    w = (apos / inrow) * ww;
-    qq += q; ww += w;
-}
-
 void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_)
 {
     mesh.World = glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
@@ -97,7 +88,7 @@ void Sector::Rebuild()
         if(!apos) continue;
         register float qq,ww,q,w;
 
-        if(j == 0 || blocks[i][j - 1][k]->id() == 0)
+        if(j == 0 || database::instance()->block_db[blocks[i][j - 1][k]->id()]->transparent)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BACK],
                     q,w,qq,ww);
@@ -117,7 +108,7 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(i == RX - 1 || blocks[i+1][j][k]->id() == 0)
+        if(i == RX - 1 || database::instance()->block_db[blocks[i+1][j][k]->id()]->transparent)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_RIGHT],
                     q,w,qq,ww);
@@ -137,7 +128,7 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(i == 0 || blocks[i - 1][j][k]->id() == 0)
+        if(i == 0 || database::instance()->block_db[blocks[i - 1][j][k]->id()]->transparent)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_LEFT],
                     q,w,qq,ww);
@@ -157,7 +148,7 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(j == RY - 1 || blocks[i][j+1][k]->id() == 0)
+        if(j == RY - 1 || database::instance()->block_db[blocks[i][j+1][k]->id()]->transparent)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_FRONT],
                     q,w,qq,ww);
@@ -177,7 +168,7 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(k == 0 || blocks[i][j][k - 1]->id() == 0)
+        if(k == 0 || database::instance()->block_db[blocks[i][j][k - 1]->id()]->transparent)
         if(k != 0)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BOTTOM],
@@ -198,7 +189,7 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(k == RZ - 1 || blocks[i][j][k + 1]->id() == 0)
+        if(k == RZ - 1 || database::instance()->block_db[blocks[i][j][k + 1]->id()]->transparent)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_TOP],
                     q,w,qq,ww);

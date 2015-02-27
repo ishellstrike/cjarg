@@ -5,6 +5,7 @@
 #include <vector>
 #include "sge/colorextender.h"
 #include "sge/helper.h"
+#include "sge/prefecences.h"
 
 Win::Win(WContainer *par) :
     col(0,0,0,0.75),
@@ -87,5 +88,18 @@ void Win::Update()
             WinS::ws->ToTop(this);
         }
         WinS::MouseHooked = true;
+    }
+}
+
+void Win::MoveUnderCur()
+{
+    pos = Mouse::getCursorPos();
+    if(pos.x + size.x > RESX)
+    {
+        pos.x = RESX - size.x;
+    }
+    if(pos.y + size.y > RESY)
+    {
+        pos.y = RESY - size.y;
     }
 }

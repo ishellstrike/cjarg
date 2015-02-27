@@ -25,6 +25,22 @@ void StaticBlock::setSideTexture(std::string tex_)
     tex[SIDE_RIGHT] = TextureAtlas::refs[tex_];
 }
 
+void StaticBlock::lClick(Block *b)
+{
+    if(l_click)
+    {
+        l_click->Click(b);
+    }
+}
+
+void StaticBlock::rClick(Block *b)
+{
+    if(r_click)
+    {
+        r_click->Click(b);
+    }
+}
+
 void StaticBlock::setTexture(Jtex tex_)
 {
     for(int i=0; i<SIDE_AFTER_LAST; ++i)

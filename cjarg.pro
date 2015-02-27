@@ -63,7 +63,8 @@ SOURCES += main.cpp \
     ui/list_container.cpp \
     ui/vertical_bar.cpp \
     logic/entity/physic.cpp \
-    logic/map/physicssolver.cpp
+    logic/map/physicssolver.cpp \
+    logic/agents/clickreaction.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -109,7 +110,8 @@ HEADERS += \
     ui/list_container.h \
     ui/vertical_bar.h \
     logic/entity/physic.h \
-    logic/map/physicssolver.h
+    logic/map/physicssolver.h \
+    logic/agents/clickreaction.h
 
 
 

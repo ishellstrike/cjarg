@@ -39,7 +39,8 @@ struct Sector
 
     Block *blocks[RX][RY][RZ];
     Point offset;
-    std::vector<Creature*> creatures;
+    typedef std::vector<Creature*> CreatureList;
+    CreatureList creatures;
     std::vector<Item*> items;
 
     Mesh mesh;
