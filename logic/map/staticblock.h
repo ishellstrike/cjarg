@@ -3,6 +3,7 @@
 #include "logic/map/block.h"
 #include "logic/agents/clickreaction.h"
 #include <memory>
+#include "cereal/cereal.hpp"
 
 class StaticBlock
 {
@@ -34,6 +35,15 @@ public:
     void rClick(Block *b);
 
     void setTexture(Jtex tex_);
+
+private:
+
+  friend class cereal::access;
+  template<class Archive>
+  void serialize(Archive &ar)
+  {
+    ar(CEREAL_NVP(transparent), CEREAL_NVP(tex));
+  }
 };
 
 #endif // STATICBLOCK_H

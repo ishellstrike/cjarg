@@ -1,3 +1,6 @@
 [submodule "sge"]
 	path = sge
 	url = https://github.com/ishellstrike/sge.git
+[submodule "cereal"]
+	path = cereal
+	url = https://github.com/ishellstrike/cereal.git

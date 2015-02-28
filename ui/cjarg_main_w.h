@@ -11,7 +11,7 @@ public:
     cjarg_main_w(WContainer *par);
     ~cjarg_main_w();
 
-    Label *title;
+    Label *title, *ver, *controls, *beta;
     Button *new_game, *options;
     Panel *panel;
 

@@ -18,6 +18,8 @@ Win::Win(WContainer *par) :
     closeb->pos = {-20, -20};
     closeb->onLeftPress = [&](){hidden = true;};
     header = 20;
+
+    size = {200,200};
 }
 
 Win::~Win()

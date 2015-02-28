@@ -5,8 +5,8 @@
 Label::Label(WContainer *par) :
     WComponent(par)
 {
-    onLeftPress = [this](){append("x");};
     size = {20,20};
+    text("empty");
 }
 
 Label::~Label()

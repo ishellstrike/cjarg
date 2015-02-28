@@ -17,6 +17,8 @@
 #include <future>
 #include "sge/helper.h"
 #include "logic/agents/clickreaction.h"
+#include "cereal/cereal.hpp"
+#include "cereal/archives/json.hpp"
 
 #define MAJOR 2
 #define MINOR 1
@@ -45,7 +47,7 @@ bool JargGameWindow::BaseInit()
         LOG(error) << "glfwInit error " << glfwErrorCode;
         return false;
     }
-    glfwWindowHint(GLFW_SAMPLES, 16);
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
@@ -131,16 +133,14 @@ bool JargGameWindow::BaseInit()
 
     new Win(ws.get());
     cjarg_main_w *ww = new cjarg_main_w(ws.get());
-    ww->size = {200,200};
     auto www = new cjarg_list_test(ws.get());
-    www->size = {200,200};
 
     atlas.LoadAll();
 
     //LOG(info) << bb->getAgent<Chest>()->items[0];
 
     lworker = std::make_shared<LevelWorker>();
-    lworker->SetGenerator(TrivialGenerator::Generate);
+    lworker->SetGenerator(TestGenerator_City1::Generate);
     level = std::make_shared<Level>(*lworker);
 
     me = std::make_shared<Creature>();
@@ -162,7 +162,7 @@ bool JargGameWindow::BaseInit()
     ss->setTexture(StaticBlock::SIDE_TOP, "mc_grass.png");
     ss->setTexture(StaticBlock::SIDE_BOTTOM, "mc_dirt.png");
     ss->setSideTexture("mc_grass_side.png");
-    ss->r_click = std::unique_ptr<ClickReactionTest>(new ClickReactionTest());
+    //ss->r_click = std::unique_ptr<ClickReactionTest>(new ClickReactionTest());
     database::instance()->registerBlock("grass", ss);
 
     ss = new StaticBlock();
@@ -173,6 +173,10 @@ bool JargGameWindow::BaseInit()
     ss->setTexture("fence_s.png");
     ss->transparent = true;
     database::instance()->registerBlock("fence", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture("briwall1.png");
+    database::instance()->registerBlock("bricks", ss);
 
     ss = new StaticBlock();
     ss->setTexture(StaticBlock::SIDE_FRONT, "f.png");
@@ -189,6 +193,8 @@ bool JargGameWindow::BaseInit()
     ss->setTexture(StaticBlock::SIDE_TOP, "chest.png");
     ss->setTexture(StaticBlock::SIDE_FRONT, "chest_front.png");
     database::instance()->registerBlock("chest", ss);
+
+    database::instance()->Load();
 
     tiker = std::chrono::steady_clock::now();
 }
@@ -215,30 +221,17 @@ void JargGameWindow::BaseUpdate()
 {
     glfwPollEvents();
 
-    if(Keyboard::isKeyDown(GLFW_KEY_UP))
-        me->pos.y -= 0.1;
-    if(Keyboard::isKeyDown(GLFW_KEY_DOWN))
-        me->pos.y += 0.1;
-    if(Keyboard::isKeyDown(GLFW_KEY_LEFT))
-        me->pos.x -= 0.1;
-    if(Keyboard::isKeyDown(GLFW_KEY_RIGHT))
-        me->pos.x += 0.1;
-
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        glm::vec3 t = (glm::vec3(0, 0, -1) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
-        me->Push(glm::vec3(t.x, t.y, 0.2));
+        me->pos.y += 1;
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        glm::vec3 t = (glm::vec3(0, 0, 1) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
-        me->Push(glm::vec3(t.x, t.y, 0.2));
+        me->pos.y -= 1;
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-        glm::vec3 t = (glm::vec3(-1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
-        me->Push(glm::vec3(t.x, t.y, 0.2));
+        me->pos.x -= 1;
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        glm::vec3 t = (glm::vec3(1, 0, 0) * cam->rotation_quaternion * (float)gt.elapsed) * 15.f;
-        me->Push(glm::vec3(t.x, t.y, 0.2));
+        me->pos.x += 1;
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_SPACE)){
@@ -248,38 +241,46 @@ void JargGameWindow::BaseUpdate()
     if(Keyboard::isKeyPress(GLFW_KEY_LEFT_CONTROL)){
         Mouse::SetFixedPosState(!Mouse::GetFixedPosState());
     }
-    cam->position = me->pos + glm::vec3(0,0,2);
 
-    if(Keyboard::isKeyDown(GLFW_KEY_LEFT_SHIFT)){
-        cam->camera_scale = 50.0F;
-    } else {
-        cam->camera_scale = 10.0F;
+    if(Keyboard::isKeyPress(GLFW_KEY_F2)){
+        wire = wire ? (glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ), false) : (glPolygonMode( GL_FRONT_AND_BACK, GL_FILL ), true);
     }
 
-    if(Mouse::GetFixedPosState())
+
+    if (Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
-        cam->Move2D(Mouse::getCursorDelta().x, Mouse::getCursorDelta().y, &gt);
+        Mouse::SetFixedPosState(true);
+        cam->pitch += Mouse::getCursorDelta().y / 10.f * static_cast<float>(gt.elapsed);
     }
-    if(Keyboard::isKeyPress(GLFW_KEY_1))
+    else
+        Mouse::SetFixedPosState(false);
+
+    if (Mouse::isMiddleDown())
     {
-        level->change_at(level->m_selected, "chest");
-    }
-    if(Keyboard::isKeyPress(GLFW_KEY_2))
-    {
-        level->change_at(level->m_selected, "fence");
+       cam->Reset();
     }
 
-
-    if(Mouse::isLeftPressed())
+    if (Mouse::isRightDown() || Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
-        level->lClick();
+        cam->yaw += Mouse::getCursorDelta().x / 10.f * static_cast<float>(gt.elapsed);
+        cam->viewMatrixDirty = true;
     }
-    if(Mouse::isRightPressed())
-        level->rClick();
 
+    if(!WinS::MouseHooked)
+    {
+        if(Mouse::isLeftPressed())
+            level->lClick();
+        if(Mouse::isRightPressed())
+            level->rClick();
+        if(Keyboard::isKeyPress(GLFW_KEY_1))
+            level->change_at(level->m_selected, "chest");
+        if(Keyboard::isKeyPress(GLFW_KEY_2))
+            level->change_at(level->m_selected, "fence");
+    }
 
     cam->Update();
     cam->CalculateFrustum(cam->projection, cam->view * cam->model);
+    cam->SetLookAt(me->pos);
     level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
     level->Update(cam, gt);
 
@@ -312,9 +313,9 @@ void JargGameWindow::BaseDraw()
     glDisable(GL_CULL_FACE);
     batch->setUniform(ortho_PM);
     batch->drawText(cam->getFullDebugDescription(), {10.f, 100.f}, f12.get(), Color::White);
-    batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), {200.f, 100.f}, f12.get(), Color::White);
+    batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), {20.f, 20.f}, f12.get(), Color::White);
 
-    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), {50.f, 50.f}, f12.get(), Color::Red);
+    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), {5.f, 5.f}, f12.get(), Color::Red);
 
     ws->Draw();
     if(!Mouse::GetFixedPosState())
@@ -348,7 +349,7 @@ void JargGameWindow::Resize(int w, int h)
         h = 1;
     Prefecences::Instance()->resolution = glm::vec2(w, h);
     glViewport(0, 0, w, h);
-    cam->SetViewport(0, 0, w, h);
+    cam->SetViewport({0, 0, w, h});
     JargGameWindow::wi->ortho_PM = glm::ortho(0.0f, (float)w, (float)h, 0.0f, -1.f, 1.0f);//.perspective(45, (float)w/float(h), 1, 1000);
 }
 

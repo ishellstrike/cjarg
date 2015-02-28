@@ -111,7 +111,9 @@ HEADERS += \
     ui/vertical_bar.h \
     logic/entity/physic.h \
     logic/map/physicssolver.h \
-    logic/agents/clickreaction.h
+    logic/agents/clickreaction.h \
+    logic/serialize.h \
+    cereal/include/cereal/cereal.hpp
 
 
 
@@ -119,6 +121,7 @@ win32:LIBS += -L$$PWD/3rdparty/lib/ -lopengl32 -lglew32 -lglfw3dll -lfreetype
 unix:LIBS += -lGL -lGLEW -lglfw3 -lfreetype -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -lXcursor -lXinerama
 unix:INCLUDEPATH += /usr/include/freetype2
 INCLUDEPATH += $$PWD
+INCLUDEPATH += cereal/include
 
 win32:INCLUDEPATH += $$PWD/3rdparty/include
 win32:DEPENDPATH += $$PWD/3rdparty/include
@@ -245,7 +248,8 @@ DISTFILES += \
     data/textures/wearpolka4.png \
     data/fonts/DejaVuSansMono.ttf \
     data/textures/cur_mouse.png \
-    data/textures/cur_resize.png
+    data/textures/cur_resize.png \
+    data/textures/frame.png
 
 OTHER_FILES += \
     README.md \

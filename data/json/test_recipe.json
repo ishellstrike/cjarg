@@ -11,6 +11,6 @@
     "__comment_3":"[%ability_id, %level];",
 
     "result":[["some_result", 1]],
-    "__comment_3":"[%item_id, %count];",
+    "__comment_3":"[%item_id, %count];"
 }
 ]

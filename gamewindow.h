@@ -35,6 +35,7 @@ public:
     void Mainloop();
     GameTimer gt;
     FPSCounter fps;
+    bool wire = true;
 
     static void Resize(int w, int h);
 

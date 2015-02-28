@@ -138,15 +138,15 @@ glm::vec3 SubdivideCheck(const glm::vec3 &min, const glm::vec3 &max, const glm::
 
 void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
 {
-    int x = p1.x;
-    int y = p1.y;
-    int z = p1.z;
-    int dx = glm::abs(p2.x-x);
-    int dy = glm::abs(p2.y-y);
-    int dz = glm::abs(p2.z-z);
-    int sx = glm::sign(p2.x-x);
-    int sy = glm::sign(p2.y-y);
-    int sz = glm::sign(p2.z-z);
+    int x  = static_cast<int>(p1.x);
+    int y  = static_cast<int>(p1.y);
+    int z  = static_cast<int>(p1.z);
+    int dx = static_cast<int>(glm::abs(p2.x-x));
+    int dy = static_cast<int>(glm::abs(p2.y-y));
+    int dz = static_cast<int>(glm::abs(p2.z-z));
+    int sx = static_cast<int>(glm::sign(p2.x-x));
+    int sy = static_cast<int>(glm::sign(p2.y-y));
+    int sz = static_cast<int>(glm::sign(p2.z-z));
 
     if( (dy>=dx) && (dy>=dz) )
     {
@@ -262,7 +262,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
 
     std::vector<glm::vec3> points;
     auto farpos = ray.origin + ray.dir * (float) RX * 10.f;
-    Bresencham3D(ray.origin, farpos, points);
+    Bresencham3D(ray.origin + glm::vec3(-1, 0.5, 0), farpos + glm::vec3(-1, 0.5, 0), points);
 
     for(glm::vec3 &point : points)
     {
@@ -284,68 +284,69 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
             {
                 Creature *c = *c_iter;
                 c->velocity += c->acseleration;
-                c->velocity.z += -9.8 *gt.elapsed;
+                c->velocity.z += -29.8 *gt.elapsed;
 
-                glm::vec3 npos = c->pos;
-                npos += c->velocity * (float)gt.elapsed;
+                glm::vec3 npos;
+                npos = c->pos + glm::vec3(c->velocity.x*2, 0, 0) * (float)gt.elapsed;
                 if(npos.z > RZ || (npos.z > 0 && block(npos) && block(npos)->id() == 0))
+                    c->pos.x = npos.x;
+                else
+                    c->velocity.x = 0;
+
+                npos = c->pos + glm::vec3(0, c->velocity.y*2, 0) * (float)gt.elapsed;
+                if(npos.z > RZ || (npos.z > 0 && block(npos) && block(npos)->id() == 0))
+                    c->pos.y = npos.y;
+                else
+                    c->velocity.y = 0;
+
+                npos = c->pos + glm::vec3(0, 0, c->velocity.z*2) * (float)gt.elapsed;
+                if(npos.z > RZ || (npos.z > 0 && block(npos) && block(npos)->id() == 0))
+                    c->pos.z = npos.z;
+                else
+                    c->velocity.z = 0;
+
+                if(c->pos.z < 0)
+                    c->pos.z = 0;
+
+                // если находится за границей сектора -- переносим в новый сектор, если он существует
+                if(c->pos.x > (cur->offset.x + 1)*RX)
                 {
-                    c->pos = npos;
-
-                    if(c->pos.z < 0)
+                    Sector* nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic);
+                    if(nsec)
                     {
-                        c->pos.z = 0;
-                    }
-
-                    // если находится за границей сектора -- переносим в новый сектор, если он существует
-                    if(c->pos.x > (cur->offset.x + 1)*RX)
-                    {
-                        Sector* nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic);
-                        if(nsec)
-                        {
-                            cur->creatures.erase(c_iter);
-                            nsec->creatures.push_back(c);
-                            continue;
-                        }
-                    }
-                    if(c->pos.x < (cur->offset.x)*RX)
-                    {
-                        Sector* nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic);
-                        if(nsec)
-                        {
-                            cur->creatures.erase(c_iter);
-                            nsec->creatures.push_back(c);
-                            continue;
-                        }
-                    }
-                    if(c->pos.y > (cur->offset.y + 1)*RY)
-                    {
-                        Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic);
-                        if(nsec)
-                        {
-                            cur->creatures.erase(c_iter);
-                            nsec->creatures.push_back(c);
-                            continue;
-                        }
-                    }
-                    if(c->pos.y < (cur->offset.y)*RY)
-                    {
-                        Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic);
-                        if(nsec)
-                        {
-                            cur->creatures.erase(c_iter);
-                            nsec->creatures.push_back(c);
-                            continue;
-                        }
+                        cur->creatures.erase(c_iter);
+                        nsec->creatures.push_back(c);
+                        break;
                     }
                 }
-                else
+                if(c->pos.x < (cur->offset.x)*RX)
                 {
-                    c->velocity = glm::vec3(0);
-
-                    if(c->pos.z < 0)
+                    Sector* nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic);
+                    if(nsec)
                     {
-                        c->pos.z = 0;
+                        cur->creatures.erase(c_iter);
+                        nsec->creatures.push_back(c);
+                        break;
+                    }
+                }
+                if(c->pos.y > (cur->offset.y + 1)*RY)
+                {
+                    Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic);
+                    if(nsec)
+                    {
+                        cur->creatures.erase(c_iter);
+                        nsec->creatures.push_back(c);
+                        break;
+                    }
+                }
+                if(c->pos.y < (cur->offset.y)*RY)
+                {
+                    Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic);
+                    if(nsec)
+                    {
+                        cur->creatures.erase(c_iter);
+                        nsec->creatures.push_back(c);
+                        break;
                     }
                 }
 
@@ -370,8 +371,8 @@ void Level::Preload(Point p, int r)
 
 Block *Level::block(const Point3 &p)
 {
-    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
-    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
+    int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find({divx, divy}) == lw.mem.end())
         return nullptr;
     auto &sect = lw.mem[Point(divx, divy)];
@@ -380,8 +381,8 @@ Block *Level::block(const Point3 &p)
 
 Block *Level::block(const glm::vec3 &p)
 {
-    int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
-    int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
+    int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
+    int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
         return nullptr;
     auto &sect = lw.mem[Point(divx, divy)];

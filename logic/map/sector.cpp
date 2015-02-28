@@ -93,10 +93,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BACK],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0},{i,     j,     k    }, {q, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0},{i + 1, j,     k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0},{i + 1, j,     k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0},{i    , j,     k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i,     j,     k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i + 1, j,     k    }, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i + 1, j,     k + 1}, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i    , j,     k + 1}, {q, w}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -113,10 +113,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_RIGHT],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0},{i + 1, j,     k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0},{i + 1, j,     k    }, {q, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0},{i + 1, j + 1, k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0},{i + 1, j + 1, k + 1}, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j,     k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j,     k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j + 1, k    }, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j + 1, k + 1}, {qq, w}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -133,10 +133,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_LEFT],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0},{i    , j,     k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0},{i    , j,     k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0},{i    , j + 1, k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0},{i    , j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j,     k    }, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j,     k + 1}, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k    }, {q, ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -153,10 +153,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_FRONT],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0},{i    , j + 1, k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0},{i    , j + 1, k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0},{i + 1, j + 1, k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0},{i + 1, j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i    , j + 1, k    }, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i    , j + 1, k + 1}, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k    }, {q, ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -174,10 +174,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BOTTOM],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1},{i + 1, j    , k    }, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1},{i    , j    , k    }, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1},{i    , j + 1, k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1},{i + 1, j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j    , k    }, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i    , j    , k    }, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i    , j + 1, k    }, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j + 1, k    }, {q, ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -194,10 +194,10 @@ void Sector::Rebuild()
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_TOP],
                     q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1},{i    , j    , k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1},{i + 1, j    , k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1},{i + 1, j + 1, k + 1}, {q, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1},{i    , j + 1, k + 1}, {qq, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j    , k + 1}, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j    , k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j + 1, k + 1}, {qq, ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);

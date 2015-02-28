@@ -58,12 +58,13 @@ varying vec2 texcoordout;
 varying vec3 lightVec;
 varying vec3 normalout;
 const vec4 fog = vec4(100/255.f, 149/255.f, 237/255.f, 1.f);
-float density = 0.009;
+float density = 0.003;
 const float LOG2 = 1.442695;
 
 void main(void)
 {
-    if(texture2D(material_texture, texcoordout).a < 0.1) discard;
+    float a = texture2D(material_texture, texcoordout).a;
+    if(a < 0.1) discard;
 
     float DiffuseFactor = dot(normalize(normalout), -lightVec);
     vec4 col;
@@ -77,7 +78,7 @@ void main(void)
     float fogFactor = exp2( -density * density * z * z * LOG2 );
     fogFactor = clamp(fogFactor, 0.0, 1.0);
     col = mix(fog, col, fogFactor);
-    col.a = 1;
+    col.a = a;
     gl_FragColor = col;
 }
 #endif
