@@ -1,8 +1,8 @@
 #ifndef STATICITEM_H
 #define STATICITEM_H
 #include "item.h"
-#include "cereal/cereal.hpp"
 #include <memory>
+#include <string>
 
 class StaticItem
 {

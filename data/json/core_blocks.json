@@ -16,13 +16,15 @@
 	"type":"block",
 	"id":"test",
 	"tex":["t.png","bot.png","f.png","b.png","l.png","r.png"],
-	"parts":{
-		"Chest":{
+	"parts":[
+		{
+			"type":"Chest",
 			"items":[{"id": 0, "count": 1},{"id": 0, "count": 1}]
 		},
-		"Furnance":{
+		{
+			"type":"Furnance",
 			"temp": 100
 		}
-	}
+	]
 }
 ]

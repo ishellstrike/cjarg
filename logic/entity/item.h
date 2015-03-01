@@ -1,6 +1,6 @@
 #ifndef ITEM_H
 #define ITEM_H
-#include "cereal/cereal.hpp"
+#include "rapidjson/document.h"
 
 class Item
 {
@@ -11,10 +11,10 @@ public:
     int id = 0;
     int count = 1;
 
-    template<class Archive>
-    void save(Archive &ar) const
+    void deserialize(rapidjson::Value &val)
     {
-        ar(CEREAL_NVP(id), CEREAL_NVP(count));
+        id = val["id"].GetInt();
+        count = val["count"].GetInt();
     }
 };
 

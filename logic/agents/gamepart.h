@@ -36,17 +36,6 @@ struct Dynamic
         }
         return false;
     }
-
-    template<class Archive>
-    void save(Archive &ar) const
-    {
-        for(auto ag : agents)
-        {
-            Agent *agent = ag.get();
-            CASTER(Chest);
-            CASTER(Furnance);
-        }
-    }
 };
 
 struct Static

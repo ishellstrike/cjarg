@@ -2,7 +2,7 @@
 #define AGENT_H
 #include <string>
 #include <memory>
-#include "cereal/cereal.hpp"
+#include "rapidjson/document.h"
 
 #define AGENT(type)                         \
 type() :                                    \
@@ -11,13 +11,15 @@ type() :                                    \
 }                                           \
 ~type(){}                                   \
 
-#define CASTER(ctype)                       \
-if(agent->type == #ctype)                   \
-{                                           \
-    ctype *a = static_cast<ctype*>(agent);  \
-    ar(cereal::make_nvp(#ctype, *a));       \
-    continue;                               \
-}
+#define CASTER(ctype)   \
+if(strcmp(part["type"].GetString(), #ctype) == 0) \
+{ \
+    std::shared_ptr<ctype> c =  std::make_shared<ctype>(); \
+    c->deserialize(part); \
+    b->etalon->parts->agents.push_back(c); \
+} \
+else
+
 
 typedef int Jid;
 typedef int Jtex;
@@ -47,13 +49,8 @@ public:
     virtual Agent *instantiate() const;
     const std::string type = "EmptyAgent";
     friend class Dynamic;
-    friend class BackCaster;
 
-    template<class Archive>
-    void save(Archive &ar) const
-    {
-      ar(CEREAL_NVP(type));
-    }
+    void deserialize(rapidjson::Value &val);
 };
 
 class StaticAgent : public  Agent

@@ -1,9 +1,8 @@
 #include "database.h"
 #include "sge/prefecences.h"
-#include "cereal/cereal.hpp"
-#include "cereal/archives/json.hpp"
 #include "sge/fielsystem.h"
 #include <fstream>
+#include "rapidjson/document.h"
 
 void database::registerBlock(const std::string &s, StaticBlock *b)
 {
@@ -79,16 +78,52 @@ void database::Load()
                 if(type == "block")
                 {
                     StaticBlock *b = new StaticBlock();
+                    b->etalon = std::unique_ptr<Block>(new Block());
+                    b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
+
                     std::string id = val["id"].GetString();
 
-                    if(val.HasMember("alltex")) b->setTexture(val["alltex"].GetString());
-                    else
-                    if(val.HasMember("tex")) {
-                        rapidjson::Value &arr = val["tex"];
+                    if(val.HasMember("transparent"))
+                    {
+                        b->transparent = val["transparent"].GetBool_();
+                    }
+
+                    if(val.HasMember("alltex") || val.HasMember("tex")) {
+                        if(val.HasMember("alltex")) b->setTexture(val["alltex"].GetString());
+                        else
+                        if(val.HasMember("tex")) {
+                            rapidjson::Value &arr = val["tex"];
+                            for(int a = 0; a < arr.Size(); a++)
+                                b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].GetString());
+                        } else
+                            LOG(error) << "block " << id << " from " << file << " has no texture";
+                    }
+
+                    if(val.HasMember("parts")) {
+                        rapidjson::Value &arr = val["parts"];
+                        if(val["parts"].IsArray())
                         for(int a = 0; a < arr.Size(); a++)
-                            b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].GetString());
-                    } else
-                        LOG(error) << "block " << id << " from " << file << " has no texture";
+                        {
+                            rapidjson::Value &part = arr[a];
+                            if(part.HasMember("type")) {
+
+                                /* all agents must be written here */
+                                CASTER(Chest)
+                                CASTER(Furnance)
+                                /*else here*/ LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has unknown type";
+                            }
+                            else
+                                LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has no type";
+                        }
+                        else
+                            LOG(error) << "block \"" << id << "\" parts is not valid agents array";
+                    }
+
+                    if(b->etalon->parts->agents.size() == 0)
+                    {
+                        b->etalon->parts = nullptr;
+                        b->etalon = nullptr;
+                    }
 
                     registerBlock(id, b);
                     loaded ++;
@@ -108,8 +143,6 @@ void database::Load()
         LOG(info) << loaded << " loaded";
         LOG(info) << "---";
     }
-
-    cereal::JSONInputArchive arch();
 }
 
 database::database()

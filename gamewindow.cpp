@@ -15,8 +15,6 @@
 #include <future>
 #include "sge/helper.h"
 #include "logic/agents/clickreaction.h"
-#include "cereal/cereal.hpp"
-#include "cereal/archives/json.hpp"
 
 #include "logic/agents/agents.h"
 
@@ -161,21 +159,6 @@ bool JargGameWindow::BaseInit()
     database::instance()->Load();
 
     tiker = std::chrono::steady_clock::now();
-
-    StaticBlock sb = StaticBlock();
-    Block *b = new Block();
-    Dynamic *d = new Dynamic();
-    d->agents.push_back(std::make_shared<Chest>());
-    d->agents.push_back(std::make_shared<Furnance>());
-    d->getAgent<Chest>()->items.push_back(Item());
-    d->getAgent<Chest>()->items.push_back(Item());
-    d->getAgent<Chest>()->items.push_back(Item());
-    b->parts = std::unique_ptr<Dynamic>(d);
-    sb.etalon = std::unique_ptr<Block>(b);
-
-    std::ostream o_stream(std::cout.rdbuf());
-    cereal::JSONOutputArchive arch(o_stream, cereal::JSONOutputArchive::Options::NoIndent());
-    arch(sb);
 }
 
 bool JargGameWindow::Destroy()

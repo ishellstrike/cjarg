@@ -3,7 +3,6 @@
 #include <vector>
 #include <logic/agents/gamepart.h>
 #include "../agents/agent.h"
-#include "cereal/cereal.hpp"
 
 class Block
 {
@@ -25,13 +24,6 @@ public:
 
     Jid m_id = 0;
     Jtex m_tex = 0;
-
-    template<class Archive>
-    void save(Archive &ar) const
-    {
-        if(parts)
-            ar(cereal::make_nvp("parts", *parts));
-    }
 };
 
 #endif // BLOCK_H

@@ -1,6 +1,7 @@
 #ifndef FURNANCE_H
 #define FURNANCE_H
 #include "agent.h"
+#include "rapidjson/document.h"
 
 struct Furnance : public Agent
 {
@@ -9,12 +10,7 @@ struct Furnance : public Agent
     int temp = 100;
 
     Agent *instantiate() const;
-
-    template<class Archive>
-    void save(Archive &ar)  const
-    {
-        ar(CEREAL_NVP(temp));
-    }
+    void deserialize(rapidjson::Value &val);
 };
 
 #endif // FURNANCE_H
