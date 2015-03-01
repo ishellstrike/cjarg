@@ -50,7 +50,6 @@ SOURCES += main.cpp \
     sge/lodepng/lodepng.cpp \
     sge/camera.cpp \
     sge/ClassicNoise.cpp \
-    logic/agents/staticitem.cpp \
     logic/map/staticblock.cpp \
     sge/helper.cpp \
     sge/spheretesselator.cpp \
@@ -64,7 +63,9 @@ SOURCES += main.cpp \
     ui/vertical_bar.cpp \
     logic/entity/physic.cpp \
     logic/map/physicssolver.cpp \
-    logic/agents/clickreaction.cpp
+    logic/agents/clickreaction.cpp \
+    logic/entity/staticitem.cpp \
+    logic/agents/furnance.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -97,7 +98,6 @@ HEADERS += \
     sge/sge_geometry.h \
     sge/camera.h \
     sge/ClassicNoise.h \
-    logic/agents/staticitem.h \
     logic/map/staticblock.h \
     sge/helper.h \
     sge/abstracttexture.h \
@@ -113,7 +113,10 @@ HEADERS += \
     logic/map/physicssolver.h \
     logic/agents/clickreaction.h \
     logic/serialize.h \
-    cereal/include/cereal/cereal.hpp
+    cereal/include/cereal/cereal.hpp \
+    logic/entity/staticitem.h \
+    logic/agents/furnance.h \
+    logic/agents/agents.h
 
 
 

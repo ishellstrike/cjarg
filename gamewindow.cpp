@@ -12,13 +12,13 @@
 #include <thread>
 #include <chrono>
 #include "logic/map/trivialgenerator.h"
-#include "logic/agents/agent.h"
-#include "logic/agents/chest.h"
 #include <future>
 #include "sge/helper.h"
 #include "logic/agents/clickreaction.h"
 #include "cereal/cereal.hpp"
 #include "cereal/archives/json.hpp"
+
+#include "logic/agents/agents.h"
 
 #define MAJOR 2
 #define MINOR 1
@@ -155,48 +155,27 @@ bool JargGameWindow::BaseInit()
     database::instance()->registerBlock("air", ss);
 
     ss = new StaticBlock();
-    ss->setTexture("mc_dirt.png");
-    database::instance()->registerBlock("dirt", ss);
-
-    ss = new StaticBlock();
-    ss->setTexture(StaticBlock::SIDE_TOP, "mc_grass.png");
-    ss->setTexture(StaticBlock::SIDE_BOTTOM, "mc_dirt.png");
-    ss->setSideTexture("mc_grass_side.png");
-    //ss->r_click = std::unique_ptr<ClickReactionTest>(new ClickReactionTest());
-    database::instance()->registerBlock("grass", ss);
-
-    ss = new StaticBlock();
     ss->setTexture("error.png");
     database::instance()->registerBlock("error", ss);
-
-    ss = new StaticBlock();
-    ss->setTexture("fence_s.png");
-    ss->transparent = true;
-    database::instance()->registerBlock("fence", ss);
-
-    ss = new StaticBlock();
-    ss->setTexture("briwall1.png");
-    database::instance()->registerBlock("bricks", ss);
-
-    ss = new StaticBlock();
-    ss->setTexture(StaticBlock::SIDE_FRONT, "f.png");
-    ss->setTexture(StaticBlock::SIDE_BACK, "b.png");
-    ss->setTexture(StaticBlock::SIDE_TOP, "t.png");
-    ss->setTexture(StaticBlock::SIDE_BOTTOM, "bot.png");
-    ss->setTexture(StaticBlock::SIDE_LEFT, "l.png");
-    ss->setTexture(StaticBlock::SIDE_RIGHT, "r.png");
-    database::instance()->registerBlock("test", ss);
-
-    ss = new StaticBlock();
-    ss->setSideTexture("chest_side.png");
-    ss->setTexture(StaticBlock::SIDE_BOTTOM, "chest.png");
-    ss->setTexture(StaticBlock::SIDE_TOP, "chest.png");
-    ss->setTexture(StaticBlock::SIDE_FRONT, "chest_front.png");
-    database::instance()->registerBlock("chest", ss);
 
     database::instance()->Load();
 
     tiker = std::chrono::steady_clock::now();
+
+    StaticBlock sb = StaticBlock();
+    Block *b = new Block();
+    Dynamic *d = new Dynamic();
+    d->agents.push_back(std::make_shared<Chest>());
+    d->agents.push_back(std::make_shared<Furnance>());
+    d->getAgent<Chest>()->items.push_back(Item());
+    d->getAgent<Chest>()->items.push_back(Item());
+    d->getAgent<Chest>()->items.push_back(Item());
+    b->parts = std::unique_ptr<Dynamic>(d);
+    sb.etalon = std::unique_ptr<Block>(b);
+
+    std::ostream o_stream(std::cout.rdbuf());
+    cereal::JSONOutputArchive arch(o_stream, cereal::JSONOutputArchive::Options::NoIndent());
+    arch(sb);
 }
 
 bool JargGameWindow::Destroy()

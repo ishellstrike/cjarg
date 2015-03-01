@@ -8,7 +8,7 @@ Block::Block()
 
 Block::Block(const std::vector<Agent*> &agents_, const std::string &id)
 {
-   parts = new Dynamic();
+   parts = std::unique_ptr<Dynamic>(new Dynamic());
    for(Agent* ag : agents_)
    {
        parts->agents.push_back(std::shared_ptr<Agent>(ag));

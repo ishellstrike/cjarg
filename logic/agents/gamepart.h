@@ -1,12 +1,9 @@
 #ifndef GAMEPART_H
 #define GAMEPART_H
-#include "agent.h"
+#include "agents.h"
 #include <vector>
 #include <memory>
 #include <functional>
-
-typedef int Jid;
-typedef int Jtex;
 
 struct Dynamic
 {
@@ -19,6 +16,12 @@ struct Dynamic
     template <typename T>
     T *getAgent()
     {
+        for(auto a : agents)
+        {
+            Agent &agent = *a;
+            if(agent.id == Agent::typeid_for<T>())
+                return static_cast<T*>(&agent);
+        }
         return nullptr;
     }
 
@@ -28,10 +31,21 @@ struct Dynamic
         T *agent = getAgent<T>();
         if(agent)
         {
-            a(agent);
+            a(agent-> agent);
             return true;
         }
         return false;
+    }
+
+    template<class Archive>
+    void save(Archive &ar) const
+    {
+        for(auto ag : agents)
+        {
+            Agent *agent = ag.get();
+            CASTER(Chest);
+            CASTER(Furnance);
+        }
     }
 };
 

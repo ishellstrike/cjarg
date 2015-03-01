@@ -1,6 +1,6 @@
 #ifndef ITEM_H
 #define ITEM_H
-#include "../agents/gamepart.h"
+#include "cereal/cereal.hpp"
 
 class Item
 {
@@ -8,9 +8,14 @@ public:
     Item();
     ~Item();
 
-    Jid id();
+    int id = 0;
+    int count = 1;
 
-private:
+    template<class Archive>
+    void save(Archive &ar) const
+    {
+        ar(CEREAL_NVP(id), CEREAL_NVP(count));
+    }
 };
 
 #endif // ITEM_H

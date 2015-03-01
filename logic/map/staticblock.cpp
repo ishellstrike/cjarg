@@ -1,9 +1,11 @@
 #include "staticblock.h"
 #include "sge/textureatlas.h"
+#include "sge/logger.h"
 
 StaticBlock::StaticBlock()
 {
-
+    for(int i=0; i<6; i++)
+    {tex[i] = 0;}
 }
 
 StaticBlock::~StaticBlock()
@@ -11,10 +13,17 @@ StaticBlock::~StaticBlock()
 
 }
 
-void StaticBlock::setTexture(StaticBlock::SIDE side, std::string tex_)
+bool StaticBlock::setTexture(StaticBlock::SIDE side, std::string tex_)
 {
     assert(side < SIDE_AFTER_LAST);
+    if (TextureAtlas::refs.find(tex_) == TextureAtlas::refs.end())
+    {
+        LOG(error) << tex_ << " missed";
+        tex[side] = TextureAtlas::refs["error"];
+        return false;
+    }
     tex[side] = TextureAtlas::refs[tex_];
+    return true;
 }
 
 void StaticBlock::setSideTexture(std::string tex_)

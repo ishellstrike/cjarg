@@ -5,18 +5,29 @@
 #include "sge/fielsystem.h"
 #include <fstream>
 
-void database::registerBlock(std::string s, StaticBlock *b)
+void database::registerBlock(const std::string &s, StaticBlock *b)
 {
+    if(block_pointer.find(s) != block_pointer.end())
+        LOG(info) << "block " << s << " redefinition";
     block_db.push_back(std::unique_ptr<StaticBlock>(b));
     block_back_pointer[block_db.size() - 1] = s;
     block_pointer[s] = block_db.size() - 1;
+
+    b->id = block_db.size() - 1;
+    //b->full_id = s;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
-void database::registerItem(std::string s, Item *i)
+void database::registerItem(const std::string &s, StaticItem *i)
 {
-    item_db.push_back(i);
+    if(item_pointer.find(s) != item_pointer.end())
+        LOG(info) << "item " << s << " redefinition";
+    item_db.push_back(std::unique_ptr<StaticItem>(i));
+    item_back_pointer[item_db.size() - 1] = s;
     item_pointer[s] = item_db.size() - 1;
+
+    i->id = item_db.size() - 1;
+    //i->full_id = s;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
@@ -64,15 +75,31 @@ void database::Load()
                     continue;
                 }
 
+                // === parse part ===
                 if(type == "block")
                 {
-                    LOG(info) << "block " << val["id"].GetString();
+                    StaticBlock *b = new StaticBlock();
+                    std::string id = val["id"].GetString();
+
+                    if(val.HasMember("alltex")) b->setTexture(val["alltex"].GetString());
+                    else
+                    if(val.HasMember("tex")) {
+                        rapidjson::Value &arr = val["tex"];
+                        for(int a = 0; a < arr.Size(); a++)
+                            b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].GetString());
+                    } else
+                        LOG(error) << "block " << id << " from " << file << " has no texture";
+
+                    registerBlock(id, b);
                     loaded ++;
                 }
 
                 if(type == "item")
                 {
-                    LOG(info) << "item " << val["id"].GetString();
+                    StaticItem *i = new StaticItem;
+                    std::string id = val["id"].GetString();
+
+                    registerItem(id, i);
                     loaded ++;
                 }
             }
@@ -92,9 +119,6 @@ database::database()
 
 database::~database()
 {
-    for(Item *item: item_db){
-        delete item;
-    }
 }
 
 database *database::m_inst = nullptr;

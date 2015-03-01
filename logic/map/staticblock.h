@@ -22,12 +22,15 @@ public:
     StaticBlock();
     ~StaticBlock();
 
-    Jtex tex[6];
+    int tex[6];
     bool transparent = false;
     std::unique_ptr<ClickReaction> r_click, l_click;
     std::unique_ptr<Block> etalon;
 
-    void setTexture(SIDE side, std::string tex_);
+    std::string full_id;
+    Jid id;
+
+    bool setTexture(SIDE side, std::string tex_);
     void setTexture(std::string tex_);
     void setSideTexture(std::string tex_);
 
@@ -36,14 +39,12 @@ public:
 
     void setTexture(Jtex tex_);
 
-private:
-
-  friend class cereal::access;
-  template<class Archive>
-  void serialize(Archive &ar)
-  {
-    ar(CEREAL_NVP(transparent), CEREAL_NVP(tex));
-  }
+    template<class Archive>
+    void save(Archive &ar) const
+    {
+        if(etalon)
+            ar(cereal::make_nvp("etalon", *etalon), CEREAL_NVP(transparent), CEREAL_NVP(tex));
+    }
 };
 
 #endif // STATICBLOCK_H

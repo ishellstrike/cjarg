@@ -2,6 +2,25 @@
 #define AGENT_H
 #include <string>
 #include <memory>
+#include "cereal/cereal.hpp"
+
+#define AGENT(type)                         \
+type() :                                    \
+    Agent(#type, Agent::typeid_for<type>()) \
+{                                           \
+}                                           \
+~type(){}                                   \
+
+#define CASTER(ctype)                       \
+if(agent->type == #ctype)                   \
+{                                           \
+    ctype *a = static_cast<ctype*>(agent);  \
+    ar(cereal::make_nvp(#ctype, *a));       \
+    continue;                               \
+}
+
+typedef int Jid;
+typedef int Jtex;
 
 class Agent
 {
@@ -15,6 +34,9 @@ private:
     }
 public:
 
+    Agent();
+    Agent(const std::string &__s, int __id);
+    ~Agent();
     template <typename T_>
     static int typeid_for()
     {
@@ -22,10 +44,17 @@ public:
         return result;
     }
 
-    virtual Agent* instantiate() const = 0;
-    const std::string type = "Agent";
-};
+    virtual Agent *instantiate() const;
+    const std::string type = "EmptyAgent";
+    friend class Dynamic;
+    friend class BackCaster;
 
+    template<class Archive>
+    void save(Archive &ar) const
+    {
+      ar(CEREAL_NVP(type));
+    }
+};
 
 class StaticAgent : public  Agent
 {

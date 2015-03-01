@@ -6,6 +6,7 @@
 #include "logic/entity/item.h"
 #include <unordered_map>
 #include "logic/map/staticblock.h"
+#include "logic/entity/staticitem.h"
 
 class database
 {
@@ -43,11 +44,12 @@ public:
     std::unordered_map<std::string, Jid> block_pointer;
     std::unordered_map<Jid, std::string> block_back_pointer;
     std::vector<std::unique_ptr<StaticBlock>> block_db;
-    void registerBlock(std::string s, StaticBlock* b);
+    void registerBlock(const std::string &s, StaticBlock* b);
 
     std::unordered_map<std::string, Jid> item_pointer;
-    std::vector<Item*> item_db;
-    void registerItem(std::string s, Item* i);
+    std::unordered_map<Jid, std::string> item_back_pointer;
+    std::vector<std::unique_ptr<StaticItem>> item_db;
+    void registerItem(const std::string &s, StaticItem *i);
 
     void Load();
 
