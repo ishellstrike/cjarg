@@ -252,7 +252,8 @@ DISTFILES += \
     data/fonts/DejaVuSansMono.ttf \
     data/textures/cur_mouse.png \
     data/textures/cur_resize.png \
-    data/textures/frame.png
+    data/textures/frame.png \
+    data/json/core_blocks.json
 
 OTHER_FILES += \
     README.md \

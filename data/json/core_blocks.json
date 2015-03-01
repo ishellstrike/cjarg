@@ -1,0 +1,28 @@
+[
+{
+	"type":"block",
+	"alltex":"dirt1.png",
+	"id":"dirt"
+},{
+	"type":"block",
+	"id":"fence",
+	"transparent":true,
+	"alltex":"fence_s.png"
+},{
+	"type":"block",
+	"id":"bricks",
+	"alltex":"briwall1.png"
+},{
+	"type":"block",
+	"id":"test",
+	"tex":["t.png","bot.png","f.png","b.png","l.png","r.png"],
+	"parts":{
+		"Chest":{
+			"items":[{"id": 0, "count": 1},{"id": 0, "count": 1}]
+		},
+		"Furnance":{
+			"temp": 100
+		}
+	}
+}
+]
