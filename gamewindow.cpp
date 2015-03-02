@@ -46,6 +46,7 @@ bool JargGameWindow::BaseInit()
         return false;
     }
 
+    //glfwWindowHint(GLFW_SAMPLES, 16);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
@@ -242,7 +243,10 @@ void JargGameWindow::BaseUpdate()
 
     cam->Update();
     cam->CalculateFrustum(cam->projection, cam->view * cam->model);
-    cam->SetLookAt(me->pos);
+
+    auto t_look = cam->lookAt;
+    cam->SetLookAt(glm::mix(t_look, me->pos, gt.elapsed));
+
     level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
     level->Update(cam, gt);
 

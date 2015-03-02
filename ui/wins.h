@@ -7,6 +7,7 @@
 #include <list>
 #include <glm/glm.hpp>
 #include "sge/font.h"
+#include "sge/colorscheme.h"
 
 class WinS : public WContainer{
 public:
@@ -15,6 +16,7 @@ public:
     ~WinS();
     static bool MouseHooked;
     static bool KeyboardHooked;
+    static ColorScheme color;
 
     void Update();
     void ToTop(WComponent *w);

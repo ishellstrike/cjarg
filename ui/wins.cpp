@@ -10,13 +10,14 @@
 WinS::WinS() :
     WContainer()
 {
-
+    color = ColorScheme::Basic();
 }
 
 WinS::WinS(SpriteBatch *sb_) :
     WContainer()
 {
     WinS::sb = sb_;
+    color = ColorScheme::Basic();
     ws = this;
 }
 
@@ -72,4 +73,5 @@ bool WinS::MouseHooked = false;
 WinS *WinS::ws;
 SpriteBatch *WinS::sb = nullptr;
 Font *WinS::f = nullptr;
+ColorScheme WinS::color;
 

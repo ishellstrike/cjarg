@@ -29,16 +29,18 @@ Win::~Win()
 void Win::Draw() const
 {
     SpriteBatch& sb = *WinS::sb;
+    WinS *ws = WinS::ws;
 
-    sb.drawRect(pos, size, col);
-    sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, Color::White);
+    sb.drawRect(pos, size, WinS::color.basic);
 
-    sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, Color::White);
     sb.drawLine(pos + glm::vec2(0, header), glm::vec2(pos.x + size.x, pos.y + header), 2, Color::White);
-    sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, Color::White);
-    sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, Color::White);
 
-    sb.drawText(text, {pos.x + 5, pos.y}, WinS::f, Color::White);
+    sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, WinS::color.border_up);
+    sb.drawLine(pos, glm::vec2(pos.x + size.x, pos.y), 2, WinS::color.border_up);
+    sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, WinS::color.border_down);
+    sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, WinS::color.border_down);
+
+    sb.drawText(text, {pos.x + 5, pos.y}, WinS::f, WinS::color.text);
 
     closeb->Draw();
 

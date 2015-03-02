@@ -136,41 +136,49 @@ glm::vec3 SubdivideCheck(const glm::vec3 &min, const glm::vec3 &max, const glm::
     return glm::vec3(0);
 }
 
-void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
+/*!
+ * \brief 3d версия алгоритме Брезенхема
+ * \param p1 начало отрезка
+ * \param p2 конец отрезка
+ * \param out_points[out] единичные кубы пространства, пересекающиеся с отрезком
+ *
+ * Трассировка пересечения заданного отрезка с кубами 1х1х1, на которое виртуально делится все пространство
+ */
+void Bresencham3D(const glm::vec3 &p1, const glm::vec3 &p2, std::vector<glm::vec3> &out_points)
 {
     int x  = static_cast<int>(p1.x);
     int y  = static_cast<int>(p1.y);
     int z  = static_cast<int>(p1.z);
-    int dx = static_cast<int>(glm::abs(p2.x-x));
-    int dy = static_cast<int>(glm::abs(p2.y-y));
-    int dz = static_cast<int>(glm::abs(p2.z-z));
-    int sx = static_cast<int>(glm::sign(p2.x-x));
-    int sy = static_cast<int>(glm::sign(p2.y-y));
-    int sz = static_cast<int>(glm::sign(p2.z-z));
+    int dx = static_cast<int>(glm::abs(p2.x - x));
+    int dy = static_cast<int>(glm::abs(p2.y - y));
+    int dz = static_cast<int>(glm::abs(p2.z - z));
+    int sx = static_cast<int>(glm::sign(p2.x - x));
+    int sy = static_cast<int>(glm::sign(p2.y - y));
+    int sz = static_cast<int>(glm::sign(p2.z - z));
 
-    if( (dy>=dx) && (dy>=dz) )
+    if( (dy >= dx) && (dy >= dz) )
     {
-        register int e_yx = (dx-dy) << 1;
-        register int e_yz = (dz-dy) << 1;
+        register int e_yx = (dx - dy) << 1;
+        register int e_yz = (dz - dy) << 1;
 
         e_yx -= (e_yx >> 1);
         e_yz -= (e_yz >> 1);
 
-        for(register int i=0;i<dy;i++)
+        for(register int i = 0; i < dy; ++i)
         {
-            points.push_back(glm::vec3(x,y,z));
-            if(e_yx>=0)
+            out_points.push_back(glm::vec3(x, y, z));
+            if(e_yx >= 0)
             {
                 x += sx;
                 e_yx -= (dy << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
 
-            if(e_yz>=0)
+            if(e_yz >= 0)
             {
                 z += sz;
                 e_yz -= (dy << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
 
             y += sy;
@@ -178,30 +186,30 @@ void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
             e_yz += (dz << 1);
         }
     }
-    else if( (dx>=dy) && (dx>=dz) )
+    else if( (dx >= dy) && (dx >= dz) )
     {
-        register int e_xy = (dy-dx) << 1;
-        register int e_xz = (dz-dx) << 1;
+        register int e_xy = (dy - dx) << 1;
+        register int e_xz = (dz - dx) << 1;
 
         e_xz -= (e_xz >> 1);
         e_xy -= (e_xy >> 1);
 
-        for(register int i=0;i<dx;i++)
+        for(register int i = 0; i < dx; ++i)
         {
-            points.push_back(glm::vec3(x,y,z));
+            out_points.push_back(glm::vec3(x, y, z));
 
             if(e_xy>=0)
             {
                 y += sy;
                 e_xy -= (dx << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
 
             if(e_xz>=0)
             {
                 z += sz;
                 e_xz -= (dx << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
             x += sx;
             e_xy +=(dy << 1);
@@ -210,37 +218,37 @@ void Bresencham3D(glm::vec3 &p1, glm::vec3 &p2, std::vector<glm::vec3> &points)
     }
     else // (dz>=dy) && (dz>=dx)
     {
-        register int e_zx = (dx-dz) << 1;
-        register int e_zy = (dy-dz) << 1;
+        register int e_zx = (dx - dz) << 1;
+        register int e_zy = (dy - dz) << 1;
 
         e_zx -= (e_zx >> 1);
         e_zy -= (e_zy >> 1);
 
-        for(register int i=0;i<dz;i++)
+        for(register int i = 0; i < dz; ++i)
         {
-            points.push_back(glm::vec3(x,y,z));
+            out_points.push_back(glm::vec3(x, y, z));
 
             if(e_zx>=0)
             {
                 x += sx;
                 e_zx -= (dz << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
             if(e_zy>=0)
             {
                 y += sy;
                 e_zy -= (dz << 1);
-                points.push_back(glm::vec3(x,y,z));
+                out_points.push_back(glm::vec3(x, y, z));
             }
 
             z += sz;
-            e_zx +=(dx << 1);
-            e_zy +=(dy << 1);
+            e_zx += (dx << 1);
+            e_zy += (dy << 1);
         }
 
 
     }
-    points.push_back(glm::vec3(x,y,z));
+    out_points.push_back(glm::vec3(x, y, z));
 }
 
 
@@ -262,7 +270,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
 
     std::vector<glm::vec3> points;
     auto farpos = ray.origin + ray.dir * (float) RX * 10.f;
-    Bresencham3D(ray.origin + glm::vec3(-1, 0.5, 0), farpos + glm::vec3(-1, 0.5, 0), points);
+    Bresencham3D(ray.origin + glm::vec3(-1, 0.5f, 0), farpos + glm::vec3(-1, 0.5f, 0), points);
 
     for(glm::vec3 &point : points)
     {

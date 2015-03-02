@@ -65,7 +65,8 @@ SOURCES += main.cpp \
     logic/map/physicssolver.cpp \
     logic/agents/clickreaction.cpp \
     logic/entity/staticitem.cpp \
-    logic/agents/furnance.cpp
+    logic/agents/furnance.cpp \
+    sge/colorscheme.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -126,7 +127,8 @@ HEADERS += \
     rapidjson/rapidjson.h \
     rapidjson/reader.h \
     rapidjson/stringbuffer.h \
-    rapidjson/writer.h
+    rapidjson/writer.h \
+    sge/colorscheme.h
 
 
 
