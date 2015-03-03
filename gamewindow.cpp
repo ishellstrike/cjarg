@@ -131,8 +131,9 @@ bool JargGameWindow::BaseInit()
     ws->f = f12.get();
 
     new Win(ws.get());
-    cjarg_main_w *ww = new cjarg_main_w(ws.get());
-    auto www = new cjarg_list_test(ws.get());
+    //cjarg_main_w *ww = new cjarg_main_w(ws.get());
+    //auto www = new cjarg_list_test(ws.get());
+    perf = new cjarg_perfomance(ws.get());
 
     atlas.LoadAll();
 
@@ -205,6 +206,10 @@ void JargGameWindow::BaseUpdate()
         Mouse::SetFixedPosState(!Mouse::GetFixedPosState());
     }
 
+    if(Keyboard::isKeyPress(GLFW_KEY_F1)){
+        fixed = !fixed;
+        if(fixed) tiker = std::chrono::steady_clock::now();
+    }
     if(Keyboard::isKeyPress(GLFW_KEY_F2)){
         wire = wire ? (glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ), false) : (glPolygonMode( GL_FRONT_AND_BACK, GL_FILL ), true);
     }
@@ -213,7 +218,7 @@ void JargGameWindow::BaseUpdate()
     if (Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
         Mouse::SetFixedPosState(true);
-        cam->pitch += Mouse::getCursorDelta().y / 10.f * static_cast<float>(gt.elapsed);
+        cam->pitch += Mouse::getCursorDelta().y / 1000.f;
     }
     else
         Mouse::SetFixedPosState(false);
@@ -225,7 +230,7 @@ void JargGameWindow::BaseUpdate()
 
     if (Mouse::isRightDown() || Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
-        cam->yaw += Mouse::getCursorDelta().x / 10.f * static_cast<float>(gt.elapsed);
+        cam->yaw += Mouse::getCursorDelta().x / 1000.f;
         cam->viewMatrixDirty = true;
     }
 
@@ -295,6 +300,7 @@ void JargGameWindow::BaseDraw()
     glfwSwapBuffers(window);
     gt.Update(glfwGetTime());
     fps.Update(gt);
+    perf->UpdateTimer(fps, gt);
 }
 
 void JargGameWindow::Mainloop()
@@ -305,7 +311,7 @@ void JargGameWindow::Mainloop()
         BaseUpdate();
         BaseDraw();
         tiker += std::chrono::microseconds(100000/6);
-        std::this_thread::sleep_until(tiker);
+        if(fixed) std::this_thread::sleep_until(tiker);
     }
 }
 

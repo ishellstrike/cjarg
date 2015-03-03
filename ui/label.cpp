@@ -34,8 +34,7 @@ void Label::append(const std::string &__s)
 void Label::Draw() const
 {
     glm::vec2 p = globalPos();
-    WinS::sb->drawText(m_text, p, size, WinS::f, aimed ? WinS::color.hovered_text : WinS::color.text,
-                       SpriteBatch::ALIGN_LEFT);
+    WinS::sb->drawText(m_text, p, size, WinS::f, WinS::color.text, SpriteBatch::ALIGN_LEFT);
 
     WComponent::Draw();
 }

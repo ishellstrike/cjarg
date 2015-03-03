@@ -66,7 +66,9 @@ SOURCES += main.cpp \
     logic/agents/clickreaction.cpp \
     logic/entity/staticitem.cpp \
     logic/agents/furnance.cpp \
-    sge/colorscheme.cpp
+    sge/colorscheme.cpp \
+    ui/cjarg_perfomance.cpp \
+    ui/graph.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -128,7 +130,9 @@ HEADERS += \
     rapidjson/reader.h \
     rapidjson/stringbuffer.h \
     rapidjson/writer.h \
-    sge/colorscheme.h
+    sge/colorscheme.h \
+    ui/cjarg_perfomance.h \
+    ui/graph.h
 
 
 

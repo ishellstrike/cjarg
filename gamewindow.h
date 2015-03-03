@@ -21,6 +21,7 @@
 #include "sge/camera.h"
 #include "ui/cjarg_main_w.h"
 #include "ui/cjarg_list_test.h"
+#include "ui/cjarg_perfomance.h"
 
 class JargGameWindow {
 public:
@@ -60,6 +61,9 @@ public:
 
     std::shared_ptr<WinS> ws;
     cjarg_main_w *main_w;
+    cjarg_perfomance *perf;
+    bool fixed = true;
+
 
     std::shared_ptr<BasicJargShader> basic, font;
     std::shared_ptr<SpriteBatch> batch;

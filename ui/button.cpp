@@ -32,7 +32,7 @@ void Button::Draw() const
     sb.drawLine(glm::vec2(pos.x, pos.y + size.y), pos + size, 2, border_down);
     sb.drawLine(glm::vec2(pos.x + size.x, pos.y), pos + size, 2, border_down);
 
-    WinS::sb->drawText(text, pos, size, WinS::f, aimed ? WinS::color.text : WinS::color.hovered_text, SpriteBatch::ALIGN_CENTER);
+    WinS::sb->drawText(text, pos, size, WinS::f, aimed ? WinS::color.hovered_text : WinS::color.text, SpriteBatch::ALIGN_CENTER);
 
     WComponent::Draw();
 }
