@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include "sge/mouse.h"
-#include "sge/cube.h"
+#include "sge/geometry/cube.h"
 #include "logic/base/database.h"
 
 Level::Level(LevelWorker &lw_) :
@@ -44,8 +44,8 @@ Level::~Level()
 
 void Level::Render(std::shared_ptr<Camera> cam)
 {
-    int x = cam->position.x / RX;
-    int y = cam->position.y / RY;
+    int x = cam->getPosition().x / RX;
+    int y = cam->getPosition().y / RY;
     facecount = vertcount = 0;
 
     for(auto &pair: lw.mem)
@@ -53,7 +53,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
         if(pair.second->state == Sector::READY || pair.second->rebuilding)
         {
             if(pair.second->is_outoffrustum) continue;
-            pair.second->mesh.Render(cam->MVP);
+            pair.second->mesh.Render(cam->getMVP());
             facecount += pair.second->facecount;
             vertcount += pair.second->vertcount;
         }
@@ -78,7 +78,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
         selection.World = glm::translate(glm::mat4(1), m_selected + glm::vec3(0.5,0.5,0.5));
         selection.World = glm::scale(selection.World, glm::vec3(1.1f,1.1f,1.1f));
         glDisable(GL_CULL_FACE);
-        selection.Render(cam->MVP);
+        selection.Render(cam->getMVP());
         glEnable(GL_CULL_FACE);
     }
 }
@@ -255,10 +255,10 @@ void Bresencham3D(const glm::vec3 &p1, const glm::vec3 &p2, std::vector<glm::vec
 
 void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
 {
-    glm::vec3 near = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 0.f),  cam->model * cam->view, cam->projection,
-                                    cam->viewport);
-    glm::vec3 far = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 1.f),  cam->model * cam->view, cam->projection,
-                                    cam->viewport);
+    glm::vec3 near = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 0.f),  cam->getModel() * cam->getView(), cam->getProjection(),
+                                    cam->getViewport());
+    glm::vec3 far = glm::unProject(glm::vec3(Mouse::getCursorPos().x, RESY-Mouse::getCursorPos().y, 1.f),  cam->getModel() * cam->getView(), cam->getProjection(),
+                                    cam->getViewport());
     glm::ray ray(near, far - near);
 
     finded = false;
@@ -312,6 +312,9 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                     c->pos.z = npos.z;
                 else
                     c->velocity.z = 0;
+
+                c->velocity.x /= 1.2;
+                c->velocity.y /= 1.2;
 
                 if(c->pos.z < 0)
                     c->pos.z = 0;

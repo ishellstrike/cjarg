@@ -13,7 +13,7 @@ public:
     void AddValue(float a);
 
     std::vector<float> data;
-    int dpos;
+    int dpos = 0;
     float min = 0, max = 100;
     const int dsize = 100;
 };

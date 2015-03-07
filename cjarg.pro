@@ -23,15 +23,12 @@ SOURCES += main.cpp \
     logic/entity/item.cpp \
     sge/basicjargshader.cpp \
     sge/colorextender.cpp \
-    sge/cube.cpp \
     sge/font.cpp \
     sge/fpscounter.cpp \
     sge/gametimer.cpp \
-    sge/icosahedron.cpp \
     sge/keyboard.cpp \
     sge/logger.cpp \
     sge/material.cpp \
-    sge/mesh.cpp \
     sge/mouse.cpp \
     sge/pixmap.cpp \
     sge/prefecences.cpp \
@@ -40,7 +37,7 @@ SOURCES += main.cpp \
     sge/spritebatch.cpp \
     sge/texture.cpp \
     sge/textureatlas.cpp \
-    sge/vpnt.cpp \
+    sge/geometry/vpnt.cpp \
     sge/json/json_internalarray.inl \
     sge/json/json_internalmap.inl \
     sge/json/json_reader.cpp \
@@ -68,7 +65,11 @@ SOURCES += main.cpp \
     logic/agents/furnance.cpp \
     sge/colorscheme.cpp \
     ui/cjarg_perfomance.cpp \
-    ui/graph.cpp
+    ui/graph.cpp \
+    sge/geometry/cube.cpp \
+    sge/geometry/icosahedron.cpp \
+    sge/geometry/mesh.cpp \
+    sge/geometry/quad.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -132,7 +133,11 @@ HEADERS += \
     rapidjson/writer.h \
     sge/colorscheme.h \
     ui/cjarg_perfomance.h \
-    ui/graph.h
+    ui/graph.h \
+    sge/geometry/*.h \
+    sge/geometry/geometry.hpp \
+    sge/geometry/quad.h \
+    sge/geometry/geometry.hpp
 
 
 

@@ -15,6 +15,7 @@
 #include <future>
 #include "sge/helper.h"
 #include "logic/agents/clickreaction.h"
+#include "sge/geometry/cube.h"
 
 #include "logic/agents/agents.h"
 
@@ -96,7 +97,7 @@ bool JargGameWindow::BaseInit()
     Mouse::initialize(window);
     cam = std::make_shared<Camera>();
     cam->SetPosition({40,40,30});
-    cam->SetLookAt({0,0,0});
+    cam->setLookAt({0,0,0});
     Resize(RESX, RESY);
     //Mouse::SetFixedPosState(true);
     glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos){
@@ -160,7 +161,15 @@ bool JargGameWindow::BaseInit()
 
     database::instance()->Load();
 
+    std::shared_ptr<Material> mat = std::make_shared<Material>();
+
     tiker = std::chrono::steady_clock::now();
+    mesh = Cube::getMesh();
+    mesh->Unindex();
+    mesh->computeNormal();
+    mesh->material = mat;
+    mesh->shader = level->basic;
+    mesh->Bind();
 }
 
 bool JargGameWindow::Destroy()
@@ -186,16 +195,16 @@ void JargGameWindow::BaseUpdate()
     glfwPollEvents();
 
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        me->pos.y += 1;
+        me->Push({0,1,0});
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        me->pos.y -= 1;
+        me->Push({0,-1,0});
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-        me->pos.x -= 1;
+       me->Push({-1,0,0});
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        me->pos.x += 1;
+        me->Push({1,0,0});
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_SPACE)){
@@ -218,7 +227,7 @@ void JargGameWindow::BaseUpdate()
     if (Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
         Mouse::SetFixedPosState(true);
-        cam->pitch += Mouse::getCursorDelta().y / 1000.f;
+        cam->setPitch(cam->getPitch() + Mouse::getCursorDelta().y / 1000.f);
     }
     else
         Mouse::SetFixedPosState(false);
@@ -226,12 +235,6 @@ void JargGameWindow::BaseUpdate()
     if (Mouse::isMiddleDown())
     {
        cam->Reset();
-    }
-
-    if (Mouse::isRightDown() || Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
-    {
-        cam->yaw += Mouse::getCursorDelta().x / 1000.f;
-        cam->viewMatrixDirty = true;
     }
 
     if(!WinS::MouseHooked)
@@ -247,12 +250,12 @@ void JargGameWindow::BaseUpdate()
     }
 
     cam->Update();
-    cam->CalculateFrustum(cam->projection, cam->view * cam->model);
+    cam->CalculateFrustum();
 
-    auto t_look = cam->lookAt;
-    cam->SetLookAt(glm::mix(t_look, me->pos, gt.elapsed));
+    auto t_look = cam->getLookAt();
+    cam->setLookAt(glm::mix(t_look, me->pos, gt.elapsed*10));
 
-    level->Preload({cam->position.x / RX, cam->position.y / RY}, 7);
+    level->Preload({cam->getPosition().x / RX, cam->getPosition().y / RY}, 7);
     level->Update(cam, gt);
 
     if(Mouse::isWheelUp())
@@ -278,6 +281,8 @@ void JargGameWindow::BaseDraw()
 
 
     level->Render(cam);
+    mesh->World = glm::translate(glm::mat4(1), me->pos);
+    mesh->Render(cam->getVP());
 
 
     glDisable(GL_DEPTH_TEST);

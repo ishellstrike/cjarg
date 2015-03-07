@@ -51,6 +51,7 @@ public:
     std::shared_ptr<Texture> tex;
     std::shared_ptr<Creature> me;
     static std::shared_ptr<Camera> cam;
+    std::shared_ptr<Mesh> mesh;
 
     std::shared_ptr<Font> f12;
 

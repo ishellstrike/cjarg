@@ -9,3 +9,13 @@ Creature::~Creature()
 {
 
 }
+const glm::vec3 &Creature::getWantedPos() const
+{
+    return wantedPos;
+}
+
+void Creature::setWantedPos(const glm::vec3 &value)
+{
+    wantedPos = value;
+}
+

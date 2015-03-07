@@ -20,13 +20,15 @@ void Graph::Draw() const
     float ysize = size.y * 0.8f;
     auto max = *std::max_element(std::begin(data), std::end(data));
     auto min = *std::min_element(std::begin(data), std::end(data));
-    for(int b = dpos + 1; b < dsize + dpos; b++, x+= 1)
+    for(int b = dpos + 2; b < dsize + dpos; b++, x+= 1)
     {
         auto a = b % dsize;
+        if(a == 0) continue;
         auto preval = (1-(((data[a-1])-min) / (max-min)))*ysize;
         auto val = (1-(((data[a])-min) / (max-min)))*ysize;
-        sb.drawLine(glm::vec2((size.x - 1)/(float)dsize * x, preval) + pos,
-                    glm::vec2(size.x/(float)dsize * x, val) + pos, 1, WinS::color.border_up);
+
+        sb.drawLine(glm::vec2((size.x)/static_cast<float>(dsize) * (x - 1), preval) + pos,
+                    glm::vec2(size.x/static_cast<float>(dsize) * x, val) + pos, 1, WinS::color.border_up);
     }
 
     sb.drawLine(pos, glm::vec2(pos.x, pos.y + size.y), 2, WinS::color.border_up);

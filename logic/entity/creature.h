@@ -10,6 +10,11 @@ public:
     Creature();
     ~Creature();
 
+    const glm::vec3 &getWantedPos() const;
+    void setWantedPos(const glm::vec3 &value);
+
+private:
+    glm::vec3 wantedPos;
 };
 
 #endif // CREATURE_H

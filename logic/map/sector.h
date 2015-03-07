@@ -12,7 +12,7 @@
 #include <memory>
 #include "sge/material.h"
 #include "sge/basicjargshader.h"
-#include "sge/mesh.h"
+#include "sge/geometry/mesh.h"
 #define FORijk for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j) for (int k=0; k<RZ; ++k)
 #define FORij for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j)
 
