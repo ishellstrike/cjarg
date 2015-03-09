@@ -79,6 +79,8 @@ void Win::Update()
             size.y = 40;
         if(size.x < 100)
             size.x = 100;
+        if(onResize)
+            onResize();
     }
     else
         resizing = false;

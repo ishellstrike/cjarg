@@ -33,6 +33,7 @@ Sector::~Sector()
     {
         delete blocks[i][j][k];
     }
+    blocks.clear();
 }
 
 void Sector::blockId(const Point3 &p, Jid i)
@@ -47,15 +48,48 @@ Jid Sector::blockId(const Point3 &p)
 
 void Sector::Init()
 {
-    FORijk
+    blocks.resize(RX);
+    for(int i = 0; i < RX; i++)
     {
-        blocks[i][j][k] = new Block();
+        blocks[i].resize(RY);
+        for(int j = 0; j < RY; j++)
+        {
+            blocks[i][j].resize(RZ);
+            for(int k = 0; k < RZ; k++)
+                blocks[i][j][k] = new Block();
+        }
     }
 }
 
 Block *Sector::block(const Point3 &p)
 {
     return blocks[p.x][p.y][p.z];
+}
+
+void Sector::block(const Point3 &p, Jid i)
+{
+    blocks[p.x][p.y][p.z]->id(i);
+}
+
+void Sector::block(const Point3 &p, std::string s)
+{
+    auto db = database::instance();
+    blocks[p.x][p.y][p.z]->id(db->block_db[db->block_pointer[s]]->id);
+}
+
+void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
+{
+    for(int i = 0; i < s.size.x && pos.x + i < RX; i++)
+    {
+        for(int j = 0; j < s.size.y && pos.y + j < RY; j++)
+        {
+            Letter l = s.data[i][j];
+            if(l == '.') continue;
+            auto dict = s.dict.find(l);
+            std::string st = dict->second;
+            block({pos.x + i, pos.y + j, pos.z}, st);
+        }
+    }
 }
 
 void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_)

@@ -1,20 +1,44 @@
 [
 {
+	"id":"dirt",
 	"type":"block",
-	"alltex":"dirt1.png",
-	"id":"dirt"
+	"alltex":"dirt1.png"
 },{
-	"type":"block",
 	"id":"fence",
+	"type":"block",
 	"transparent":true,
 	"alltex":"fence_s.png"
 },{
-	"type":"block",
 	"id":"bricks",
+	"type":"block",
 	"alltex":"briwall1.png"
 },{
+	"id":"bath",
 	"type":"block",
+	"alltex":"bath1.png"
+},{
+	"id":"door",
+	"type":"block",
+	"alltex":"door1.png"
+},{
+	"id":"pan",
+	"type":"block",
+	"alltex":"rakovina.png"
+},{
+	"id":"stand",
+	"type":"block",
+	"alltex":"tumba1.png"
+},{
+	"id":"furnance",
+	"type":"block",
+	"alltex":"plita.png"
+},{
+	"id":"bed",
+	"type":"block",
+	"alltex":"bed1.png"
+},{
 	"id":"test",
+	"type":"block",
 	"tex":["t.png","bot.png","f.png","b.png","l.png","r.png"],
 	"parts":[
 		{
@@ -26,5 +50,10 @@
 			"temp": 100
 		}
 	]
+},{
+	"id":"glass",
+	"type":"block",
+	"alltex":"glass_ver.png",
+	"transparent":true
 }
 ]

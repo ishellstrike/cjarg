@@ -5,6 +5,7 @@
 #define RZ 16
 #define RXYZ RX*RY*RZ
 #include "block.h"
+#include "scheme.h"
 #include <glm/glm.hpp>
 #include "point.h"
 #include "../entity/creature.h"
@@ -33,11 +34,14 @@ struct Sector
     void Init();
 
     Block *block(const Point3 &p);
+    void block(const Point3 &p, Jid i);
+    void block(const Point3 &p, std::string s);
+    void placeScheme(const Scheme &s, glm::vec3 pos);
 
     void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_);
     void Rebuild();
 
-    Block *blocks[RX][RY][RZ];
+    std::vector<std::vector<std::vector<Block*>>> blocks;
     Point offset;
     typedef std::vector<Creature*> CreatureList;
     CreatureList creatures;
@@ -49,6 +53,7 @@ struct Sector
     bool is_outoffrustum = false;
     bool rebuilding = false;
     bool rebuild_later = false;
+
 private:
 
     friend struct Generator;

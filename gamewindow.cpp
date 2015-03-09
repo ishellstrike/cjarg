@@ -17,7 +17,7 @@
 #include "logic/agents/clickreaction.h"
 #include "sge/geometry/cube.h"
 
-#include "logic/agents/agents.h"
+#include "logic/agents/agents.hpp"
 
 #define MAJOR 2
 #define MINOR 1
@@ -195,16 +195,16 @@ void JargGameWindow::BaseUpdate()
     glfwPollEvents();
 
     if(Keyboard::isKeyDown(GLFW_KEY_W)){
-        me->Push({0,1,0});
+        me->Push(cam->Forward);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_S)){
-        me->Push({0,-1,0});
+        me->Push(cam->Backward);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_A)){
-       me->Push({-1,0,0});
+       me->Push(cam->Left);
     }
     if(Keyboard::isKeyDown(GLFW_KEY_D)){
-        me->Push({1,0,0});
+        me->Push(cam->Right);
     }
 
     if(Keyboard::isKeyPress(GLFW_KEY_SPACE)){
@@ -228,6 +228,11 @@ void JargGameWindow::BaseUpdate()
     {
         Mouse::SetFixedPosState(true);
         cam->setPitch(cam->getPitch() + Mouse::getCursorDelta().y / 1000.f);
+    }
+    if(Mouse::isRightDown() || Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
+    {
+        Mouse::SetFixedPosState(true);
+        cam->setYaw(cam->getYaw() + Mouse::getCursorDelta().x / 1000.f);
     }
     else
         Mouse::SetFixedPosState(false);
@@ -281,7 +286,7 @@ void JargGameWindow::BaseDraw()
 
 
     level->Render(cam);
-    mesh->World = glm::translate(glm::mat4(1), me->pos);
+    mesh->World = glm::translate(glm::mat4(1), me->pos + glm::vec3(0,0,1));
     mesh->Render(cam->getVP());
 
 
@@ -291,7 +296,7 @@ void JargGameWindow::BaseDraw()
     batch->drawText(cam->getFullDebugDescription(), {10.f, 100.f}, f12.get(), Color::White);
     batch->drawText(string_format("face: %d vert: %d", level->facecount, level->vertcount), {20.f, 20.f}, f12.get(), Color::White);
 
-    batch->drawText(std::to_string(fps.GetCount()).append(" fps"), {5.f, 5.f}, f12.get(), Color::Red);
+    batch->drawText(string_format("%d fps th %d", fps.GetCount(), LevelWorker::th), {5.f, 5.f}, f12.get(), Color::Red);
 
     ws->Draw();
     if(!Mouse::GetFixedPosState())

@@ -19,6 +19,7 @@ public:
     bool resizing = false;
     glm::vec2 resize_point;
     void MoveUnderCur();
+    std::function<void()> onResize;
 
     glm::vec4 col;
     std::string text;

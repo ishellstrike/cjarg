@@ -20,7 +20,6 @@ if(strcmp(part["type"].GetString(), #ctype) == 0) \
 } \
 else
 
-
 typedef int Jid;
 typedef int Jtex;
 

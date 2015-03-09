@@ -3,6 +3,7 @@
 #include "sge/fielsystem.h"
 #include <fstream>
 #include "rapidjson/document.h"
+#include <logic/map/scheme.h>
 
 void database::registerBlock(const std::string &s, StaticBlock *b)
 {
@@ -63,20 +64,20 @@ void database::Load()
                 rapidjson::Value &val = d[i];
                 if(!val.HasMember("type"))
                 {
-                    LOG(error) << "record #" << i+1 << " from " << file << " has no type";
+                    LOG(error) << "record #" << i+1 << " from " << file << " has no \"type\"";
                     continue;
                 }
                 std::string type = val["type"].GetString();
 
-                if(!val.HasMember("id"))
-                {
-                    LOG(error) << "record #" << i+1 << " from " << file << " has no id";
-                    continue;
-                }
-
                 // === parse part ===
                 if(type == "block")
                 {
+                    if(!val.HasMember("id"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " has no \"id\"";
+                        continue;
+                    }
+
                     StaticBlock *b = new StaticBlock();
                     b->etalon = std::unique_ptr<Block>(new Block());
                     b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
@@ -96,7 +97,7 @@ void database::Load()
                             for(int a = 0; a < arr.Size(); a++)
                                 b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].GetString());
                         } else
-                            LOG(error) << "block " << id << " from " << file << " has no texture";
+                            LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
                     }
 
                     if(val.HasMember("parts")) {
@@ -110,7 +111,7 @@ void database::Load()
                                 /* all agents must be written here */
                                 CASTER(Chest)
                                 CASTER(Furnance)
-                                /*else here*/ LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has unknown type";
+                                /*else here*/ LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
                             }
                             else
                                 LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has no type";
@@ -131,11 +132,118 @@ void database::Load()
 
                 if(type == "item")
                 {
+                    if(!val.HasMember("id"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " has no \"id\"";
+                        continue;
+                    }
+
                     StaticItem *i = new StaticItem;
                     std::string id = val["id"].GetString();
 
                     registerItem(id, i);
                     loaded ++;
+                }
+
+                if(type == "scheme")
+                {
+                    Scheme s;
+                    if(!val.HasMember("building"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has no \"building\"";
+                        continue;
+
+                    }
+                    s.type = val["building"].GetString();
+
+                    if(!val.HasMember("dictionary"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has no \"dictionary\"";
+                        continue;
+                    }
+                    rapidjson::Value &dict = val["dictionary"];
+                    if(dict.IsArray())
+                    {
+                        for(int j=0; j < dict.Size(); j++)
+                        {
+                            rapidjson::Value &pair = dict[j];
+                            s.dict[pair.Begin()->GetString()[0]] = (pair.Begin() + 1)->GetString();
+                        }
+                    }
+                        else
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has broken \"dictionary\" (must be [[\"C\",\"id_string\"], ...])";
+                        continue;
+                    }
+
+                    if(!val.HasMember("size"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has no \"size\"";
+                        continue;
+                    }
+                    rapidjson::Value &size = val["size"];
+                    if(!size.IsArray() || size.Size() != 2) {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has broken \"size\" (must be [x,y])";
+                        continue;
+                    }
+                    s.size = {size.Begin()->GetInt(), (size.Begin() + 1)->GetInt()};
+                    s.Resize(s.size);
+
+                    if(!val.HasMember("data"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has no \"data\"";
+                        continue;
+                    }
+                    rapidjson::Value &data = val["data"];
+                    if(data.IsArray())
+                    {
+                        if(data.Size() != s.size.y)
+                        {
+                            LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has broken \"data\", height is " <<
+                                          data.Size() << ", scheme has height " << s.size.y;
+                            continue;
+                        }
+                        for(int j=0; j < data.Size(); j++)
+                        {
+                            auto str = data[j].GetString();
+                            if(data[j].GetStringLength() != s.size.x)
+                            {
+                                LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has broken \"data\", line " << j <<
+                                              " lenght is " << data[j].GetStringLength() << ", scheme has lenght " << s.size.x;
+                                continue;
+                            }
+                            for(int k = 0; k < data[j].GetStringLength(); ++k)
+                            {
+                                s.data[k][j] = str[k];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " is scheme and has broken \"data\" (must be [\"   abcd   \", ...])";
+                        continue;
+                    }
+
+                    //test
+                    bool broken = false;
+                    for(int m = 0; m < s.size.x && !broken; m++)
+                        for(int n = 0; n < s.size.y && !broken; n++){
+                            if(s.data[m][n] == '.') continue;
+                            auto it = s.dict.find(s.data[m][n]);
+                            if(it == s.dict.end())
+                            {
+                                broken = true;
+                                LOG(error) << "\"" << s.data[m][n] << "\" not found in dictionary";
+                            }
+                        }
+                    if(broken) {
+                        LOG(error) << "scheme broken";
+                        s.LogData();
+                        LOG(error) << "-------------";
+                        continue;
+                    }
+
+                    scheme_db[s.type].push_back(s);
                 }
             }
         } else

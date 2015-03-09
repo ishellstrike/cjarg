@@ -14,6 +14,14 @@ cjarg_perfomance::cjarg_perfomance(WContainer *par) :
     gfps_fast = new Graph(this);
     ggt_fast->pos = {0,100};
     gfps_fast->pos = {100,100};
+
+    onResize = [=](){
+        glm::vec2 size = this->size - glm::vec2(0,20);
+        ggt->size = gfps->size = ggt_fast->size = gfps_fast->size = size/2.f;
+        gfps->pos = {size.x/2.f, 0};
+        ggt_fast->pos = {0, size.y/2.f};
+        gfps_fast->pos = {size.x/2.f, size.y/2.f};
+    };
 }
 
 void cjarg_perfomance::Draw() const
@@ -24,11 +32,6 @@ void cjarg_perfomance::Draw() const
 void cjarg_perfomance::Update()
 {
     Win::Update();
-    glm::vec2 size = this->size - glm::vec2(0,20);
-    ggt->size = gfps->size = ggt_fast->size = gfps_fast->size = size/2.f;
-    gfps->pos = {size.x/2.f, 0};
-    ggt_fast->pos = {0, size.y/2.f};
-    gfps_fast->pos = {size.x/2.f, size.y/2.f};
 }
 
 void cjarg_perfomance::UpdateTimer(const FPSCounter &fps, const GameTimer &gt)

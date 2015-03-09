@@ -25,10 +25,12 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
     {
         has_thread = true;
         threads = std::thread([&, mat, basic, s](){
+            th ++;
             if(generator && !s->rebuilding)
                 generator(s);
             s->Rebuild(mat, basic);
             has_thread = false;
+            th --;
             return;
         });
         threads.detach();
@@ -55,4 +57,5 @@ void LevelWorker::SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen)
 }
 
 volatile bool LevelWorker::has_thread = false;
+volatile int LevelWorker::th = 0;
 

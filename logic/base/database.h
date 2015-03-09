@@ -5,8 +5,10 @@
 #include "logic/map/block.h"
 #include "logic/entity/item.h"
 #include <unordered_map>
+#include <vector>
 #include "logic/map/staticblock.h"
 #include "logic/entity/staticitem.h"
+#include <logic/map/scheme.h>
 
 class database
 {
@@ -50,6 +52,8 @@ public:
     std::unordered_map<Jid, std::string> item_back_pointer;
     std::vector<std::unique_ptr<StaticItem>> item_db;
     void registerItem(const std::string &s, StaticItem *i);
+
+    std::unordered_map<SchemeType, std::vector<Scheme>> scheme_db;
 
     void Load();
 

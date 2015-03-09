@@ -1,6 +1,6 @@
 #ifndef GAMEPART_H
 #define GAMEPART_H
-#include "agents.h"
+#include "agents.hpp"
 #include <vector>
 #include <memory>
 #include <functional>

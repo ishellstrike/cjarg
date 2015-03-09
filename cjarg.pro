@@ -69,7 +69,9 @@ SOURCES += main.cpp \
     sge/geometry/cube.cpp \
     sge/geometry/icosahedron.cpp \
     sge/geometry/mesh.cpp \
-    sge/geometry/quad.cpp
+    sge/geometry/quad.cpp \
+    logic/map/gen_helper.cpp \
+    logic/map/scheme.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -119,7 +121,6 @@ HEADERS += \
     logic/serialize.h \
     logic/entity/staticitem.h \
     logic/agents/furnance.h \
-    logic/agents/agents.h \
     rapidjson/internal/pow10.h \
     rapidjson/internal/stack.h \
     rapidjson/internal/strfunc.h \
@@ -137,7 +138,10 @@ HEADERS += \
     sge/geometry/*.h \
     sge/geometry/geometry.hpp \
     sge/geometry/quad.h \
-    sge/geometry/geometry.hpp
+    sge/geometry/geometry.hpp \
+    logic/map/gen_helper.h \
+    logic/map/scheme.h \
+    logic/agents/agents.hpp
 
 
 

@@ -17,6 +17,7 @@ public:
     Sector *getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic);
     void SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen);
     SectorMap mem;
+        volatile static int th;
 private:
 
     std::function<void(std::shared_ptr<Sector>)> generator;
