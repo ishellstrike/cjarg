@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <sge/logger.h>
 #include <map>
+#include <rapidjson/document.h>
 
 typedef std::string SchemeType;
 typedef char Letter;
@@ -56,6 +57,8 @@ struct Scheme
      * \code NumericTransform(Scheme::TRANSFORM_RCW);
      */
     void NumericTransform(int __num);
+
+    bool deserialize(rapidjson::Value &__val);
 };
 
 #endif // SCHEME_H

@@ -71,7 +71,8 @@ SOURCES += main.cpp \
     sge/geometry/mesh.cpp \
     sge/geometry/quad.cpp \
     logic/map/gen_helper.cpp \
-    logic/map/scheme.cpp
+    logic/map/scheme.cpp \
+    logic/base/parse_helper.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -141,7 +142,8 @@ HEADERS += \
     sge/geometry/geometry.hpp \
     logic/map/gen_helper.h \
     logic/map/scheme.h \
-    logic/agents/agents.hpp
+    logic/agents/agents.hpp \
+    logic/base/parse_helper.h
 
 
 
