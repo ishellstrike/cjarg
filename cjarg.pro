@@ -278,7 +278,8 @@ DISTFILES += \
     data/textures/cur_resize.png \
     data/textures/frame.png \
     data/json/core_blocks.json \
-    rapidjson/license.txt
+    rapidjson/license.txt \
+    data/json/core_sheme_rooms.json
 
 OTHER_FILES += \
     README.md \

@@ -1,0 +1,52 @@
+[
+{
+	"type":"scheme",
+	"building":"house1_room",
+	"size":[8,5],
+	"data": ["Bo|..C..",
+			 "..D..C.T",
+			 "--+.....",
+			 "p.D..sRo",
+			 "0.|....F"],
+	"dictionary": [
+		["B","bed"],
+		["o","stand"],
+		["0","bath"],
+		["p","pan"],
+		["s","sink"],
+		["D","door"],
+		["R","fridge"],
+		["T","tv"],
+		["C","couch"],
+		["|","bricks"],
+		["-","bricks"],
+		["+","bricks"],
+		["F","furnance"]
+	]
+},{
+	"type":"scheme",
+	"building":"house1_room",
+	"size":[8,5],
+	"data": [".B|oo.CC",
+			 "..D.....",
+			 "--+..BBT",
+			 "p.D..sRo",
+			 "0.|....F"],
+	"dictionary": [
+		["B","bed"],
+		["o","stand"],
+		["0","bath"],
+		["p","pan"],
+		["s","sink"],
+		["D","door"],
+		["R","fridge"],
+		["F","furnance"],
+		["T","tv"],
+		["C","couch"],
+		["|","bricks"],
+		["-","bricks"],
+		["+","bricks"],
+		["b","bookshelf"]
+	]
+}
+]
