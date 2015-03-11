@@ -1,49 +1,64 @@
 [
 {
 	"id":"dirt",
+	"name":"земля",
 	"type":"block",
-	"alltex":"dirt1.png"
+	"alltex":["dirt1.png"]
+},{
+	"id":"grass",
+	"name":"трава",
+	"type":"block",
+	"alltex":["grass1.png","grass2.png","grass3.png","grass4.png","grass5.png","grass6.png","grass7.png"]
 },{
 	"id":"fence",
+	"name":"металическая решетка",
 	"type":"block",
 	"transparent":true,
-	"alltex":"fence_s.png"
+	"alltex":["fence_s.png"]
 },{
 	"id":"bricks",
 	"type":"block",
-	"alltex":"briwall1.png"
+	"alltex":["briwall1.png"]
 },{
 	"id":"bath",
+	"name":"ванна",
 	"type":"block",
-	"alltex":"bath1.png"
+	"alltex":["bath1.png","bath2.png","bath3.png","bath4.png","bath5.png"]
 },{
 	"id":"door",
+	"name":"деревянная дверь",
 	"type":"block",
-	"alltex":"door1.png"
+	"alltex":["door1.png"]
 },{
 	"id":"pan",
+	"name":"раковина",
 	"type":"block",
-	"alltex":"rakovina.png"
+	"cube":false,
+	"alltex":["rakovina.png"]
 },{
 	"id":"stand",
+	"name":"тумбочка",
 	"type":"block",
-	"alltex":"tumba1.png"
+	"cube":false,
+	"alltex":["tumba1.png"]
 },{
 	"id":"furnance",
 	"type":"block",
-	"alltex":"plita.png"
+	"cube":false,
+	"alltex":["plita.png"]
 },{
 	"id":"bed",
 	"type":"block",
-	"alltex":"bed1.png"
+	"cube":false,
+	"alltex":["bed1.png","bed2.png","bed3.png","bed4.png","bed5.png"]
 },{
 	"id":"test",
 	"type":"block",
-	"tex":["t.png","bot.png","f.png","b.png","l.png","r.png"],
+	"tex":[["t.png"],["bot.png"],["f.png"],["b.png"],["l.png"],["r.png"]],
 	"parts":[
 		{
 			"type":"Chest",
-			"items":[{"id": 0, "count": 1},{"id": 0, "count": 1}]
+			"items":[{"id": "item", "count": 1},{"id": "item2", "count": 1}]
 		},
 		{
 			"type":"Furnance",
@@ -53,7 +68,21 @@
 },{
 	"id":"glass",
 	"type":"block",
-	"alltex":"glass_ver.png",
+	"alltex":["glass_ver.png"],
 	"transparent":true
+},{
+	"id":"cone",
+	"type":"block",
+	"alltex":["cone1.png", "cone2.png"],
+	"cube":false,
+	"transparent":true,
+	"fire":true
+},{
+	"id":"crates",
+	"type":"block",
+	"alltex":["crates1.png", "crates2.png", "crates3.png"],
+	"cube":false,
+	"transparent":true,
+	"fire":true
 }
 ]
