@@ -10,7 +10,7 @@
 #include "sge/logger.h"
 #include "sge/shader.h"
 #include "sge/spritebatch.h"
-#include "ui/wins.h"
+#include "sge_ui/wins.h"
 #include "sge/fpscounter.h"
 #include "sge/gametimer.h"
 #include "sge/textureatlas.h"
@@ -19,9 +19,9 @@
 #include "logic/base/database.h"
 #include "sge/font.h"
 #include "sge/camera.h"
-#include "ui/cjarg_main_w.h"
-#include "ui/cjarg_list_test.h"
-#include "ui/cjarg_perfomance.h"
+#include "cjarg_main_w.h"
+#include "cjarg_list_test.h"
+#include "cjarg_perfomance.h"
 
 class JargGameWindow {
 public:

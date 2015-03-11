@@ -1,11 +1,11 @@
 #ifndef CJARG_PERFOMANCE_H
 #define CJARG_PERFOMANCE_H
-#include "wins.h"
-#include "wins.h"
+#include "sge_ui/wins.h"
+#include "sge_ui/wins.h"
 #include "sge/fpscounter.h"
 #include "sge/gametimer.h"
 #include <list>
-#include "graph.h"
+#include "sge_ui/graph.h"
 
 class cjarg_perfomance : public Win
 {

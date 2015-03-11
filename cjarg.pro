@@ -12,8 +12,6 @@ SOURCES += main.cpp \
     logic/map/level.cpp \
     logic/map/levelworker.cpp \
     logic/map/point.cpp \
-    ui/wins.cpp \
-    ui/win.cpp \
     logic/base/database.cpp \
     logic/map/trivialgenerator.cpp \
     logic/entity/creature.cpp \
@@ -50,35 +48,36 @@ SOURCES += main.cpp \
     logic/map/staticblock.cpp \
     sge/helper.cpp \
     sge/spheretesselator.cpp \
-    ui/button.cpp \
-    ui/label.cpp \
-    ui/component.cpp \
-    ui/cjarg_main_w.cpp \
-    ui/panel.cpp \
-    ui/cjarg_list_test.cpp \
-    ui/list_container.cpp \
-    ui/vertical_bar.cpp \
     logic/entity/physic.cpp \
     logic/map/physicssolver.cpp \
     logic/agents/clickreaction.cpp \
     logic/entity/staticitem.cpp \
     logic/agents/furnance.cpp \
     sge/colorscheme.cpp \
-    ui/cjarg_perfomance.cpp \
-    ui/graph.cpp \
     sge/geometry/cube.cpp \
     sge/geometry/icosahedron.cpp \
     sge/geometry/mesh.cpp \
     sge/geometry/quad.cpp \
     logic/map/gen_helper.cpp \
     logic/map/scheme.cpp \
-    logic/base/parse_helper.cpp
+    logic/base/parse_helper.cpp \
+    cjarg_perfomance.cpp \
+    cjarg_main_w.cpp \
+    cjarg_list_test.cpp \
+    sge_ui/button.cpp \
+    sge_ui/component.cpp \
+    sge_ui/graph.cpp \
+    sge_ui/label.cpp \
+    sge_ui/list_container.cpp \
+    sge_ui/panel.cpp \
+    sge_ui/vertical_bar.cpp \
+    sge_ui/win.cpp \
+    sge_ui/wins.cpp
 
 HEADERS += \
     gamewindow.h \
     jsonparser.h \
     logic/map/*.h \
-    ui/*.h \
     logic/base/database.h \
     logic/map/diamondsquare.h \
     logic/map/trivialgenerator.h \
@@ -108,14 +107,6 @@ HEADERS += \
     logic/map/staticblock.h \
     sge/helper.h \
     sge/abstracttexture.h \
-    ui/button.h \
-    ui/label.h \
-    ui/wcontainer.h \
-    ui/cjarg_main_w.h \
-    ui/panel.h \
-    ui/cjarg_list_test.h \
-    ui/list_container.h \
-    ui/vertical_bar.h \
     logic/entity/physic.h \
     logic/map/physicssolver.h \
     logic/agents/clickreaction.h \
@@ -134,8 +125,6 @@ HEADERS += \
     rapidjson/stringbuffer.h \
     rapidjson/writer.h \
     sge/colorscheme.h \
-    ui/cjarg_perfomance.h \
-    ui/graph.h \
     sge/geometry/*.h \
     sge/geometry/geometry.hpp \
     sge/geometry/quad.h \
@@ -143,7 +132,20 @@ HEADERS += \
     logic/map/gen_helper.h \
     logic/map/scheme.h \
     logic/agents/agents.hpp \
-    logic/base/parse_helper.h
+    logic/base/parse_helper.h \
+    cjarg_perfomance.h \
+    cjarg_main_w.h \
+    cjarg_list_test.h \
+    sge_ui/button.h \
+    sge_ui/component.h \
+    sge_ui/graph.h \
+    sge_ui/label.h \
+    sge_ui/list_container.h \
+    sge_ui/panel.h \
+    sge_ui/vertical_bar.h \
+    sge_ui/wcontainer.h \
+    sge_ui/win.h \
+    sge_ui/wins.h
 
 
 

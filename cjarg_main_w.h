@@ -1,9 +1,9 @@
 #ifndef CJARG_MAIN_W_H
 #define CJARG_MAIN_W_H
-#include "win.h"
-#include "button.h"
-#include "label.h"
-#include "panel.h"
+#include "sge_ui/win.h"
+#include "sge_ui/button.h"
+#include "sge_ui/label.h"
+#include "sge_ui/panel.h"
 
 class cjarg_main_w : public Win
 {

@@ -6,7 +6,7 @@
 #include "sge/shader.h"
 #include "sge/spritebatch.h"
 #include "glm/gtx/transform.hpp"
-#include "ui/win.h"
+#include "sge_ui/win.h"
 #include "sge/colorextender.h"
 #include "sge/textureatlas.h"
 #include <thread>

@@ -51,6 +51,7 @@ void TestGenerator_City1::Generate(std::shared_ptr<Sector> s)
     for(int i = 0; i < 5; i++) {
         a.NumericTransform(Noise::normalized_simplexnoise(ii,jj)*12345);
     }
+
     s->placeScheme(a, {1,1,1});
     gen_helper::PlaceRegion(s, {1,1,2}, {1 + a.size.x,1 + a.size.y, 2}, "bricks");
     s->placeScheme(a, {1,1,3});
