@@ -39,14 +39,15 @@ void database::Load()
     for(std::string file : files)
     {
         std::ifstream fs(Prefecences::Instance()->getJsonDir() + file);
-        std::string buf;
         std::string all;
         all.reserve(65536);
         while(!fs.eof())
         {
+            std::string buf;
             fs >> buf;
             all += buf;
         }
+        fs.close();
 
         LOG(info) << "parse " << file;
         rapidjson::Document d;
@@ -54,6 +55,8 @@ void database::Load()
         if(d.HasParseError())
         {
             LOG(error) << d.GetParseError();
+            LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, static_cast<size_t>(0)), glm::min(all.length(), static_cast<size_t>(40)));
+            LOG(error) << "                    ^";
         }
 
         int loaded = 0;
@@ -90,12 +93,12 @@ void database::Load()
                     }
 
                     if(val.HasMember("alltex") || val.HasMember("tex")) {
-                        if(val.HasMember("alltex")) b->setTexture(val["alltex"].GetString());
+                        if(val.HasMember("alltex")) b->setTexture(val["alltex"].Begin()->GetString());
                         else
                         if(val.HasMember("tex")) {
                             rapidjson::Value &arr = val["tex"];
                             for(int a = 0; a < arr.Size(); a++)
-                                b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].GetString());
+                                b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].Begin()->GetString());
                         } else
                             LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
                     }

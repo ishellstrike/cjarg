@@ -13,7 +13,8 @@ public:
 
     void deserialize(rapidjson::Value &val)
     {
-        id = val["id"].GetInt();
+        auto tex_id = val["id"].GetString();
+        //id = database::instance()->item_db[database::instance()->item_pointer[tex_id]]->id;
         count = val["count"].GetInt();
     }
 };

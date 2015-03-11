@@ -8,27 +8,29 @@
 template<typename T> class Array2D
 {
 public:
-    Array2D(unsigned int w, unsigned int h):
+    Array2D(size_t w, size_t h):
         width(w), height(h), data(new T[w*h]) {}
     ~Array2D() { if(data) {delete[] data;} data = nullptr; }
 
+    glm::vec2 size() {return{width, height};}
+
     template <typename C>
-    T* operator[](C i) {return data+((int)i)*height;}
+    T *operator[](C i) {return data+((int)i)*height;}
 private:
-    T* data = nullptr;
-    unsigned int width = 0, height = 0;
+    T *data;
+    size_t width, height;
 };
 
 struct DiamondSquare
 {
-    Array2D<float> *DsGenerate(int iWidth, int iHeight, double iRoughness)
+    Array2D<float> *DsGenerate(int iWidth, int iHeight, float iRoughness)
     {
         Array2D<float> *points = new Array2D<float>(iWidth + 1, iHeight + 1);
 
-        double c1 = rand()/(double)RAND_MAX;
-        double c2 = rand()/(double)RAND_MAX;
-        double c3 = rand()/(double)RAND_MAX;
-        double c4 = rand()/(double)RAND_MAX;
+        float c1 = rand()/(float)RAND_MAX;
+        float c2 = rand()/(float)RAND_MAX;
+        float c3 = rand()/(float)RAND_MAX;
+        float c4 = rand()/(float)RAND_MAX;
         _dRoughness = iRoughness;
         _dBigSize = iWidth + iHeight;
         DsDivide(points, 0, 0, iWidth, iHeight, c1, c2, c3, c4);
@@ -36,30 +38,30 @@ struct DiamondSquare
     }
 
 private:
-    double _dBigSize;
-    double _dRoughness;
+    float _dBigSize;
+    float _dRoughness;
 
-    static double Normalize(double iNum) {
+    static float Normalize(float iNum) {
         if (iNum < 0) {
             iNum = 0;
         }
-        else if (iNum > 1.0) {
-            iNum = 1.0;
+        else if (iNum > 1.0f) {
+            iNum = 1.0f;
         }
         return iNum;
     }
 
-    void DsDivide(Array2D<float> *points, double x, double y, double width, double height, double c1, double c2, double c3, double c4)
+    void DsDivide(Array2D<float> *points, float x, float y, float width, float height, float c1, float c2, float c3, float c4)
     {
-        double newWidth = glm::floor(width/2.0);
-        double newHeight = glm::floor(height/2.0);
+        float newWidth = glm::floor(width/2.0f);
+        float newHeight = glm::floor(height/2.0f);
 
         if (width > 1 || height > 1) {
-            double middle = ((c1 + c2 + c3 + c4)/4.0) + PMove(newWidth + newHeight);
-            double edge1 = ((c1 + c2)/2.0);
-            double edge2 = ((c2 + c3)/2.0);
-            double edge3 = ((c3 + c4)/2.0);
-            double edge4 = ((c4 + c1)/2.0);
+            float middle = ((c1 + c2 + c3 + c4)/4.0f) + PMove(newWidth + newHeight);
+            float edge1 = ((c1 + c2)/2.0f);
+            float edge2 = ((c2 + c3)/2.0f);
+            float edge3 = ((c3 + c4)/2.0f);
+            float edge4 = ((c4 + c1)/2.0f);
             middle = Normalize(middle);
             edge1 = Normalize(edge1);
             edge2 = Normalize(edge2);
@@ -86,7 +88,7 @@ private:
         }
     }
 
-    double PMove(double smallSize)
+    float PMove(float smallSize)
     {
         return (rand()/(float)RAND_MAX - 0.5)*smallSize / _dBigSize * _dRoughness;
     }
