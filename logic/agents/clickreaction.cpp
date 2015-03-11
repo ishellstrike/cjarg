@@ -1,6 +1,6 @@
 #include "clickreaction.h"
-#include "ui/wins.h"
-#include "ui/cjarg_main_w.h"
+#include "sge_ui/wins.h"
+#include "cjarg_main_w.h"
 
 void ClickReactionTest::Click(Block *b)
 {
