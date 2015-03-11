@@ -9,17 +9,20 @@
 
 typedef std::string SchemeType;
 typedef char Letter;
+typedef std::vector<std::vector<Letter>> LetterMatrix;
 
 struct Scheme
 {
     enum TRANSFORM {
         TRANSFORM_MX,
         TRANSFORM_MY,
-        TRANSFORM_RCW,
+        TRANSFORM_CW,
+        TRANSFORM_CCW,
+        TRANSFORM_T,
         TRANSFORM_AFTER_LAST
     };
 
-    std::vector<std::vector<Letter>> data;
+    LetterMatrix data;
     std::map<Letter, std::string> dict;
 
     /*!
@@ -36,6 +39,7 @@ struct Scheme
      * \brief Поворот схемы по чесовой стрелке
      */
     void RotateCCW();
+    void RotateCW();
 
     /*!
      * \brief Транспонирование схемы
@@ -54,7 +58,7 @@ struct Scheme
      * \param __num
      *
      * \code for(int i = 0; i < 5; ++i) NumericTransform(rnd()); //4 случайных трансформации
-     * \code NumericTransform(Scheme::TRANSFORM_RCW);
+     * \code NumericTransform(Scheme::TRANSFORM_CCW);
      */
     void NumericTransform(int __num);
 

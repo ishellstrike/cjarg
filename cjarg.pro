@@ -145,7 +145,10 @@ HEADERS += \
     sge_ui/vertical_bar.h \
     sge_ui/wcontainer.h \
     sge_ui/win.h \
-    sge_ui/wins.h
+    sge_ui/wins.h \
+    tests/catch.hpp \
+    tests/tests.hpp \
+    tests/scheme_tests.h
 
 
 

@@ -83,7 +83,7 @@ void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
     {
         for(int j = 0; j < s.size.y && pos.y + j < RY; j++)
         {
-            Letter l = s.data[i][j];
+            Letter l = s.data[j][i];
             if(l == '.') continue;
             auto dict = s.dict.find(l);
             std::string st = dict->second;
