@@ -30,3 +30,13 @@ void Chest::deserialize(rapidjson::Value &val)
     }
 }
 
+void Chest::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l)
+{
+
+}
+
+void Chest::Init(const glm::vec3 &pos, const Level &l)
+{
+
+}
+

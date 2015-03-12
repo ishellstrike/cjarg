@@ -31,7 +31,7 @@ struct Dynamic
         T *agent = getAgent<T>();
         if(agent)
         {
-            a(agent-> agent);
+            a(agent->agent);
             return true;
         }
         return false;

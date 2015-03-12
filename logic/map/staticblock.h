@@ -21,7 +21,7 @@ public:
     StaticBlock();
     ~StaticBlock();
 
-    int tex[6];
+    int tex[SIDE_AFTER_LAST];
     bool transparent = false;
     std::unique_ptr<ClickReaction> r_click, l_click;
     std::unique_ptr<Block> etalon;

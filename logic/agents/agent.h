@@ -3,6 +3,10 @@
 #include <string>
 #include <memory>
 #include "rapidjson/document.h"
+#include "sge/gametimer.h"
+#include <glm/glm.hpp>
+
+class Level;
 
 #define AGENT(type)                         \
 type() :                                    \
@@ -45,11 +49,14 @@ public:
         return result;
     }
 
-    virtual Agent *instantiate() const;
     const std::string type = "EmptyAgent";
     friend class Dynamic;
 
     void deserialize(rapidjson::Value &val);
+
+    virtual Agent *instantiate() const = 0;
+    virtual void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l) = 0;
+    virtual void Init(const glm::vec3 &pos, const Level &l) = 0;
 };
 
 class StaticAgent : public  Agent

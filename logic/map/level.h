@@ -14,17 +14,31 @@
 class Level
 {
 public:
+    enum NEIGB
+    {
+        NEIGB_TOP,
+        NEIGB_BOTTOM,
+        NEIGB_FRONT,
+        NEIGB_BACK,
+        NEIGB_LEFT,
+        NEIGB_RIGHT,
+        NEIGB_AFTER_LAST
+    };
+
+    static const glm::vec3 neigb_offset[];
+
     Level(LevelWorker &lw_);
     ~Level();
 
     void Draw(SpriteBatch &sb, const glm::vec3 &cam);
     void Preload(Point p, int r);
 
-    Block *block(const Point3 &p);
-    Block *block(const glm::vec3 &p);
-    StaticBlock *block_base(const glm::vec3 &p);
-    StaticBlock *selected_base();
-    Block *selected();
+    Block *block(const Point3 &p) const;
+    Block *block(const glm::vec3 &p) const;
+    std::vector<Block *> neighbours(const glm::vec3 &p) const;
+    StaticBlock *block_base(const glm::vec3 &p) const;
+    StaticBlock *selected_base() const;
+    Block *selected() const;
 
     void lClick();
     void rClick();

@@ -75,7 +75,8 @@ SOURCES += main.cpp \
     sge_ui/panel.cpp \
     sge_ui/vertical_bar.cpp \
     sge_ui/win.cpp \
-    sge_ui/wins.cpp
+    sge_ui/wins.cpp \
+    logic/agents/joinable.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -151,7 +152,8 @@ HEADERS += \
     sge_ui/wins.h \
     tests/catch.hpp \
     tests/tests.hpp \
-    tests/scheme_tests.h
+    tests/scheme_tests.h \
+    logic/agents/joinable.h
 
 
 

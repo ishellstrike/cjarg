@@ -13,6 +13,12 @@
 #include "sge/geometry/cube.h"
 #include "logic/base/database.h"
 
+const glm::vec3 Level::neigb_offset[] = {
+    glm::vec3(0, 0,-1), glm::vec3( 0, 0, 1),
+    glm::vec3(1, 0, 0), glm::vec3(-1, 0, 0),
+    glm::vec3(0, 1, 0), glm::vec3( 0,-1, 0)
+};
+
 Level::Level(LevelWorker &lw_) :
     lw(lw_)
 {
@@ -263,7 +269,7 @@ void Level::Preload(Point p, int r)
         }
 }
 
-Block *Level::block(const Point3 &p)
+Block *Level::block(const Point3 &p) const
 {
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
@@ -273,7 +279,7 @@ Block *Level::block(const Point3 &p)
     return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
 }
 
-Block *Level::block(const glm::vec3 &p)
+Block *Level::block(const glm::vec3 &p) const
 {
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
@@ -283,17 +289,25 @@ Block *Level::block(const glm::vec3 &p)
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
 }
 
-StaticBlock *Level::block_base(const glm::vec3 &p)
+std::vector<Block *> Level::neighbours(const glm::vec3 &p) const
+{
+    std::vector<Block *> result;
+    for(auto &offset : neigb_offset)
+        result.push_back(block(p + offset));
+    return result;
+}
+
+StaticBlock *Level::block_base(const glm::vec3 &p) const
 {
     return database::instance()->block_db[block(p)->id()].get();
 }
 
-Block *Level::selected()
+Block *Level::selected() const
 {
     return block(m_selected);
 }
 
-StaticBlock *Level::selected_base()
+StaticBlock *Level::selected_base() const
 {
     return database::instance()->block_db[selected()->id()].get();
 }

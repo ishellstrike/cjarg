@@ -4,12 +4,16 @@
 #include "../entity/item.h"
 #include <vector>
 #include "rapidjson/document.h"
+#include "../map/staticblock.h"
+#include "../map/level.h"
 
-struct Chest : public Agent
+struct Joinable : public Agent
 {
-    AGENT(Chest)
+    AGENT(Joinable)
 
-    std::vector<Item> items;
+    int join_id;
+
+    bool has_joines[StaticBlock::SIDE_AFTER_LAST];
 
     Agent *instantiate() const;
     void deserialize(rapidjson::Value &val);

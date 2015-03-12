@@ -25,11 +25,6 @@ Agent::~Agent()
 
 }
 
-Agent *Agent::instantiate() const
-{
-    return nullptr;
-}
-
 void Agent::deserialize(rapidjson::Value &val)
 {
 

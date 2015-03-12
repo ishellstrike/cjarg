@@ -12,3 +12,13 @@ void Furnance::deserialize(rapidjson::Value &val)
         temp = val["temp"].GetInt();
     }
 }
+
+void Furnance::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l)
+{
+
+}
+
+void Furnance::Init(const glm::vec3 &pos, const Level &l)
+{
+
+}
