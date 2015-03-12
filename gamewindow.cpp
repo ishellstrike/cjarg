@@ -54,7 +54,7 @@ bool JargGameWindow::BaseInit()
 
     monitor = nullptr;
 
-    window = glfwCreateWindow(RESX, RESY, "cjarg", monitor, nullptr);
+    window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -132,7 +132,7 @@ bool JargGameWindow::BaseInit()
     ws->f = f12.get();
 
     new Win(ws.get());
-    //cjarg_main_w *ww = new cjarg_main_w(ws.get());
+    cjarg_main_w *ww = new cjarg_main_w(ws.get());
     //auto www = new cjarg_list_test(ws.get());
     perf = new cjarg_perfomance(ws.get());
 

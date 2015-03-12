@@ -1,4 +1,5 @@
 #include "cjarg_main_w.h"
+#include "sge/helper.h"
 
 cjarg_main_w::cjarg_main_w(WContainer *par) :
     Win(par)
@@ -17,6 +18,7 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
     new_game->size = {100,20};
     new_game->text = "New game";
     new_game->pos = {0, 30};
+    new_game->onLeftPress = [=](){hidden = true;};
 
     options = new Button(panel);
     options->anchor = ANCHOR_CENTER;
@@ -38,7 +40,7 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
     ver = new Label(panel);
     ver->pos = {0, title->pos.y + title->size.y + 10};
     ver->anchor = ANCHOR_CENTER_HOR;
-    ver->text("v0.0");
+    ver->text(string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE));
 
     controls = new Label(panel);
     controls->pos = {0, ver->pos.y + ver->size.y + 10};

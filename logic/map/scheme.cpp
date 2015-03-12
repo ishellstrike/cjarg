@@ -187,7 +187,6 @@ bool Scheme::deserialize(rapidjson::Value &__val)
         LOG(error) << "scheme has broken \"data\" (must be [\"   abcd   \", ...])";
         return false;
     }
-    s.LogData();
 
     //test
     bool broken = false;

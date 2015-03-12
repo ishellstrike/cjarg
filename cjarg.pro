@@ -5,6 +5,9 @@ CONFIG -= qt
 CONFIG += c++11
 #win32:QMAKE_LFLAGS += -shared
 
+DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
+DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
+
 SOURCES += main.cpp \
     gamewindow.cpp \
     logic/map/sector.cpp \
