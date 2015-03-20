@@ -167,7 +167,7 @@ bool Scheme::deserialize(rapidjson::Value &__val)
                           data.Size() << ", scheme has height " << s.size.y;
             return false;
         }
-        for(int j = 0; j < data.Size(); j++)
+        for(size_t j = 0; j < data.Size(); j++)
         {
             auto str = data[j].GetString();
             if(data[j].GetStringLength() != s.size.x)
@@ -176,7 +176,7 @@ bool Scheme::deserialize(rapidjson::Value &__val)
                               " lenght is " << data[j].GetStringLength() << ", scheme has lenght " << s.size.x;
                 return false;
             }
-            for(int k = 0; k < data[j].GetStringLength(); ++k)
+            for(size_t k = 0; k < data[j].GetStringLength(); ++k)
             {
                 s.data[j][k] = str[k];
             }

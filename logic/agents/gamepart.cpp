@@ -1,25 +1,4 @@
 #include "logic/agents/gamepart.h"
-Static::~Static()
-{
-}
-
-
-Static::Static()
-{
-
-}
-
-
-Dynamic::Dynamic()
-{
-
-}
-
-
-Dynamic::~Dynamic()
-{
-}
-
 Dynamic *Dynamic::instantiate() const
 {
     Dynamic *dyn = new Dynamic();

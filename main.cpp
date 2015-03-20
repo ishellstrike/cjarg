@@ -3,18 +3,19 @@
 #define GLM_SWIZZLE
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <logic/map/scheme.h>
-#include "logic/agents/chest.h"
-#include "gamewindow.h"
-#include <debug/debug.h>
 
-//#define TESTS
+#define TESTS
 
 #ifdef TESTS
 #define CATCH_CONFIG_RUNNER
 #include "tests/catch.hpp"
+#define private public
 #endif
 
+#include <logic/map/scheme.h>
+#include "logic/agents/chest.h"
+#include "gamewindow.h"
+#include <debug/debug.h>
 
 #ifdef WIN32
 int wmain(int argc, wchar_t *argv[])

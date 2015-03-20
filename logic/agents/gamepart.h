@@ -5,12 +5,9 @@
 #include <memory>
 #include <functional>
 
-struct Dynamic
+class Dynamic
 {
-    Dynamic();
-    ~Dynamic();
-
-    std::vector<std::shared_ptr<Agent>> agents;
+public:
     Dynamic *instantiate() const;
 
     template <typename T>
@@ -36,13 +33,24 @@ struct Dynamic
         }
         return false;
     }
+
+    template <typename T>
+    void pushAgent(std::shared_ptr<T> agent)
+    {
+        agents.push_back(agent);
+    }
+
+    bool isEmpty()
+    {
+        return agents.size() == 0;
+    }
+
+private:
+    std::vector<std::shared_ptr<Agent>> agents;
 };
 
 struct Static
 {
-    Static();
-    ~Static();
-
     std::vector<std::shared_ptr<StaticAgent>> static_agents;
 };
 

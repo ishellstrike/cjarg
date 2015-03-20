@@ -153,7 +153,8 @@ HEADERS += \
     tests/catch.hpp \
     tests/tests.hpp \
     tests/scheme_tests.h \
-    logic/agents/joinable.h
+    logic/agents/joinable.h \
+    tests/agent_tests.h
 
 
 

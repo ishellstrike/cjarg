@@ -123,7 +123,7 @@ void database::Load()
                             LOG(error) << "block \"" << id << "\" parts is not valid agents array";
                     }
 
-                    if(b->etalon->parts->agents.size() == 0)
+                    if(b->etalon->parts->isEmpty())
                     {
                         b->etalon->parts = nullptr;
                         b->etalon = nullptr;

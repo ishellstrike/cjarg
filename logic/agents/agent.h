@@ -5,6 +5,7 @@
 #include "rapidjson/document.h"
 #include "sge/gametimer.h"
 #include <glm/glm.hpp>
+#include "../../tests/catch.hpp"
 
 class Level;
 
@@ -20,7 +21,7 @@ if(strcmp(part["type"].GetString(), #ctype) == 0) \
 { \
     std::shared_ptr<ctype> c =  std::make_shared<ctype>(); \
     c->deserialize(part); \
-    b->etalon->parts->agents.push_back(c); \
+    b->etalon->parts->pushAgent(c); \
 } \
 else
 

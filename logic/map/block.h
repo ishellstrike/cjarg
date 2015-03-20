@@ -7,15 +7,6 @@
 class Block
 {
 public:
-    Block();
-    /*!
-     * \brief Using for create database examples
-     * \param a
-     * \param agents_
-     */
-    Block(const std::vector<Agent *> &agents_, const std::string &id);
-    ~Block();
-
     Jid id();
 
     void id(Jid id_);
