@@ -54,7 +54,8 @@ bool JargGameWindow::BaseInit()
 
     monitor = nullptr;
 
-    window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
+    //window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
+    window = glfwCreateWindow(RESX, RESY, "jarg", monitor, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -148,7 +149,7 @@ bool JargGameWindow::BaseInit()
     me->pos.z = 32;
     level->lw.mem[Point(0,0)] = std::shared_ptr<Sector>(new Sector());
     level->lw.mem[Point(0,0)]->Init();
-    level->lw.mem[Point(0,0)]->creatures.push_back(me.get());
+    level->lw.mem[Point(0,0)]->creatures.push_back(me);
 
     StaticBlock *ss = new StaticBlock();
     ss->setTexture(0);
@@ -223,6 +224,11 @@ void JargGameWindow::BaseUpdate()
         wire = wire ? (glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ), false) : (glPolygonMode( GL_FRONT_AND_BACK, GL_FILL ), true);
     }
 
+    if(Keyboard::isKeyPress(GLFW_KEY_MINUS))
+        level->slice(level->slice() - 1);
+    if(Keyboard::isKeyPress(GLFW_KEY_EQUAL))
+        level->slice(level->slice() + 1);
+
 
     if (Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
@@ -260,8 +266,13 @@ void JargGameWindow::BaseUpdate()
     auto t_look = cam->getLookAt();
     cam->setLookAt(glm::mix(t_look, me->pos, gt.elapsed*10));
 
-    level->Preload({cam->getPosition().x / RX, cam->getPosition().y / RY}, 7);
-    level->Update(cam, gt);
+    world_tick += gt.elapsed;
+    if(world_tick >= 0.05)
+    {
+        world_tick = 0;
+        level->Preload({cam->getPosition().x / RX, cam->getPosition().y / RY}, 7);
+        level->Update(cam, gt);
+    }
 
     if(Mouse::isWheelUp())
     {

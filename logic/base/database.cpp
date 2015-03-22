@@ -55,7 +55,7 @@ void database::Load()
         if(d.HasParseError())
         {
             LOG(error) << d.GetParseError();
-            LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, static_cast<size_t>(0)), glm::min(all.length(), static_cast<size_t>(40)));
+            //LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, 0), glm::min(all.length(), 40));
             LOG(error) << "                    ^";
         }
 
@@ -90,6 +90,11 @@ void database::Load()
                     if(val.HasMember("transparent"))
                     {
                         b->transparent = val["transparent"].GetBool_();
+                    }
+
+                    if(val.HasMember("cube"))
+                    {
+                        b->cube = val["cube"].GetBool_();
                     }
 
                     if(val.HasMember("alltex") || val.HasMember("tex")) {

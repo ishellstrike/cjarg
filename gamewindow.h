@@ -59,6 +59,7 @@ public:
     ~JargGameWindow();
 
     std::chrono::steady_clock::time_point tiker;
+    double world_tick = 0;
 
     std::shared_ptr<WinS> ws;
     cjarg_main_w *main_w;

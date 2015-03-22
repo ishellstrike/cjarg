@@ -53,7 +53,7 @@ public:
     const std::string type = "EmptyAgent";
     friend class Dynamic;
 
-    void deserialize(rapidjson::Value &val);
+    virtual void deserialize(rapidjson::Value &val) = 0;
 
     virtual Agent *instantiate() const = 0;
     virtual void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l) = 0;

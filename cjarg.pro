@@ -5,8 +5,10 @@ CONFIG -= qt
 CONFIG += c++11
 #win32:QMAKE_LFLAGS += -shared
 
-DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
-DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
+unix:DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
+unix:DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
+win32:DEFINES += 'BUILD_DATE=\"date\"'
+win32:DEFINES += 'GIT_VERSION=\"rev\"'
 
 SOURCES += main.cpp \
     gamewindow.cpp \
@@ -76,7 +78,9 @@ SOURCES += main.cpp \
     sge_ui/vertical_bar.cpp \
     sge_ui/win.cpp \
     sge_ui/wins.cpp \
-    logic/agents/joinable.cpp
+    logic/agents/joinable.cpp \
+    logic/agents/basic_skills.cpp \
+    logic/entity/skilllist.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -154,7 +158,9 @@ HEADERS += \
     tests/tests.hpp \
     tests/scheme_tests.h \
     logic/agents/joinable.h \
-    tests/agent_tests.h
+    tests/agent_tests.h \
+    logic/agents/basic_skills.h \
+    logic/entity/skilllist.h
 
 
 

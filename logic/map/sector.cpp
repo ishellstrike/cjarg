@@ -7,6 +7,7 @@
 #include <chrono>
 #include "logic/base/database.h"
 #include "sge/helper.h"
+#include "sge/geometry/quad.h"
 
 Sector::Sector() :
     mesh(),
@@ -59,6 +60,13 @@ void Sector::Init()
                 blocks[i][j][k] = new Block();
         }
     }
+
+    for(int i = 0; i<rand()%30; i++)
+    {
+        std::shared_ptr<Creature> c = std::make_shared<Creature>();
+        c->pos = {rand()%RX, rand()%RY, rand()%RZ};
+        creatures.push_back(c);
+    }
 }
 
 Block *Sector::block(const Point3 &p)
@@ -92,19 +100,19 @@ void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
     }
 }
 
-void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_)
+void Sector::Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice)
 {
     mesh.World = glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
     mesh.material = mat_;
     mesh.shader = basic_;
 
-    mesh.Vertices.reserve(50000);
-    mesh.Indices.reserve(50000);
+    mesh.Vertices.reserve(10000);
+    mesh.Indices.reserve(10000);
 
-    Rebuild();
+    Rebuild(slice);
 }
 
-void Sector::Rebuild()
+void Sector::Rebuild(int slice)
 {
     mesh.Vertices.clear();
     mesh.Indices.clear();
@@ -118,11 +126,15 @@ void Sector::Rebuild()
         // 5 z -
         // 6 z +
 
+        if(k >= slice) continue;
+        //if(!database::instance()->block_db[blocks[i][j][k]->id()]->cube) continue;
+
         register Jtex apos = blocks[i][j][k]->id();
         if(!apos) continue;
-        register float qq,ww,q,w;
+        float qq,ww,q,w;
 
-        if(j == 0 || database::instance()->block_db[blocks[i][j - 1][k]->id()]->transparent)
+        if(j == 0 || database::instance()->block_db[blocks[i][j - 1][k]->id()]->transparent ||
+                     !database::instance()->block_db[blocks[i][j - 1][k]->id()]->cube)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BACK],
                     q,w,qq,ww);
@@ -142,7 +154,8 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(i == RX - 1 || database::instance()->block_db[blocks[i+1][j][k]->id()]->transparent)
+        if(i == RX - 1 || database::instance()->block_db[blocks[i+1][j][k]->id()]->transparent ||
+                          !database::instance()->block_db[blocks[i+1][j][k]->id()]->cube)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_RIGHT],
                     q,w,qq,ww);
@@ -162,7 +175,8 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(i == 0 || database::instance()->block_db[blocks[i - 1][j][k]->id()]->transparent)
+        if(i == 0 || database::instance()->block_db[blocks[i - 1][j][k]->id()]->transparent ||
+                     !database::instance()->block_db[blocks[i - 1][j][k]->id()]->cube)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_LEFT],
                     q,w,qq,ww);
@@ -182,7 +196,8 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(j == RY - 1 || database::instance()->block_db[blocks[i][j+1][k]->id()]->transparent)
+        if(j == RY - 1 || database::instance()->block_db[blocks[i][j+1][k]->id()]->transparent ||
+                          !database::instance()->block_db[blocks[i][j+1][k]->id()]->cube)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_FRONT],
                     q,w,qq,ww);
@@ -202,7 +217,8 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(k == 0 || database::instance()->block_db[blocks[i][j][k - 1]->id()]->transparent)
+        if(k == 0 || database::instance()->block_db[blocks[i][j][k - 1]->id()]->transparent ||
+                     !database::instance()->block_db[blocks[i][j][k - 1]->id()]->cube)
         if(k != 0)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BOTTOM],
@@ -223,7 +239,8 @@ void Sector::Rebuild()
             c+=4;
         }
 
-        if(k == RZ - 1 || database::instance()->block_db[blocks[i][j][k + 1]->id()]->transparent)
+        if(k == RZ - 1 || database::instance()->block_db[blocks[i][j][k + 1]->id()]->transparent ||
+                          !database::instance()->block_db[blocks[i][j][k + 1]->id()]->cube || k == slice - 1)
         {
             get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_TOP],
                     q,w,qq,ww);
@@ -248,5 +265,65 @@ void Sector::Rebuild()
     vertcount = mesh.Vertices.size();
 
     state = UNBINDED;
+}
+
+void addBillboard(Mesh &m, glm::vec3 pos, int tex, std::shared_ptr<Camera> cam)
+{
+    float qq,ww,q,w;
+    get_uvs(tex,q,w,qq,ww);
+
+    int i = pos.x;
+    int j = pos.y;
+    int k = pos.z;
+
+    int c = m.Vertices.size();
+
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j,     k + 1}, {qq, w}));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j,     k + 1}, {q, w}));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q, ww}));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j + 1, k + 1}, {qq, ww}));
+
+    m.Indices.push_back(c + 0);
+    m.Indices.push_back(c + 1);
+    m.Indices.push_back(c + 2);
+
+    m.Indices.push_back(c + 2);
+    m.Indices.push_back(c + 3);
+    m.Indices.push_back(c + 0);
+}
+
+void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice, std::shared_ptr<Camera> cam)
+{
+    sprites.World = glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
+    sprites.material = mat_;
+    sprites.shader = basic_;
+
+    sprites.Vertices.reserve(10000);
+    sprites.Indices.reserve(10000);
+
+    sprites.Vertices.clear();
+    sprites.Indices.clear();
+
+    for(std::shared_ptr<Creature> c : creatures)
+    {
+        addBillboard(sprites, c->pos, 1, cam);
+    }
+
+//    FORijk
+//    {
+//        if(!database::instance()->block_db[blocks[i][j][k]->id()]->cube)
+//            addBillboard(sprites, {i,j,k}, database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_TOP], cam);
+//    }
+}
+
+void Sector::markRebuild()
+{
+    if(!rebuilding)
+    {
+        rebuilding = true;
+        state = Sector::EMPTY;
+    } else {
+        rebuild_later = true;
+    }
 }
 

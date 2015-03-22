@@ -24,8 +24,3 @@ Agent::~Agent()
 {
 
 }
-
-void Agent::deserialize(rapidjson::Value &val)
-{
-
-}

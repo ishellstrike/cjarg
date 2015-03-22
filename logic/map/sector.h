@@ -14,6 +14,8 @@
 #include "sge/material.h"
 #include "sge/basicjargshader.h"
 #include "sge/geometry/mesh.h"
+#include "sge/camera.h"
+
 #define FORijk for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j) for (int k=0; k<RZ; ++k)
 #define FORij for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j)
 
@@ -22,6 +24,7 @@ struct Sector
     enum {
         READY,
         BUILDING,
+        BUILDED,
         EMPTY,
         UNBINDED
     };
@@ -38,21 +41,25 @@ struct Sector
     void block(const Point3 &p, std::string s);
     void placeScheme(const Scheme &s, glm::vec3 pos);
 
-    void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_);
-    void Rebuild();
+    void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice);
+    void Rebuild(int slice);
+    void MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice, std::shared_ptr<Camera> cam);
 
     std::vector<std::vector<std::vector<Block*>>> blocks;
     Point offset;
-    typedef std::vector<Creature*> CreatureList;
+    typedef std::vector<std::shared_ptr<Creature>> CreatureList;
     CreatureList creatures;
     std::vector<Item*> items;
 
     Mesh mesh;
+    Mesh sprites;
     int state = EMPTY;
     int facecount = 0, vertcount = 0;
     bool is_outoffrustum = false;
     bool rebuilding = false;
     bool rebuild_later = false;
+
+    void markRebuild();
 
 private:
 

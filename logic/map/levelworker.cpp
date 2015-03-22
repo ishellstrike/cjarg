@@ -10,7 +10,7 @@ LevelWorker::~LevelWorker()
 {
 }
 
-Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic)
+Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic, int slice)
 {
 
     SectorMap::iterator f = mem.find(pos);
@@ -23,32 +23,22 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
 
     if(s->state == Sector::EMPTY && !has_thread)
     {
+        s->state = Sector::BUILDING;
         has_thread = true;
         threads = std::thread([&, mat, basic, s](){
             th ++;
             if(generator && !s->rebuilding)
                 generator(s);
-            s->Rebuild(mat, basic);
             has_thread = false;
+            s->state = Sector::BUILDED;
             th --;
             return;
         });
         threads.detach();
-        s->state = Sector::BUILDING;
         return nullptr;
     }
-    if(s->state == Sector::UNBINDED)
-    {
-        s->mesh.ForgetBind();
-        s->state = Sector::READY;
-        if(!s->rebuild_later)
-            s->rebuilding = false;
-        else
-            s->state = Sector::EMPTY;
-        s->rebuild_later = false;
-    }
 
-    return s->state == Sector::READY ? s.get() : nullptr;
+    return s->state == Sector::BUILDED ? s.get() : nullptr;
 }
 
 void LevelWorker::SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen)

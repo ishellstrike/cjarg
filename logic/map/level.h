@@ -62,6 +62,11 @@ public:
     glm::vec3 m_selected;
     bool finded;
     Mesh selection;
+    int slice() const;
+    void slice(int __slice);
+
+private:
+    int m_slice = RZ - 1;
 };
 
 #endif // LEVEL_H

@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define TESTS
+//#define TESTS
 
 #ifdef TESTS
 #define CATCH_CONFIG_RUNNER
@@ -15,9 +15,8 @@
 #include <logic/map/scheme.h>
 #include "logic/agents/chest.h"
 #include "gamewindow.h"
-#include <debug/debug.h>
 
-#ifdef WIN32
+#ifdef __WIN32
 int wmain(int argc, wchar_t *argv[])
 #else
 int main( int argc, char* const argv[] )

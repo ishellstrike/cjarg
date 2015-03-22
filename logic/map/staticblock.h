@@ -23,6 +23,7 @@ public:
 
     int tex[SIDE_AFTER_LAST];
     bool transparent = false;
+    bool cube = true;
     std::unique_ptr<ClickReaction> r_click, l_click;
     std::unique_ptr<Block> etalon;
 

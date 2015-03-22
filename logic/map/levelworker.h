@@ -14,7 +14,7 @@ public:
     LevelWorker();
     ~LevelWorker();
 
-    Sector *getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic);
+    Sector *getSector(const Point &pos, std::shared_ptr<Material> mat, std::shared_ptr<BasicJargShader> &basic, int slice);
     void SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen);
     SectorMap mem;
         volatile static int th;

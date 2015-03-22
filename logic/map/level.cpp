@@ -54,12 +54,35 @@ void Level::Render(std::shared_ptr<Camera> cam)
     int y = cam->getPosition().y / RY;
     facecount = vertcount = 0;
 
-    for(auto &pair: lw.mem)
+    for(std::pair<const Point, std::shared_ptr<Sector>> &pair: lw.mem)
     {
-        if(pair.second->state == Sector::READY || pair.second->rebuilding)
+        if(pair.second->state == Sector::READY || pair.second->rebuilding || pair.second->state == Sector::BUILDED)
         {
             if(pair.second->is_outoffrustum) continue;
+
+            if(pair.second->state == Sector::BUILDED)
+            {
+                pair.second->Rebuild(mat, basic, m_slice);
+            }
+            if(pair.second->state == Sector::UNBINDED)
+            {
+                pair.second->mesh.ForgetBind();
+                pair.second->state = Sector::READY;
+                if(!pair.second->rebuild_later)
+                    pair.second->rebuilding = false;
+                else
+                    pair.second->state = Sector::EMPTY;
+                pair.second->rebuild_later = false;
+            }
+
             pair.second->mesh.Render(cam->getMVP());
+            pair.second->MakeSprites(mat, basic, m_slice, cam);
+            glDisable(GL_CULL_FACE);
+            pair.second->sprites.Bind(1);
+            pair.second->sprites.Render(cam->getMVP());
+            glEnable(GL_CULL_FACE);
+
+
             facecount += pair.second->facecount;
             vertcount += pair.second->vertcount;
         }
@@ -179,7 +202,10 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
         {
             for(auto c_iter = cur->creatures.begin(); c_iter != cur->creatures.end();)
             {
-                Creature *c = *c_iter;
+                std::shared_ptr<Creature> c = *c_iter;
+
+                c->Update(gt, *this);
+
                 c->velocity += c->acseleration;
                 c->velocity.z += -29.8 *gt.elapsed;
 
@@ -211,7 +237,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 // если находится за границей сектора -- переносим в новый сектор, если он существует
                 if(c->pos.x > (cur->offset.x + 1)*RX)
                 {
-                    Sector* nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic);
+                    Sector *nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic, m_slice);
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
@@ -221,7 +247,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 }
                 if(c->pos.x < (cur->offset.x)*RX)
                 {
-                    Sector* nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic);
+                    Sector *nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic, m_slice);
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
@@ -231,7 +257,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 }
                 if(c->pos.y > (cur->offset.y + 1)*RY)
                 {
-                    Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic);
+                    Sector *nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic, m_slice);
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
@@ -241,7 +267,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 }
                 if(c->pos.y < (cur->offset.y)*RY)
                 {
-                    Sector* nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic);
+                    Sector *nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic, m_slice);
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
@@ -256,6 +282,23 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
         }
     }
 }
+int Level::slice() const
+{
+    return m_slice;
+}
+
+void Level::slice(int __slice)
+{
+    m_slice = __slice;
+    m_slice = glm::max(m_slice, 1);
+    m_slice = glm::min(m_slice, RZ - 1);
+
+    for(auto s : lw.mem)
+    {
+        s.second->markRebuild();
+    }
+}
+
 
 void Level::Preload(Point p, int r)
 {
@@ -263,7 +306,7 @@ void Level::Preload(Point p, int r)
         for(int j=-r;j<r;++j)
         {
             if(glm::length(glm::vec2((float)i,(float)j) - glm::vec2(0.f, 0.f)) > r) continue;
-            Sector *s = lw.getSector({i + p.x, j + p.y}, mat, basic);
+            Sector *s = lw.getSector({i + p.x, j + p.y}, mat, basic, m_slice);
             //if(!s) continue;
             //active[Point(i + p.x, j + p.y)] = s;
         }
@@ -351,13 +394,8 @@ bool Level::change_at(const Point3 &p, Jid id)
         if(sect->state != Sector::READY)
             return false;
         sect->block({p.x - divx * RX, p.y - divy * RY, p.z})->id(id);
-        if(!sect->rebuilding)
-        {
-            sect->rebuilding = true;
-            sect->state = Sector::EMPTY;
-        } else {
-            sect->rebuild_later = true;
-        }
+
+        sect->markRebuild();
 
         return true;
     }
