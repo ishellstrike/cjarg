@@ -38,7 +38,7 @@ Sector *LevelWorker::getSector(const Point &pos, std::shared_ptr<Material> mat, 
         return nullptr;
     }
 
-    return s->state == Sector::BUILDED ? s.get() : nullptr;
+    return s->state == Sector::BUILDED || s->state == Sector::READY ? s.get() : nullptr;
 }
 
 void LevelWorker::SetGenerator(std::function<void(std::shared_ptr<Sector>)> gen)

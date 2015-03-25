@@ -1,9 +1,9 @@
 #ifndef GAMEPART_H
 #define GAMEPART_H
-#include "agents.hpp"
 #include <vector>
 #include <memory>
 #include <functional>
+#include "../agents/agent.h"
 
 class Dynamic
 {

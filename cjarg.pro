@@ -80,7 +80,9 @@ SOURCES += main.cpp \
     sge_ui/wins.cpp \
     logic/agents/joinable.cpp \
     logic/agents/basic_skills.cpp \
-    logic/entity/skilllist.cpp
+    logic/entity/skilllist.cpp \
+    logic/entity/creaturepart.cpp \
+    logic/agents/fatal.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -160,7 +162,9 @@ HEADERS += \
     logic/agents/joinable.h \
     tests/agent_tests.h \
     logic/agents/basic_skills.h \
-    logic/entity/skilllist.h
+    logic/entity/skilllist.h \
+    logic/entity/creaturepart.h \
+    logic/agents/fatal.h
 
 
 

@@ -1,15 +1,14 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include "rapidjson/document.h"
+#include "../agents/gamepart.h"
 
-class Item
+struct Item
 {
-public:
-    Item();
-    ~Item();
-
     int id = 0;
     int count = 1;
+
+    std::unique_ptr<Dynamic> parts = nullptr;
 
     void deserialize(rapidjson::Value &val)
     {

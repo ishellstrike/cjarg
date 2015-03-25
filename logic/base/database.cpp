@@ -4,6 +4,7 @@
 #include <fstream>
 #include "rapidjson/document.h"
 #include <logic/map/scheme.h>
+#include "../agents/agents.hpp"
 
 void database::registerBlock(const std::string &s, StaticBlock *b)
 {
@@ -115,10 +116,7 @@ void database::Load()
                         {
                             rapidjson::Value &part = arr[a];
                             if(part.HasMember("type")) {
-
-                                /* all agents must be written here */
-                                CASTER(Chest)
-                                CASTER(Furnance)
+                                CASTERS
                                 /*else here*/ LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
                             }
                             else
@@ -146,10 +144,36 @@ void database::Load()
                         continue;
                     }
 
-                    StaticItem *i = new StaticItem;
+                    StaticItem *b = new StaticItem;
+                    b->etalon = std::unique_ptr<Item>(new Item());
+                    b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
+
                     std::string id = val["id"].GetString();
 
-                    registerItem(id, i);
+                    if(val.HasMember("parts")) {
+                        rapidjson::Value &arr = val["parts"];
+                        if(val["parts"].IsArray())
+                        for(int a = 0; a < arr.Size(); a++)
+                        {
+                            rapidjson::Value &part = arr[a];
+                            if(part.HasMember("type")) {
+                                CASTERS
+                                /*else here*/ LOG(error) << "item \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
+                            }
+                            else
+                                LOG(error) << "item \"" << id << "\" agent #" << a + 1 << " has no type";
+                        }
+                        else
+                            LOG(error) << "item \"" << id << "\" parts is not valid agents array";
+                    }
+
+                    if(b->etalon->parts->isEmpty())
+                    {
+                        b->etalon->parts = nullptr;
+                        b->etalon = nullptr;
+                    }
+
+                    registerItem(id, b);
                     loaded ++;
                 }
 

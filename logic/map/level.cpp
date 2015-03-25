@@ -235,9 +235,14 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                     c->pos.z = 0;
 
                 // если находится за границей сектора -- переносим в новый сектор, если он существует
-                if(c->pos.x > (cur->offset.x + 1)*RX)
+                if(c->pos.x > (cur->offset.x + 1) * RX ||
+                   c->pos.x < (cur->offset.x    ) * RX ||
+                   c->pos.y > (cur->offset.y + 1) * RY ||
+                   c->pos.y < (cur->offset.y    ) * RY )
                 {
-                    Sector *nsec = lw.getSector({cur->offset.x + 1, cur->offset.y}, mat, basic, m_slice);
+                    int sx = c->pos.x / RX;
+                    int sy = c->pos.y / RY;
+                    Sector *nsec = lw.getSector({sx, sy}, mat, basic, m_slice);
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
@@ -245,37 +250,6 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                         break;
                     }
                 }
-                if(c->pos.x < (cur->offset.x)*RX)
-                {
-                    Sector *nsec = lw.getSector({cur->offset.x - 1, cur->offset.y}, mat, basic, m_slice);
-                    if(nsec)
-                    {
-                        cur->creatures.erase(c_iter);
-                        nsec->creatures.push_back(c);
-                        break;
-                    }
-                }
-                if(c->pos.y > (cur->offset.y + 1)*RY)
-                {
-                    Sector *nsec = lw.getSector({cur->offset.x, cur->offset.y + 1}, mat, basic, m_slice);
-                    if(nsec)
-                    {
-                        cur->creatures.erase(c_iter);
-                        nsec->creatures.push_back(c);
-                        break;
-                    }
-                }
-                if(c->pos.y < (cur->offset.y)*RY)
-                {
-                    Sector *nsec = lw.getSector({cur->offset.x, cur->offset.y - 1}, mat, basic, m_slice);
-                    if(nsec)
-                    {
-                        cur->creatures.erase(c_iter);
-                        nsec->creatures.push_back(c);
-                        break;
-                    }
-                }
-
                 //передвигаем итератор, если существо не перемещено
                 ++c_iter;
             }

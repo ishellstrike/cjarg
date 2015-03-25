@@ -1,5 +1,5 @@
-#ifndef CHEST_H
-#define CHEST_H
+#ifndef JOINABLE_H
+#define JOINABLE_H
 #include "agent.h"
 #include "../entity/item.h"
 #include <vector>
@@ -22,4 +22,4 @@ struct Joinable : public Agent
     void Init(const glm::vec3 &pos, const Level &l);
 };
 
-#endif // CHEST_H
+#endif // JOINABLE_H

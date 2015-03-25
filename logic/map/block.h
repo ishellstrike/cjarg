@@ -1,12 +1,10 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef BLOCK_H_
+#define BLOCK_H_
 #include <vector>
 #include <logic/agents/gamepart.h>
-#include "../agents/agent.h"
 
-class Block
+struct Block
 {
-public:
     Jid id();
 
     void id(Jid id_);
@@ -17,4 +15,4 @@ public:
     Jtex m_tex = 0;
 };
 
-#endif // BLOCK_H
+#endif // BLOCK_H_
