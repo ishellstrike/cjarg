@@ -1,9 +1,15 @@
 #include "fatal.h"
+#include "sge/logger.h"
 
 void Organ::deserialize(rapidjson::Value &val)
 {
-    if(val.HasMember("buff_id"))
-        buff_id = val["items"].GetString();
+    if(val.HasMember("buffs") && val["buffs"].IsArray())
+    {
+        rapidjson::Value &b = val["buffs"];
+        for(int i = 0; i < b.Size(); i++)
+            buffs.push_back(val[i].GetString());
+    }
+    LOG(verbose) << "organ with buffs " << buffs.size();
 }
 
 Agent *Organ::instantiate() const

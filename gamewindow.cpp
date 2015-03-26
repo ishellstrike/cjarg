@@ -36,14 +36,14 @@ JargGameWindow::~JargGameWindow()
 
 bool JargGameWindow::BaseInit()
 {
-    LOG(info) << "Jarg initialization start";
-    LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
-    LOG(info) << "Hardware concurrency " << std::thread::hardware_concurrency();
-    glfwSetErrorCallback([](int a,const char* description){LOG(error) << description;});
+    LOG(verbose) << "Jarg initialization start";
+    LOG(verbose) << "User-preferred locale setting is " << std::locale("").name().c_str();
+    LOG(verbose) << "Hardware concurrency " << std::thread::hardware_concurrency();
+    glfwSetErrorCallback([](int a, const char* description){LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
     {
-        LOG(error) << "glfwInit error " << glfwErrorCode;
+        LOG(fatal) << "glfwInit error " << glfwErrorCode;
         return false;
     }
 
@@ -78,18 +78,18 @@ bool JargGameWindow::BaseInit()
     int glVersion[2] = {-1, -1};
     glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
     glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
-    LOG(info) << "Renderer: " << glGetString(GL_RENDERER);
-    LOG(info) << "Vendor: " << glGetString(GL_VENDOR);
-    LOG(info) << "Version: " << glGetString(GL_VERSION);
-    LOG(info) << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-    LOG(info) << "using OpenGL: " << glVersion[0] << "." << glVersion[1];
-    LOG(info) << "GLFW: " << glfwGetVersionString();
-    LOG(info) << "GLEW: " << glewGetString(GLEW_VERSION);
+    LOG(verbose) << "Renderer: " << glGetString(GL_RENDERER);
+    LOG(verbose) << "Vendor: " << glGetString(GL_VENDOR);
+    LOG(verbose) << "Version: " << glGetString(GL_VERSION);
+    LOG(verbose) << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    LOG(verbose) << "using OpenGL: " << glVersion[0] << "." << glVersion[1];
+    LOG(verbose) << "GLFW: " << glfwGetVersionString();
+    LOG(verbose) << "GLEW: " << glewGetString(GLEW_VERSION);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     Keyboard::Initialize();
     glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods){
@@ -171,6 +171,8 @@ bool JargGameWindow::BaseInit()
     mesh->material = mat;
     mesh->shader = level->basic;
     mesh->Bind();
+
+    return true;
 }
 
 bool JargGameWindow::Destroy()
@@ -310,11 +312,12 @@ void JargGameWindow::BaseDraw()
     batch->drawText(string_format("%d fps th %d", fps.GetCount(), LevelWorker::th), {5.f, 5.f}, f12.get(), Color::Red);
 
     ws->Draw();
-    if(!Mouse::GetFixedPosState())
+    if(!Mouse::GetFixedPosState()) {
         if(Mouse::state == Mouse::STATE_MOUSE)
             batch->drawQuadAtlas(Mouse::getCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_mouse.png"], Color::White);
         else
             batch->drawQuadAtlas(Mouse::getCursorPos(), {32,32}, *TextureAtlas::tex, TextureAtlas::refs["cur_resize.png"], Color::White);
+    }
     Mouse::state = Mouse::STATE_MOUSE;
     batch->render();
 

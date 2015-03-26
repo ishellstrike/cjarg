@@ -11,6 +11,11 @@ struct Block
 
     std::unique_ptr<Dynamic> parts = nullptr;
 
+    Block(){}
+    ~Block(){}
+    Block(const Block&) = delete;
+    Block& operator=(const Block&) = delete;
+
     Jid m_id = 0;
     Jtex m_tex = 0;
 };

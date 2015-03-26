@@ -50,7 +50,7 @@ void database::Load()
         }
         fs.close();
 
-        LOG(info) << "parse " << file;
+        LOG(verbose) << "parse " << file;
         rapidjson::Document d;
          d.Parse<0>(all.c_str());
         if(d.HasParseError())
@@ -191,8 +191,8 @@ void database::Load()
             }
         } else
             LOG(error) << "not valid object array";
-        LOG(info) << loaded << " loaded";
-        LOG(info) << "---";
+        LOG(verbose) << loaded << " loaded";
+        LOG(verbose) << "---";
     }
 }
 

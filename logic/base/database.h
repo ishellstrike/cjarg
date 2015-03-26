@@ -25,7 +25,7 @@ public:
                 m_inst = new database();
 
             mutex.unlock();
-            LOG(info) << "making database instance";
+            LOG(verbose) << "making database instance";
         }
         return m_inst;
     }
@@ -40,7 +40,7 @@ public:
             m_inst = nullptr;
         }
         mutex.unlock();
-        LOG(info) << "droping database instance";
+        LOG(verbose) << "droping database instance";
     }
 
     std::unordered_map<std::string, Jid> block_pointer;
@@ -61,8 +61,8 @@ private:
     static database *m_inst;
     database();
     ~database();
-    database(const database &root){}
-    database &operator=(const database &){}
+    database(const database &root) = delete;
+    database &operator=(const database &) = delete;
 };
 
 #endif // DATABASE_H

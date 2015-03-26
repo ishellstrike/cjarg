@@ -7,7 +7,7 @@ struct Organ : public Agent
 {
     AGENT(Organ)
 
-    std::string buff_id;
+    std::vector<std::string> buffs;
 
     void deserialize(rapidjson::Value &val);
     Agent *instantiate() const;

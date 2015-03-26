@@ -10,6 +10,11 @@ struct Item
 
     std::unique_ptr<Dynamic> parts = nullptr;
 
+    Item(){}
+    ~Item(){}
+    Item(const Item&) = delete;
+    Item& operator=(const Item&) = delete;
+
     void deserialize(rapidjson::Value &val)
     {
         auto tex_id = val["id"].GetString();

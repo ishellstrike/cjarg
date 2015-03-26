@@ -10,20 +10,20 @@
 #include "sge/geometry/quad.h"
 
 Sector::Sector() :
-    mesh(),
+    blocks(),
     creatures(),
-    items(),
-    blocks()
+    mesh(),
+    items()
 {
     Init();
 }
 
 Sector::Sector(const Point &p) :
+    blocks(),
     offset(p),
-    mesh(),
     creatures(),
-    items(),
-    blocks()
+    mesh(),
+    items()
 {
     Init();
 }

@@ -15,6 +15,8 @@ type() :                                    \
 {                                           \
 }                                           \
 ~type(){}                                   \
+type(const type&) = delete;                 \
+type& operator=(const type&) = delete;
 
 #define CASTER(ctype)   \
 if(strcmp(part["type"].GetString(), #ctype) == 0) \

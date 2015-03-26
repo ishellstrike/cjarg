@@ -9,7 +9,7 @@ struct Chest : public Agent
 {
     AGENT(Chest)
 
-    std::vector<Item> items;
+    std::vector<std::unique_ptr<Item>> items;
 
     Agent *instantiate() const;
     void deserialize(rapidjson::Value &val);
