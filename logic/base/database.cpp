@@ -32,8 +32,38 @@ void database::registerItem(const std::string &s, StaticItem *i)
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
+void database::registerCreature(const std::string &s, StaticCreature *i)
+{
+    if(creature_pointer.find(s) != creature_pointer.end())
+        LOG(info) << "creature " << s << " redefinition";
+    creature_db.push_back(std::unique_ptr<StaticCreature>(i));
+    creature_back_pointer[creature_db.size() - 1] = s;
+    creature_pointer[s] = creature_db.size() - 1;
+
+    i->id = creature_db.size() - 1;
+}
+
+StaticCreature *database::getCreature(const std::string &s)
+{
+    if(creature_pointer.find(s) == creature_pointer.end())
+        return creature_db[0].get();
+    return creature_db[creature_pointer[s]].get();
+}
+
 void database::Load()
 {
+    StaticBlock *ss = new StaticBlock();
+    ss->setTexture(0);
+    ss->transparent = true;
+    registerBlock("air", ss);
+
+    ss = new StaticBlock();
+    ss->setTexture("error.png");
+    registerBlock("error", ss);
+
+    StaticCreature *sc = new StaticCreature;
+    registerCreature("error", sc);
+
     std::vector<std::string> files;
     getFiles(Prefecences::Instance()->getJsonDir(), files);
 
@@ -50,13 +80,13 @@ void database::Load()
         }
         fs.close();
 
-        LOG(verbose) << "parse " << file;
+        LOG(info) << "parse " << file;
         rapidjson::Document d;
          d.Parse<0>(all.c_str());
         if(d.HasParseError())
         {
             LOG(error) << d.GetParseError();
-            //LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, 0), glm::min(all.length(), 40));
+            LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, (size_t)0), glm::min(all.length(), (size_t)40));
             LOG(error) << "                    ^";
         }
 
@@ -129,7 +159,6 @@ void database::Load()
                     if(b->etalon->parts->isEmpty())
                     {
                         b->etalon->parts = nullptr;
-                        b->etalon = nullptr;
                     }
 
                     registerBlock(id, b);
@@ -149,6 +178,7 @@ void database::Load()
                     b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
 
                     std::string id = val["id"].GetString();
+                    b->full_id = id;
 
                     if(val.HasMember("parts")) {
                         rapidjson::Value &arr = val["parts"];
@@ -170,10 +200,55 @@ void database::Load()
                     if(b->etalon->parts->isEmpty())
                     {
                         b->etalon->parts = nullptr;
-                        b->etalon = nullptr;
                     }
 
                     registerItem(id, b);
+                    loaded ++;
+                }
+
+                if(type == "creature")
+                {
+                    if(!val.HasMember("id"))
+                    {
+                        LOG(error) << "record #" << i+1 << " from " << file << " has no \"id\"";
+                        continue;
+                    }
+
+                    StaticCreature *b = new StaticCreature;
+                    b->etalon = std::unique_ptr<Creature>(new Creature());
+                    b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
+
+                    std::string id = val["id"].GetString();
+                    b->full_id = id;
+
+                    if(val.HasMember("parts")) {
+                        rapidjson::Value &arr = val["parts"];
+                        if(val["parts"].IsArray())
+                        for(int a = 0; a < arr.Size(); a++)
+                        {
+                            rapidjson::Value &part = arr[a];
+                            if(part.HasMember("type")) {
+                                CASTERS
+                                /*else here*/ LOG(error) << "creature \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
+                            }
+                            else
+                                LOG(error) << "creature \"" << id << "\" agent #" << a + 1 << " has no type";
+                        }
+                        else
+                            LOG(error) << "creature \"" << id << "\" parts is not valid agents array";
+                    }
+
+                    if(val.HasMember("creaturepart") || val["creaturepart"].IsArray()) {
+                        rapidjson::Value &d = val["creaturepart"];
+                        b->etalon->subparts.deserialize(*d.Begin());
+                    }
+
+                    if(b->etalon->parts->isEmpty())
+                    {
+                        b->etalon->parts = nullptr;
+                    }
+
+                    registerCreature(id, b);
                     loaded ++;
                 }
 
@@ -191,8 +266,8 @@ void database::Load()
             }
         } else
             LOG(error) << "not valid object array";
-        LOG(verbose) << loaded << " loaded";
-        LOG(verbose) << "---";
+        LOG(info) << loaded << " loaded";
+        LOG(info) << "---";
     }
 }
 

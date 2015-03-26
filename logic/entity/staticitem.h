@@ -9,6 +9,8 @@ class StaticItem
 public:
     StaticItem();
     ~StaticItem();
+    StaticItem(const StaticItem&) = delete;
+    StaticItem& operator=(const StaticItem&) = delete;
 
     std::unique_ptr<Item> etalon;
     std::string full_id;

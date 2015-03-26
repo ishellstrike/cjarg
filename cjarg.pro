@@ -82,7 +82,9 @@ SOURCES += main.cpp \
     logic/agents/basic_skills.cpp \
     logic/entity/skilllist.cpp \
     logic/entity/creaturepart.cpp \
-    logic/agents/fatal.cpp
+    logic/agents/fatal.cpp \
+    logic/entity/staticcreature.cpp \
+    logic/agents/wander.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -164,7 +166,9 @@ HEADERS += \
     logic/agents/basic_skills.h \
     logic/entity/skilllist.h \
     logic/entity/creaturepart.h \
-    logic/agents/fatal.h
+    logic/agents/fatal.h \
+    logic/entity/staticcreature.h \
+    logic/agents/wander.h
 
 
 
@@ -323,7 +327,9 @@ OTHER_FILES += \
     data/textures/grass7.png \
     data/textures/conk1.png \
     data/shaders/normal.glsl \
-    data/textures/grass_m.png
+    data/textures/grass_m.png \
+    data/json/core_bodyparts.json \
+    data/json/core_creatures.json
 
 SUBDIRS += \
     sge/sge.pro \

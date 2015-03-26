@@ -6,6 +6,7 @@
     CASTER(Furnance) \
     CASTER(Joinable) \
     CASTER(Organ) \
+    CASTER(Wander) \
 
 #include "agent.h"
 
@@ -13,6 +14,7 @@
 #include "furnance.h"
 #include "joinable.h"
 #include "fatal.h"
+#include "wander.h"
 
 #endif // AGENTS_H
 

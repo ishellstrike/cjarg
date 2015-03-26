@@ -9,6 +9,7 @@
 #include "logic/map/staticblock.h"
 #include "logic/entity/staticitem.h"
 #include <logic/map/scheme.h>
+#include "logic/entity/staticcreature.h"
 
 class database
 {
@@ -52,6 +53,12 @@ public:
     std::unordered_map<Jid, std::string> item_back_pointer;
     std::vector<std::unique_ptr<StaticItem>> item_db;
     void registerItem(const std::string &s, StaticItem *i);
+
+    std::unordered_map<std::string, Jid> creature_pointer;
+    std::unordered_map<Jid, std::string> creature_back_pointer;
+    std::vector<std::unique_ptr<StaticCreature>> creature_db;
+    void registerCreature(const std::string &s, StaticCreature *i);
+    StaticCreature *getCreature(const std::string &s);
 
     std::unordered_map<SchemeType, std::vector<Scheme>> scheme_db;
 

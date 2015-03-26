@@ -20,6 +20,8 @@ public:
 
     StaticBlock();
     ~StaticBlock();
+    StaticBlock(const StaticBlock&) = delete;
+    StaticBlock& operator=(const StaticBlock&) = delete;
 
     int tex[SIDE_AFTER_LAST];
     bool transparent = false;

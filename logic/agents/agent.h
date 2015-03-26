@@ -18,14 +18,14 @@ type() :                                    \
 type(const type&) = delete;                 \
 type& operator=(const type&) = delete;
 
-#define CASTER(ctype)   \
-if(strcmp(part["type"].GetString(), #ctype) == 0) \
-{ \
-    std::shared_ptr<ctype> c =  std::make_shared<ctype>(); \
-    c->deserialize(part); \
-    b->etalon->parts->pushAgent(c); \
-} \
-else
+#define CASTER(ctype)                                      \
+if(strcmp(part["type"].GetString(), #ctype) == 0)          \
+{                                                          \
+    std::shared_ptr<ctype> c = std::make_shared<ctype>();  \
+    c->deserialize(part);                                  \
+    b->etalon->parts->pushAgent(c);                        \
+} else
+
 
 typedef int Jid;
 typedef int Jtex;

@@ -23,6 +23,18 @@ public:
     }
 
     template <typename T>
+    bool hasAgent()
+    {
+        for(auto a : agents)
+        {
+            Agent &agent = *a;
+            if(agent.id == Agent::typeid_for<T>())
+                return true;
+        }
+        return false;
+    }
+
+    template <typename T>
     bool forAgent(std::function<void(T*)> a)
     {
         T *agent = getAgent<T>();

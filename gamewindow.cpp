@@ -141,26 +141,17 @@ bool JargGameWindow::BaseInit()
 
     //LOG(info) << bb->getAgent<Chest>()->items[0];
 
+    database::instance()->Load();
+
     lworker = std::make_shared<LevelWorker>();
     lworker->SetGenerator(TestGenerator_City1::Generate);
     level = std::make_shared<Level>(*lworker);
 
-    me = std::make_shared<Creature>();
+    me = std::shared_ptr<Creature>(database::instance()->getCreature("human")->etalon->instantiate());
     me->pos.z = 32;
     level->lw.mem[Point(0,0)] = std::shared_ptr<Sector>(new Sector());
     level->lw.mem[Point(0,0)]->Init();
     level->lw.mem[Point(0,0)]->creatures.push_back(me);
-
-    StaticBlock *ss = new StaticBlock();
-    ss->setTexture(0);
-    ss->transparent = true;
-    database::instance()->registerBlock("air", ss);
-
-    ss = new StaticBlock();
-    ss->setTexture("error.png");
-    database::instance()->registerBlock("error", ss);
-
-    database::instance()->Load();
 
     std::shared_ptr<Material> mat = std::make_shared<Material>();
 

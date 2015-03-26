@@ -40,7 +40,7 @@ cjarg_main_w::cjarg_main_w(WContainer *par) :
     ver = new Label(panel);
     ver->pos = {0, title->pos.y + title->size.y + 10};
     ver->anchor = ANCHOR_CENTER_HOR;
-    //ver->text(string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE));
+    ver->text(string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE));
 
     controls = new Label(panel);
     controls->pos = {0, ver->pos.y + ver->size.y + 10};
