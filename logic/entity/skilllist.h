@@ -6,7 +6,7 @@ struct Skill {
     virtual std::string getName() = 0;
     virtual std::string getDescr() = 0;
     virtual std::string getStat() = 0;
-    char level;
+    char level = 0;
 };
 
 struct Butcher : public Skill {
@@ -19,9 +19,9 @@ struct Cooking : public Skill {
     std::string getName();
     std::string getDescr();
     std::string getStat();
-    int cooked;
-    int cooked_master;
-    int failed;
+    int cooked = 0;
+    int cooked_master = 0;
+    int failed = 0;
 };
 
 struct SkillList

@@ -2,6 +2,9 @@
 #define WANDER_H
 #include "agent.h"
 
+//!
+//! \brief AI agent
+//!
 struct Wander : public Agent
 {
     AGENT(Wander)

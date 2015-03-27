@@ -5,6 +5,9 @@
 #include <vector>
 #include "rapidjson/document.h"
 
+//!
+//! \brief universal item store agents; 100% items drops on death
+//!
 struct Chest : public Agent
 {
     AGENT(Chest)

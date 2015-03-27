@@ -3,6 +3,9 @@
 #include "agent.h"
 #include "rapidjson/document.h"
 
+//!
+//! \brief Item part agent
+//!
 struct Organ : public Agent
 {
     AGENT(Organ)
