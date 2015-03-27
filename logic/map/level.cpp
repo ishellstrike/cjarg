@@ -234,6 +234,13 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 if(c->pos.z < 0)
                     c->pos.z = 0;
 
+                ++c_iter;
+            }
+
+            for(auto c_iter = cur->creatures.begin(); c_iter != cur->creatures.end();)
+            {
+                std::shared_ptr<Creature> c = *c_iter;
+
                 // если находится за границей сектора -- переносим в новый сектор, если он существует
                 if(c->pos.x > (cur->offset.x + 1) * RX ||
                    c->pos.x < (cur->offset.x    ) * RX ||
@@ -246,7 +253,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                     if(nsec)
                     {
                         cur->creatures.erase(c_iter);
-                        nsec->creatures.push_back(c);
+                        nsec->creatures.push_back(std::move(c));
                         break;
                     }
                 }

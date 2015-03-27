@@ -8,6 +8,7 @@
 #include "logic/base/database.h"
 #include "sge/helper.h"
 #include "sge/geometry/quad.h"
+#include "sge_ui/wins.h"
 
 Sector::Sector() :
     blocks(),
@@ -307,6 +308,7 @@ void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJa
     for(std::shared_ptr<Creature> c : creatures)
     {
         addBillboard(sprites, c->pos, 1, cam);
+        WinS::sb->drawText(std::to_string(c->pos), cam->Project(c->pos), WinS::f, Color::Wheat);
     }
 
 //    FORijk

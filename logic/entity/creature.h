@@ -7,7 +7,7 @@
 #include "creaturepart.h"
 #include "../agents/gamepart.h"
 
-class Creature : public Physic
+class Creature : public Physic, public GameBase
 {
 public:
     Creature(){}
@@ -22,8 +22,8 @@ public:
 
     SkillList skills;
     CreaturePart subparts;
-    std::unique_ptr<Dynamic> parts = nullptr;
-    std::string id = "error";
+
+    std::string full_id = "error";
 
 private:
     glm::vec3 wantedPos;

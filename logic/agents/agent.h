@@ -14,7 +14,7 @@ type() :                                    \
     Agent(#type, Agent::typeid_for<type>()) \
 {                                           \
 }                                           \
-~type(){}                                   \
+virtual ~type(){}                           \
 type(const type&) = delete;                 \
 type& operator=(const type&) = delete;
 
@@ -29,6 +29,26 @@ if(strcmp(part["type"].GetString(), #ctype) == 0)          \
 
 typedef int Jid;
 typedef int Jtex;
+
+class Creature;
+class Block;
+class Item;
+
+struct AgentOwner {
+    enum TypeNum {
+        CREATURE,
+        BLOCK,
+        ITEM
+    };
+
+    union Type {
+        Creature *c;
+        Block *b;
+        Item *i;
+    };
+
+    TypeNum n;
+};
 
 class Agent
 {

@@ -4,6 +4,8 @@
 #include <memory>
 #include <functional>
 #include "../agents/agent.h"
+#include "rapidjson/document.h"
+#include <string>
 
 class Dynamic
 {
@@ -59,6 +61,12 @@ public:
 
 private:
     std::vector<std::shared_ptr<Agent>> agents;
+};
+
+struct GameBase {
+    std::unique_ptr<Dynamic> parts = nullptr;
+
+    Jid id;
 };
 
 struct Static
