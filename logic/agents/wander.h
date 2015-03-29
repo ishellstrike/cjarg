@@ -14,6 +14,8 @@ struct Wander : public Agent
 
     void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l);
     void Init(const glm::vec3 &pos, const Level &l);
+    std::string fullInfo(){return "";}
+    std::string debugInfo(){return "";}
 };
 
 #endif // WANDER_H

@@ -6,6 +6,24 @@
 #include <logic/map/scheme.h>
 #include "../agents/agents.hpp"
 
+#define CASTERS_PART                                                                                               \
+    if(val.HasMember("parts")) {                                                                                   \
+        rapidjson::Value &arr = val["parts"];                                                                      \
+        if(val["parts"].IsArray())                                                                                 \
+        for(int a = 0; a < arr.Size(); a++)                                                                        \
+        {                                                                                                          \
+            rapidjson::Value &part = arr[a];                                                                       \
+            if(part.HasMember("type")) {                                                                           \
+                CASTERS                                                                                            \
+                /*else here*/ LOG(error) << "record \"" << id << "\" agent #" << a + 1 << " has unknown \"type\""; \
+            }                                                                                                      \
+            else                                                                                                   \
+                LOG(error) << "record \"" << id << "\" agent #" << a + 1 << " has no type";                        \
+        }                                                                                                          \
+        else                                                                                                       \
+            LOG(error) << "record \"" << id << "\" parts is not valid agents array";                               \
+    }
+
 void database::registerBlock(const std::string &s, StaticBlock *b)
 {
     if(block_pointer.find(s) != block_pointer.end())
@@ -30,6 +48,20 @@ void database::registerItem(const std::string &s, StaticItem *i)
     i->id = item_db.size() - 1;
     //i->full_id = s;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
+}
+
+StaticItem *database::getItem(const std::string &s)
+{
+    if(item_pointer.find(s) == item_pointer.end())
+        return item_db[0].get();
+    return item_db[item_pointer[s]].get();
+}
+
+StaticItem *database::getItem(const Jid &s)
+{
+    if(item_db.size() >= s)
+        return item_db[0].get();
+    return item_db[s].get();
 }
 
 void database::registerCreature(const std::string &s, StaticCreature *i)
@@ -86,7 +118,7 @@ void database::Load()
         if(d.HasParseError())
         {
             LOG(error) << d.GetParseError();
-            LOG(error) << all.substr(glm::max(d.GetErrorOffset() - 20, (size_t)0), glm::min(all.length(), (size_t)40));
+            LOG(error) << all.substr(max(d.GetErrorOffset() - 20, (size_t)0), min(all.length(), (size_t)40));
             LOG(error) << "                    ^";
         }
 
@@ -118,15 +150,7 @@ void database::Load()
 
                     std::string id = val["id"].GetString();
 
-                    if(val.HasMember("transparent"))
-                    {
-                        b->transparent = val["transparent"].GetBool_();
-                    }
-
-                    if(val.HasMember("cube"))
-                    {
-                        b->cube = val["cube"].GetBool_();
-                    }
+                    b->deserialize(val);
 
                     if(val.HasMember("alltex") || val.HasMember("tex")) {
                         if(val.HasMember("alltex")) b->setTexture(val["alltex"].Begin()->GetString());
@@ -139,22 +163,7 @@ void database::Load()
                             LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
                     }
 
-                    if(val.HasMember("parts")) {
-                        rapidjson::Value &arr = val["parts"];
-                        if(val["parts"].IsArray())
-                        for(int a = 0; a < arr.Size(); a++)
-                        {
-                            rapidjson::Value &part = arr[a];
-                            if(part.HasMember("type")) {
-                                CASTERS
-                                /*else here*/ LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
-                            }
-                            else
-                                LOG(error) << "block \"" << id << "\" agent #" << a + 1 << " has no type";
-                        }
-                        else
-                            LOG(error) << "block \"" << id << "\" parts is not valid agents array";
-                    }
+                    CASTERS_PART
 
                     if(b->etalon->parts->isEmpty())
                     {
@@ -180,22 +189,9 @@ void database::Load()
                     std::string id = val["id"].GetString();
                     b->full_id = id;
 
-                    if(val.HasMember("parts")) {
-                        rapidjson::Value &arr = val["parts"];
-                        if(val["parts"].IsArray())
-                        for(int a = 0; a < arr.Size(); a++)
-                        {
-                            rapidjson::Value &part = arr[a];
-                            if(part.HasMember("type")) {
-                                CASTERS
-                                /*else here*/ LOG(error) << "item \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
-                            }
-                            else
-                                LOG(error) << "item \"" << id << "\" agent #" << a + 1 << " has no type";
-                        }
-                        else
-                            LOG(error) << "item \"" << id << "\" parts is not valid agents array";
-                    }
+                    b->deserialize(val);
+
+                    CASTERS_PART
 
                     if(b->etalon->parts->isEmpty())
                     {
@@ -217,30 +213,18 @@ void database::Load()
                     StaticCreature *b = new StaticCreature;
                     b->etalon = std::unique_ptr<Creature>(new Creature());
                     b->etalon->parts = std::unique_ptr<Dynamic>(new Dynamic());
+                    b->etalon->subparts = std::unique_ptr<CreaturePart>(new CreaturePart);
 
                     std::string id = val["id"].GetString();
                     b->full_id = id;
 
-                    if(val.HasMember("parts")) {
-                        rapidjson::Value &arr = val["parts"];
-                        if(val["parts"].IsArray())
-                        for(int a = 0; a < arr.Size(); a++)
-                        {
-                            rapidjson::Value &part = arr[a];
-                            if(part.HasMember("type")) {
-                                CASTERS
-                                /*else here*/ LOG(error) << "creature \"" << id << "\" agent #" << a + 1 << " has unknown \"type\"";
-                            }
-                            else
-                                LOG(error) << "creature \"" << id << "\" agent #" << a + 1 << " has no type";
-                        }
-                        else
-                            LOG(error) << "creature \"" << id << "\" parts is not valid agents array";
-                    }
+                    b->deserialize(val);
+
+                    CASTERS_PART
 
                     if(val.HasMember("creaturepart") || val["creaturepart"].IsArray()) {
                         rapidjson::Value &d = val["creaturepart"];
-                        b->etalon->subparts.deserialize(*d.Begin());
+                        b->etalon->subparts->deserialize(*d.Begin());
                     }
 
                     if(b->etalon->parts->isEmpty())

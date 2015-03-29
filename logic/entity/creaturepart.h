@@ -8,8 +8,8 @@
 
 struct CreaturePart
 {
-    std::string id;
-    int count;
+    std::string id  = "";
+    int count = 0;
     std::vector<std::unique_ptr<CreaturePart>> subparts;
     void deserialize(rapidjson::Value &val);
     CreaturePart *instantiate() const;

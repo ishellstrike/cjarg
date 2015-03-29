@@ -21,7 +21,7 @@ public:
     Creature *instantiate();
 
     SkillList skills;
-    CreaturePart subparts;
+    std::unique_ptr<CreaturePart> subparts = nullptr;
 
     std::string full_id = "error";
 

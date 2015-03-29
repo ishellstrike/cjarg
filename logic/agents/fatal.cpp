@@ -2,6 +2,7 @@
 #include "sge/logger.h"
 #include "sge/helper.h"
 #include <sstream>
+#include "gamepart.h"
 
 void Organ::deserialize(rapidjson::Value &val)
 {
@@ -16,21 +17,8 @@ void Organ::deserialize(rapidjson::Value &val)
         }
     }
 
-    health = val.HasMember("health") ? val["health"].GetInt() : 1;
-    material = val.HasMember("material") ? val["material"].GetString() : "flesh";
-
-    LOG(verbose) << "organ: " << toString();
-}
-
-std::string Organ::toString()
-{
-    std::stringstream ret;
-    ret << "[";
-    for(auto &b : buffs)
-        ret << b << " ";
-    ret << "] ";
-    ret << string_format("health = %d; material = \"%s\"", health, material.c_str());
-    return ret.str();
+    DESERIALIZE(health);
+    DESERIALIZE(material);
 }
 
 Agent *Organ::instantiate() const

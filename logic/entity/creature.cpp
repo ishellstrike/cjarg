@@ -31,6 +31,9 @@ Creature *Creature::instantiate()
         c->parts = std::unique_ptr<Dynamic>(parts->instantiate());
     c->id = id;
 
+    if(subparts)
+        c->subparts = std::unique_ptr<CreaturePart>(subparts->instantiate());
+
     return c;
 }
 

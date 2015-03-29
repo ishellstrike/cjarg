@@ -19,12 +19,13 @@ void CreaturePart::deserialize(rapidjson::Value &val)
 
 CreaturePart *CreaturePart::instantiate() const
 {
-    CreaturePart *c = new CreaturePart;
+    CreaturePart *c = new CreaturePart();
     c->count = count;
     c->id = id;
     for(int i = 0; i < subparts.size(); i++)
     {
-        c->subparts.push_back(std::unique_ptr<CreaturePart>(subparts[i]->instantiate()));
+        if(subparts[i])
+            c->subparts.push_back(std::unique_ptr<CreaturePart>(subparts[i]->instantiate()));
     }
 
     return c;

@@ -53,6 +53,8 @@ public:
     std::unordered_map<Jid, std::string> item_back_pointer;
     std::vector<std::unique_ptr<StaticItem>> item_db;
     void registerItem(const std::string &s, StaticItem *i);
+    StaticItem *getItem(const std::string &s);
+    StaticItem *getItem(const Jid &s);
 
     std::unordered_map<std::string, Jid> creature_pointer;
     std::unordered_map<Jid, std::string> creature_back_pointer;

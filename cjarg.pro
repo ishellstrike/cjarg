@@ -7,8 +7,8 @@ CONFIG += c++11
 
 unix:DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
 unix:DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
-win32:DEFINES += 'BUILD_DATE=\"date\"'
-win32:DEFINES += 'GIT_VERSION=\"rev\"'
+win32:DEFINES += 'BUILD_DATE=\\\"date\\\"'
+win32:DEFINES += 'GIT_VERSION=\\\"rev\\\"'
 
 SOURCES += main.cpp \
     gamewindow.cpp \
@@ -84,7 +84,8 @@ SOURCES += main.cpp \
     logic/entity/creaturepart.cpp \
     logic/agents/fatal.cpp \
     logic/entity/staticcreature.cpp \
-    logic/agents/wander.cpp
+    logic/agents/wander.cpp \
+    logic/order.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -122,7 +123,6 @@ HEADERS += \
     logic/entity/physic.h \
     logic/map/physicssolver.h \
     logic/agents/clickreaction.h \
-    logic/serialize.h \
     logic/entity/staticitem.h \
     logic/agents/furnance.h \
     rapidjson/internal/pow10.h \
@@ -168,7 +168,8 @@ HEADERS += \
     logic/entity/creaturepart.h \
     logic/agents/fatal.h \
     logic/entity/staticcreature.h \
-    logic/agents/wander.h
+    logic/agents/wander.h \
+    logic/order.h
 
 
 

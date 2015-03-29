@@ -24,8 +24,6 @@ public:
     StaticBlock& operator=(const StaticBlock&) = delete;
 
     int tex[SIDE_AFTER_LAST];
-    bool transparent = false;
-    bool cube = true;
     std::unique_ptr<ClickReaction> r_click, l_click;
     std::unique_ptr<Block> etalon;
 
@@ -40,6 +38,31 @@ public:
     void rClick(Block *b);
 
     void setTexture(Jtex tex_);
+
+    //trivial vars
+    bool transparent = false;
+    bool cube = true;
+    std::string name = "";
+    std::string description = "";
+
+    void deserialize(const rapidjson::Value &val)
+    {
+        DESERIALIZE(transparent);
+        DESERIALIZE(cube);
+        DESERIALIZE(name);
+        DESERIALIZE(description);
+    }
+
+    std::string debugInfo()
+    {
+        std::stringstream s;
+        s << DEBUGINFO(transparent);
+        s << DEBUGINFO(cube);
+        s << DEBUGINFO(name);
+        s << DEBUGINFO(description);
+
+        return s.str();
+    }
 };
 
 #endif // STATICBLOCK_H

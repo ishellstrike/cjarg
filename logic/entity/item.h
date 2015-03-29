@@ -3,17 +3,19 @@
 #include "rapidjson/document.h"
 #include "../agents/gamepart.h"
 
-struct Item
+struct Item : public GameBase
 {
-    int id = 0;
     int count = 1;
-
-    std::unique_ptr<Dynamic> parts = nullptr;
 
     Item(){}
     ~Item(){}
     Item(const Item&) = delete;
     Item& operator=(const Item&) = delete;
+
+    std::string description();
+    std::string name();
+    std::string fullInfo();
+    std::string debugInfo();
 
     void deserialize(rapidjson::Value &val)
     {
