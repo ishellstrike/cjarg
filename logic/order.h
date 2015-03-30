@@ -4,17 +4,6 @@
 #include <vector>
 #include <memory>
 
-struct OrderList {
-    typedef std::vector<
-                            std::shared_ptr<Order>
-                       > Olist;
-
-    Olist in_progress;
-    Olist active;
-    Olist diabled;
-    Olist::iterator cur;
-};
-
 struct Order
 {
     enum Type {
@@ -24,12 +13,23 @@ struct Order
 
     Type type = Error;
     glm::vec3 pos;
-    Priority priority = normal;
+    //Priority priority = normal;
 
     Order(){}
     ~Order(){}
     Order(const Order&) = delete;
     Order& operator=(const Order&) = delete;
+};
+
+struct OrderList {
+    typedef std::vector<
+                            std::shared_ptr<Order>
+                       > Olist;
+
+    Olist in_progress;
+    Olist active;
+    Olist diabled;
+    Olist::iterator cur;
 };
 
 #endif // ORDER_H

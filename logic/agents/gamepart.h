@@ -98,7 +98,6 @@ struct DebugToStringHelper {
         return ss.str();
     }
 
-    template<>
     static std::string debugInfo(char *s, std::string &target)
     {
         std::stringstream ss;

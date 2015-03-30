@@ -51,6 +51,17 @@ public:
         DESERIALIZE(cube);
         DESERIALIZE(name);
         DESERIALIZE(description);
+
+        if(val.HasMember("alltex") || val.HasMember("tex")) {
+            if(val.HasMember("alltex")) setTexture(val["alltex"].Begin()->GetString());
+            else
+            if(val.HasMember("tex")) {
+                rapidjson::Value &arr = val["tex"];
+                for(int a = 0; a < arr.Size(); a++)
+                    setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].Begin()->GetString());
+            } else
+                LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
+        }
     }
 
     std::string debugInfo()

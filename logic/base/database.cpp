@@ -2,27 +2,10 @@
 #include "sge/prefecences.h"
 #include "sge/fielsystem.h"
 #include <fstream>
+#include <sstream>
 #include "rapidjson/document.h"
 #include <logic/map/scheme.h>
 #include "../agents/agents.hpp"
-
-#define CASTERS_PART                                                                                               \
-    if(val.HasMember("parts")) {                                                                                   \
-        rapidjson::Value &arr = val["parts"];                                                                      \
-        if(val["parts"].IsArray())                                                                                 \
-        for(int a = 0; a < arr.Size(); a++)                                                                        \
-        {                                                                                                          \
-            rapidjson::Value &part = arr[a];                                                                       \
-            if(part.HasMember("type")) {                                                                           \
-                CASTERS                                                                                            \
-                /*else here*/ LOG(error) << "record \"" << id << "\" agent #" << a + 1 << " has unknown \"type\""; \
-            }                                                                                                      \
-            else                                                                                                   \
-                LOG(error) << "record \"" << id << "\" agent #" << a + 1 << " has no type";                        \
-        }                                                                                                          \
-        else                                                                                                       \
-            LOG(error) << "record \"" << id << "\" parts is not valid agents array";                               \
-    }
 
 void database::registerBlock(const std::string &s, StaticBlock *b)
 {
@@ -82,6 +65,9 @@ StaticCreature *database::getCreature(const std::string &s)
     return creature_db[creature_pointer[s]].get();
 }
 
+#define max(a,b) ((a)>(b)?(a):(b))
+#define min(a,b) ((a)<(b)?(a):(b))
+
 void database::Load()
 {
     StaticBlock *ss = new StaticBlock();
@@ -102,15 +88,17 @@ void database::Load()
     for(std::string file : files)
     {
         std::ifstream fs(Prefecences::Instance()->getJsonDir() + file);
+        std::stringstream ss;
         std::string all;
         all.reserve(65536);
         while(!fs.eof())
         {
             std::string buf;
             fs >> buf;
-            all += buf;
+            ss << buf;
         }
         fs.close();
+        all = ss.str();
 
         LOG(info) << "parse " << file;
         rapidjson::Document d;
@@ -118,7 +106,7 @@ void database::Load()
         if(d.HasParseError())
         {
             LOG(error) << d.GetParseError();
-            LOG(error) << all.substr(max(d.GetErrorOffset() - 20, (size_t)0), min(all.length(), (size_t)40));
+            LOG(error) << all.substr(max(d.GetErrorOffset() - 20, 0), min(all.length(), 40));
             LOG(error) << "                    ^";
         }
 
@@ -152,18 +140,7 @@ void database::Load()
 
                     b->deserialize(val);
 
-                    if(val.HasMember("alltex") || val.HasMember("tex")) {
-                        if(val.HasMember("alltex")) b->setTexture(val["alltex"].Begin()->GetString());
-                        else
-                        if(val.HasMember("tex")) {
-                            rapidjson::Value &arr = val["tex"];
-                            for(int a = 0; a < arr.Size(); a++)
-                                b->setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].Begin()->GetString());
-                        } else
-                            LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
-                    }
-
-                    CASTERS_PART
+                    PARTS_PARSER
 
                     if(b->etalon->parts->isEmpty())
                     {
@@ -191,7 +168,7 @@ void database::Load()
 
                     b->deserialize(val);
 
-                    CASTERS_PART
+                    PARTS_PARSER
 
                     if(b->etalon->parts->isEmpty())
                     {
@@ -220,12 +197,7 @@ void database::Load()
 
                     b->deserialize(val);
 
-                    CASTERS_PART
-
-                    if(val.HasMember("creaturepart") || val["creaturepart"].IsArray()) {
-                        rapidjson::Value &d = val["creaturepart"];
-                        b->etalon->subparts->deserialize(*d.Begin());
-                    }
+                    PARTS_PARSER
 
                     if(b->etalon->parts->isEmpty())
                     {

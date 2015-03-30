@@ -24,6 +24,11 @@ public:
     {
         DESERIALIZE(name);
         DESERIALIZE(description);
+
+        if(val.HasMember("creaturepart") || val["creaturepart"].IsArray()) {
+            rapidjson::Value &d = val["creaturepart"];
+            etalon->subparts->deserialize(*d.Begin());
+        }
     }
 
     std::string debugInfo()
