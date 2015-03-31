@@ -169,7 +169,8 @@ HEADERS += \
     logic/agents/fatal.h \
     logic/entity/staticcreature.h \
     logic/agents/wander.h \
-    logic/order.h
+    logic/order.h \
+    tests/serizlize_tests.h
 
 
 

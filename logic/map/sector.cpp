@@ -65,7 +65,7 @@ void Sector::Init()
     for(int i = 0; i<rand()%30; i++)
     {
         std::shared_ptr<Creature> c = std::shared_ptr<Creature>(database::instance()->getCreature("wanderman")->etalon->instantiate());
-        c->pos = {rand()%RX, rand()%RY, rand()%RZ};
+        c->pos = {rand()%RX*offset.x, rand()%RY*offset.y, rand()%RZ};
         creatures.push_back(c);
     }
 }

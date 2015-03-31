@@ -88,15 +88,17 @@ void Level::Render(std::shared_ptr<Camera> cam)
         }
     }
 
+    decltype(lw.mem.begin()) last_ok;
     for(auto beg = lw.mem.begin(); beg != lw.mem.end(); )
     {
         if(glm::length(glm::vec2(x, y) - glm::vec2(beg->first.x, beg->first.y)) > 7)
         {
             lw.mem.erase(beg);
-            break;
+            beg = last_ok;
         }
         else
         {
+            last_ok = beg;
             ++beg;
         }
     }

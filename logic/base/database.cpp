@@ -42,7 +42,7 @@ StaticItem *database::getItem(const std::string &s)
 
 StaticItem *database::getItem(const Jid &s)
 {
-    if(item_db.size() >= s)
+    if(static_cast<Jid>(item_db.size()) >= s)
         return item_db[0].get();
     return item_db[s].get();
 }
@@ -113,7 +113,7 @@ void database::Load()
         int loaded = 0;
         if(d.IsArray())
         {
-            for(int i=0; i < d.Size(); i++)
+            for(decltype(d.Size()) i=0; i < d.Size(); i++)
             {
                 rapidjson::Value &val = d[i];
                 if(!val.HasMember("type"))

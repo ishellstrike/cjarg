@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include "sge/logger.h"
+#include <utility>
 
 class Dynamic
 {
@@ -91,14 +92,14 @@ private:
 
 struct DebugToStringHelper {
     template<typename Ty_>
-    static std::string debugInfo(char *s, Ty_ &target)
+    static std::string debugInfo(const char *s, Ty_ &target)
     {
         std::stringstream ss;
         ss << s << ": " << std::to_string(target) << "; ";
         return ss.str();
     }
 
-    static std::string debugInfo(char *s, std::string &target)
+    static std::string debugInfo(const char *s, std::string &target)
     {
         std::stringstream ss;
         ss << s << ": \"" << target << "\"; ";
@@ -106,28 +107,49 @@ struct DebugToStringHelper {
     }
 };
 
-#define DESERIALIZE(target) DeserializeHelper::deserialize(val, #target, target)
-
 struct DeserializeHelper {
-    static void deserialize(const rapidjson::Value &val, char *s, int &target)
+    template <class T>
+    inline static std::pair<const char *, T> make_nvp(const char *name, T &&value) {
+        return{name, std::forward<T>(value)};
+    }
+
+#define NVP(T) DeserializeHelper::make_nvp(#T, T)
+#define DESERIALIZE(...) DeserializeHelper::deserialize(val, __VA_ARGS__)
+
+    static void deserialize(const rapidjson::Value &val) {
+    }
+
+    template <typename Last>
+    static void deserialize(const rapidjson::Value &val, const Last &last) {
+        __deserialize(val, last.first, last.second);
+    }
+
+    template <typename First, typename... Rest>
+    static void deserialize(const rapidjson::Value &val, const First &first, const Rest&... rest) {
+        __deserialize(val, first.first, first.second);
+        deserialize(val, rest...);
+    }
+
+private:
+    static void __deserialize(const rapidjson::Value &val, const char *s, int &target)
     {
         if(val.HasMember(s))
             target = val[s].GetInt();
     }
 
-    static void deserialize(const rapidjson::Value &val, char *s, std::string &target)
+    static void __deserialize(const rapidjson::Value &val, const char *s, std::string &target)
     {
         if(val.HasMember(s))
             target = val[s].GetString();
     }
 
-    static void deserialize(const rapidjson::Value &val, char *s, float &target)
+    static void __deserialize(const rapidjson::Value &val, const char *s, float &target)
     {
         if(val.HasMember(s))
             target = static_cast<float>(val[s].GetDouble());
     }
 
-    static void deserialize(const rapidjson::Value &val, char *s, bool &target)
+    static void __deserialize(const rapidjson::Value &val, const char *s, bool &target)
     {
         if(val.HasMember(s))
             target = val[s].GetBool_();

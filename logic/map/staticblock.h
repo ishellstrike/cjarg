@@ -47,20 +47,17 @@ public:
 
     void deserialize(const rapidjson::Value &val)
     {
-        DESERIALIZE(transparent);
-        DESERIALIZE(cube);
-        DESERIALIZE(name);
-        DESERIALIZE(description);
+        DESERIALIZE(NVP(transparent), NVP(cube), NVP(name), NVP(description));
 
         if(val.HasMember("alltex") || val.HasMember("tex")) {
             if(val.HasMember("alltex")) setTexture(val["alltex"].Begin()->GetString());
             else
             if(val.HasMember("tex")) {
-                rapidjson::Value &arr = val["tex"];
-                for(int a = 0; a < arr.Size(); a++)
+                const rapidjson::Value &arr = val["tex"];
+                for(decltype(arr.Size()) a = 0; a < arr.Size(); a++)
                     setTexture(static_cast<StaticBlock::SIDE>(a), arr[a].Begin()->GetString());
             } else
-                LOG(error) << "block " << id << " from " << file << " has no \"tex\" | \"alltex\"";
+                LOG(error) << "block " << id /*<< " from " << file */<< " has no \"tex\" | \"alltex\"";
         }
     }
 

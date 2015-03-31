@@ -1,13 +1,13 @@
 #include "creaturepart.h"
 #include "sge/logger.h"
 
-void CreaturePart::deserialize(rapidjson::Value &val)
+void CreaturePart::deserialize(const rapidjson::Value &val)
 {
     id = val.HasMember("id") ? val["id"].GetString() : (LOG(error) << "creaturepart has no id", "error");
     count = val.HasMember("count") ? val["count"].GetInt() : 1;
     if(val.HasMember("creaturepart") && val["creaturepart"].IsArray())
     {
-        rapidjson::Value &d = val["creaturepart"];
+        const rapidjson::Value &d = val["creaturepart"];
         for(int i = 0; i<d.Size(); i++)
         {
             std::unique_ptr<CreaturePart> c = std::unique_ptr<CreaturePart>(new CreaturePart);

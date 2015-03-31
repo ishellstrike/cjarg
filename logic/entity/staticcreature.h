@@ -22,11 +22,10 @@ public:
 
     void deserialize(const rapidjson::Value &val)
     {
-        DESERIALIZE(name);
-        DESERIALIZE(description);
+        DESERIALIZE(NVP(name), NVP(description));
 
         if(val.HasMember("creaturepart") || val["creaturepart"].IsArray()) {
-            rapidjson::Value &d = val["creaturepart"];
+            const rapidjson::Value &d = val["creaturepart"];
             etalon->subparts->deserialize(*d.Begin());
         }
     }

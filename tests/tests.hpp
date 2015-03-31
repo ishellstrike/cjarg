@@ -3,5 +3,6 @@
 
 #include "scheme_tests.h"
 #include "agent_tests.h"
+#include "serizlize_tests.h"
 
 #endif // TESTS_HPP

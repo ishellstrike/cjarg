@@ -15,6 +15,7 @@
 #include "sge/basicjargshader.h"
 #include "sge/geometry/mesh.h"
 #include "sge/camera.h"
+#include <list>
 
 #define FORijk for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j) for (int k=0; k<RZ; ++k)
 #define FORij for(int i=0; i<RX; ++i) for(int j=0; j<RY; ++j)
@@ -47,7 +48,7 @@ struct Sector
 
     std::vector<std::vector<std::vector<Block*>>> blocks;
     Point offset;
-    typedef std::vector<std::shared_ptr<Creature>> CreatureList;
+    typedef std::list<std::shared_ptr<Creature>> CreatureList;
     CreatureList creatures;
     std::vector<Item*> items;
 

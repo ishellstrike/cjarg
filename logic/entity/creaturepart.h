@@ -11,7 +11,7 @@ struct CreaturePart
     std::string id  = "";
     int count = 0;
     std::vector<std::unique_ptr<CreaturePart>> subparts;
-    void deserialize(rapidjson::Value &val);
+    void deserialize(const rapidjson::Value &val);
     CreaturePart *instantiate() const;
 
     CreaturePart(){}

@@ -10,15 +10,14 @@ void Organ::deserialize(rapidjson::Value &val)
     {
         if(val["buffs"].IsArray()) {
             rapidjson::Value &b = val["buffs"];
-            for(int i = 0; i < b.Size(); i++)
+            for(decltype(b.Size()) i = 0; i < b.Size(); i++)
                 buffs.push_back(b[i].GetString());
         } else {
             LOG(error) << "\"Organ\" buffs must be array";
         }
     }
 
-    DESERIALIZE(health);
-    DESERIALIZE(material);
+    DESERIALIZE(NVP(health),NVP(material));
 }
 
 Agent *Organ::instantiate() const

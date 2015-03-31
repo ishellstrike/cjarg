@@ -32,7 +32,7 @@ TEST_CASE( "Dynamic part tests", "[dynamic]" ) {
         Chest *c = d.getAgent<Chest>();
         REQUIRE(c != nullptr);
 
-        c->items.push_back(Item());
+        c->items.push_back(std::unique_ptr<Item>(new Item));
 
         REQUIRE(c->id == Agent::typeid_for<Chest>());
     }

@@ -12,7 +12,7 @@
     if(val.HasMember("parts")) {                                                                                   \
         rapidjson::Value &arr = val["parts"];                                                                      \
         if(val["parts"].IsArray())                                                                                 \
-        for(int a = 0; a < arr.Size(); a++)                                                                        \
+        for(decltype(arr.Size()) a = 0; a < arr.Size(); a++)                                                       \
         {                                                                                                          \
             rapidjson::Value &part = arr[a];                                                                       \
             if(part.HasMember("type")) {                                                                           \

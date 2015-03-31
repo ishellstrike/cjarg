@@ -26,9 +26,7 @@ public:
 
     void deserialize(const rapidjson::Value &val)
     {
-        DESERIALIZE(name);
-        DESERIALIZE(description);
-        DESERIALIZE(weight);
+        DESERIALIZE(NVP(name),NVP(description),NVP(weight));
     }
 
     std::string debugInfo()

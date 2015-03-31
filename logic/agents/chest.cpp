@@ -19,7 +19,7 @@ void Chest::deserialize(rapidjson::Value &val)
     if(val.HasMember("items"))
     {
         rapidjson::Value &_items = val["items"];
-        for(int a = 0; a < _items.Size(); a++)
+        for(decltype(_items.Size()) a = 0; a < _items.Size(); a++)
         {
             rapidjson::Value &_item = _items[a];
             std::unique_ptr<Item> item = std::unique_ptr<Item>(new Item);
