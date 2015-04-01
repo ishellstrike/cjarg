@@ -7,7 +7,7 @@
 
 TEST_CASE( "Deserialize templates test", "[deserialize]" ) {
 
-    SECTION("basic deserialize template (all types at once)") {
+    SECTION("basic deserialize template") {
         rapidjson::Document d;
         d.Parse<0>(R"xxx(
                    {
@@ -30,6 +30,86 @@ TEST_CASE( "Deserialize templates test", "[deserialize]" ) {
         REQUIRE(_int == 123);
         REQUIRE(_float == 1.23f);
         REQUIRE(_bool == true);
+    }
+
+    SECTION("vec deserialize template") {
+        rapidjson::Document d;
+        d.Parse<0>(R"xxx(
+                   {
+                       "_vec3":[1,2,3],
+                       "_vec2":[1,2],
+                       "_vec4":[1,2,3,4]
+                   })xxx");
+
+        glm::vec2 _vec2;
+        glm::vec3 _vec3;
+        glm::vec4 _vec4;
+
+        const rapidjson::Value &val = d;
+
+        DESERIALIZE(NVP(_vec2), NVP(_vec3), NVP(_vec4));
+
+        CHECK(_vec2 == glm::vec2(1.f, 2.f));
+        CHECK(_vec3 == glm::vec3(1.f, 2.f, 3.f));
+        CHECK(_vec4 == glm::vec4(1.f, 2.f, 3.f, 4.f));
+    }
+
+    SECTION("vec deserialize template error") {
+        rapidjson::Document d;
+        d.Parse<0>(R"xxx(
+                   {
+                       "_vec3":[1,2],
+                       "_vec2":[1,2,3],
+                       "_vec4":[1,2,"3",4]
+                   })xxx");
+
+        glm::vec2 _vec2;
+        glm::vec3 _vec3;
+        glm::vec4 _vec4;
+
+        const rapidjson::Value &val = d;
+
+        REQUIRE_THROWS_AS(DESERIALIZE(NVP(_vec2)), std::invalid_argument);
+        REQUIRE_THROWS_AS(DESERIALIZE(NVP(_vec3)), std::invalid_argument);
+        REQUIRE_THROWS_AS(DESERIALIZE(NVP(_vec4)), std::invalid_argument);
+    }
+
+    SECTION("vector deserialize template") {
+        rapidjson::Document d;
+        d.Parse<0>(R"xxx(
+                   {
+                       "_some_vector":[1,2,3,4,5],
+                       "_some_vector_string":["q","w","e","r","qwer"]
+                   })xxx");
+
+        std::vector<int> _some_vector;
+        std::vector<std::string>_some_vector_string;
+
+        const rapidjson::Value &val = d;
+
+        DESERIALIZE(NVP(_some_vector), NVP(_some_vector_string));
+
+        REQUIRE(_some_vector.size() == 5);
+        REQUIRE(_some_vector_string.size() == 5);
+        CHECK(_some_vector == std::vector<int>({1,2,3,4,5}));
+        CHECK(_some_vector_string == std::vector<std::string>({"q","w","e","r","qwer"}));
+    }
+
+    SECTION("vector deserialize template error") {
+        rapidjson::Document d;
+        d.Parse<0>(R"xxx(
+                   {
+                       "_some_vector":[1,2,3,"4",5],
+                       "_some_vector_string":["q",1,"e","r","qwer"]
+                   })xxx");
+
+        std::vector<int> _some_vector;
+        std::vector<std::string>_some_vector_string;
+
+        const rapidjson::Value &val = d;
+
+        REQUIRE_THROWS_AS(DESERIALIZE(NVP(_some_vector)), std::invalid_argument);
+        REQUIRE_THROWS_AS(DESERIALIZE(NVP(_some_vector_string)), std::invalid_argument);
     }
 }
 

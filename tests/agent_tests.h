@@ -12,19 +12,19 @@ TEST_CASE( "Dynamic part tests", "[dynamic]" ) {
 
     SECTION("add agent") {
         d.pushAgent(std::make_shared<Chest>());
-        REQUIRE(d.isEmpty() == false);
+        CHECK(d.isEmpty() == false);
     }
 
     SECTION("type id") {
         Chest c;
-        REQUIRE(c.id == Agent::typeid_for<Chest>());
+        CHECK(c.id == Agent::typeid_for<Chest>());
     }
 
     SECTION("get agent by type") {
         d.pushAgent(std::make_shared<Chest>());
         Chest *c = d.getAgent<Chest>();
         REQUIRE(c != nullptr);
-        REQUIRE(c->id == Agent::typeid_for<Chest>());
+        CHECK(c->id == Agent::typeid_for<Chest>());
     }
 
     SECTION("specific agent access") {
@@ -34,7 +34,7 @@ TEST_CASE( "Dynamic part tests", "[dynamic]" ) {
 
         c->items.push_back(std::unique_ptr<Item>(new Item));
 
-        REQUIRE(c->id == Agent::typeid_for<Chest>());
+        CHECK(c->id == Agent::typeid_for<Chest>());
     }
 }
 

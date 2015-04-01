@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define TESTS
+//#define TESTS
 
 #ifdef TESTS
 #define CATCH_CONFIG_RUNNER

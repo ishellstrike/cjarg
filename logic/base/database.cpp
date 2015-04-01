@@ -100,7 +100,7 @@ void database::Load()
         fs.close();
         all = ss.str();
 
-        LOG(info) << "parse " << file;
+        LOG(verbose) << "parse " << file;
         rapidjson::Document d;
          d.Parse<0>(all.c_str());
         if(d.HasParseError())
@@ -138,7 +138,13 @@ void database::Load()
 
                     std::string id = val["id"].GetString();
 
-                    b->deserialize(val);
+                    try {
+                        b->deserialize(val);
+                    } catch (std::invalid_argument e) {
+                        LOG(error) << e.what();
+                        delete b;
+                        continue;
+                    }
 
                     PARTS_PARSER
 
@@ -166,7 +172,13 @@ void database::Load()
                     std::string id = val["id"].GetString();
                     b->full_id = id;
 
-                    b->deserialize(val);
+                    try {
+                        b->deserialize(val);
+                    } catch (std::invalid_argument e) {
+                        LOG(error) << e.what();
+                        delete b;
+                        continue;
+                    }
 
                     PARTS_PARSER
 
@@ -195,7 +207,13 @@ void database::Load()
                     std::string id = val["id"].GetString();
                     b->full_id = id;
 
-                    b->deserialize(val);
+                    try {
+                        b->deserialize(val);
+                    } catch (std::invalid_argument e) {
+                        LOG(error) << e.what();
+                        delete b;
+                        continue;
+                    }
 
                     PARTS_PARSER
 
@@ -222,8 +240,8 @@ void database::Load()
             }
         } else
             LOG(error) << "not valid object array";
-        LOG(info) << loaded << " loaded";
-        LOG(info) << "---";
+        LOG(verbose) << loaded << " loaded";
+        LOG(verbose) << "---";
     }
 }
 
