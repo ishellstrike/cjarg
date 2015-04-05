@@ -1,14 +1,16 @@
 #ifndef ORDER_H
 #define ORDER_H
 #include <glm/glm.hpp>
-#include <vector>
+#include <list>
 #include <memory>
 
 struct Order
 {
     enum Type {
         Dig,
-        Error
+        Build,
+        Error,
+        Done
     };
 
     Type type = Error;
@@ -16,13 +18,15 @@ struct Order
     //Priority priority = normal;
 
     Order(){}
+    Order(Type t, glm::vec3 p) : type(t), pos(p){}
     ~Order(){}
     Order(const Order&) = delete;
     Order& operator=(const Order&) = delete;
+    void markDone();
 };
 
 struct OrderList {
-    typedef std::vector<
+    typedef std::list<
                             std::shared_ptr<Order>
                        > Olist;
 

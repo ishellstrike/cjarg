@@ -16,11 +16,7 @@
 #include "logic/agents/chest.h"
 #include "gamewindow.h"
 
-#ifdef __WIN32
-int wmain(int argc, wchar_t *argv[])
-#else
 int main( int argc, char* const argv[] )
-#endif
 {
 #ifdef TESTS
     int result = Catch::Session().run( argc, argv );

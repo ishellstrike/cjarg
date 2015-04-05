@@ -18,10 +18,22 @@ void Creature::Update(GameTimer &gt, Level &l)
         {
             wantedPos = {rand()%200 - 100 + pos.x, rand()%200 - 100 + pos.y, pos.z};
         }
-        auto dir = pos - wantedPos;
-        dir = glm::normalize(dir);
-        pos += dir * (float)gt.elapsed * 10.f;
     }
+
+    if(wish_list.wishes.size() > 0)
+    {
+        Wish &w = *wish_list.wishes.begin();
+        if(glm::distance(pos, w.linked->pos) > 0.1) {
+            auto dir = w.linked->pos - pos;
+            dir = glm::normalize(dir);
+            pos += dir * (float)gt.elapsed * 10.f;
+        } else {
+            w.linked->markDone();
+            wish_list.wishes.erase(wish_list.wishes.begin());
+        }
+    }
+
+
 }
 
 Creature *Creature::instantiate()

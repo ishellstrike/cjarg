@@ -10,6 +10,7 @@
 #include "sge/basicjargshader.h"
 #include "sge/camera.h"
 #include "logic/map/staticblock.h"
+#include "colony.h"
 
 class Level
 {
@@ -48,6 +49,8 @@ public:
     bool change_at(const Point3 &p, Jid id);
 
     unsigned char ground(const glm::vec3 &p);
+    Colony colony;
+    void OredersUpdate();
 
     float zoom = 32;
 

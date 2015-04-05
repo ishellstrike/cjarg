@@ -85,7 +85,11 @@ SOURCES += main.cpp \
     logic/agents/fatal.cpp \
     logic/entity/staticcreature.cpp \
     logic/agents/wander.cpp \
-    logic/order.cpp
+    logic/order.cpp \
+    logic/map/colony.cpp \
+    cjarg_base_mode_main.cpp \
+    logic/entity/wishlist.cpp \
+    logic/entity/memlist.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -170,7 +174,11 @@ HEADERS += \
     logic/entity/staticcreature.h \
     logic/agents/wander.h \
     logic/order.h \
-    tests/serizlize_tests.h
+    tests/serizlize_tests.h \
+    logic/map/colony.h \
+    cjarg_base_mode_main.h \
+    logic/entity/wishlist.h \
+    logic/entity/memlist.h
 
 
 

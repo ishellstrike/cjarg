@@ -31,8 +31,8 @@ typedef int Jid;
 typedef int Jtex;
 
 class Creature;
-class Block;
-class Item;
+struct Block;
+struct Item;
 
 struct AgentOwner {
     enum TypeNum {

@@ -45,6 +45,12 @@ public:
 
     template<typename T>
     Point3(T x_, T y_, T z_) :
+        x(static_cast<int>(x_)),
+        y(static_cast<int>(y_)),
+        z(static_cast<int>(z_))
+    {}
+
+    Point3(int x_, int y_, int z_) :
         x(x_),
         y(y_),
         z(z_)

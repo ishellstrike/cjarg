@@ -41,6 +41,12 @@ Level::Level(LevelWorker &lw_) :
     selection.material = m;
     selection.shader = basic;
     selection.Bind();
+
+    for(int i =0; i< 10; i++){
+        auto c = database::instantiateCreature("human");
+        c->pos = {rand()%RX,rand()%RY,2};
+        colony.team.push_back(c);
+    }
 }
 
 Level::~Level()
@@ -95,6 +101,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
         {
             lw.mem.erase(beg);
             beg = last_ok;
+            break;
         }
         else
         {
@@ -230,8 +237,8 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
                 else
                     c->velocity.z = 0;
 
-                c->velocity.x /= 1.2;
-                c->velocity.y /= 1.2;
+                c->velocity.x /= 1.2f;
+                c->velocity.y /= 1.2f;
 
                 if(c->pos.z < 0)
                     c->pos.z = 0;
@@ -264,6 +271,7 @@ void Level::Update(std::shared_ptr<Camera> cam, GameTimer &gt)
             }
         }
     }
+    OredersUpdate();
 }
 int Level::slice() const
 {
@@ -393,4 +401,35 @@ unsigned char Level::ground(const glm::vec3 &p)
         return RZ;
     auto &sect = lw.mem[Point(divx, divy)];
     return 0;
+}
+
+void Level::OredersUpdate()
+{
+    for(OrderList::Olist::iterator i = colony.orders.active.begin(); i!=colony.orders.active.end(); ++i)
+    {
+        std::shared_ptr<Order> o = *i;
+        for(std::shared_ptr<Creature> c : colony.team)
+        {
+            if(c->wish_list.wishCount() != 0) continue;
+            Wish w;
+            w.linked = o;
+            c->wish_list.addWish(w);
+            c->mem_list.addMem({"получил приказ"});
+            c->wantedPos = o->pos;
+            colony.orders.in_progress.push_back(o);
+            colony.orders.active.erase(i);
+            goto out_p;
+        }
+    }
+    out_p:
+    ;
+
+    for(OrderList::Olist::iterator i = colony.orders.in_progress.begin(); i!=colony.orders.in_progress.end(); ++i)
+    {
+        std::shared_ptr<Order> o = *i;
+        if(o->type == Order::Done){
+            colony.orders.in_progress.erase(i);
+            break;
+        }
+    }
 }

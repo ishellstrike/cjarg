@@ -19,6 +19,16 @@ public:
     float fastsec = 0;
     float compose_fps = 0, compose_gt = 0;
     int compose = 0;
+
+    void* operator new(size_t i)
+    {
+        return _mm_malloc(i,16);
+    }
+
+    void operator delete(void* p)
+    {
+        _mm_free(p);
+    }
 };
 
 #endif // CJARG_PERFOMANCE_H

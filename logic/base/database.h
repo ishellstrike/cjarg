@@ -60,7 +60,8 @@ public:
     std::unordered_map<Jid, std::string> creature_back_pointer;
     std::vector<std::unique_ptr<StaticCreature>> creature_db;
     void registerCreature(const std::string &s, StaticCreature *i);
-    StaticCreature *getCreature(const std::string &s);
+    StaticCreature *getStaticCreature(const std::string &s);
+    static std::shared_ptr<Creature> instantiateCreature(const std::string &s);
 
     std::unordered_map<SchemeType, std::vector<Scheme>> scheme_db;
 

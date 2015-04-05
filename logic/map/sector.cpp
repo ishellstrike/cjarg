@@ -9,6 +9,7 @@
 #include "sge/helper.h"
 #include "sge/geometry/quad.h"
 #include "sge_ui/wins.h"
+#include <sstream>
 
 Sector::Sector() :
     blocks(),
@@ -62,12 +63,12 @@ void Sector::Init()
         }
     }
 
-    for(int i = 0; i<rand()%30; i++)
-    {
-        std::shared_ptr<Creature> c = std::shared_ptr<Creature>(database::instance()->getCreature("wanderman")->etalon->instantiate());
-        c->pos = {rand()%RX*offset.x, rand()%RY*offset.y, rand()%RZ};
-        creatures.push_back(c);
-    }
+//    for(int i = 0; i<rand()%30; i++)
+//    {
+//        std::shared_ptr<Creature> c = std::shared_ptr<Creature>(database::instance()->getCreature("wanderman")->etalon->instantiate());
+//        c->pos = {rand()%RX*offset.x, rand()%RY*offset.y, rand()%RZ};
+//        creatures.push_back(c);
+//    }
 }
 
 Block *Sector::block(const Point3 &p)
@@ -295,12 +296,12 @@ void addBillboard(Mesh &m, glm::vec3 pos, int tex, std::shared_ptr<Camera> cam)
 
 void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice, std::shared_ptr<Camera> cam)
 {
-    sprites.World = glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
+    sprites.World = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
     sprites.material = mat_;
     sprites.shader = basic_;
 
-    sprites.Vertices.reserve(10000);
-    sprites.Indices.reserve(10000);
+    sprites.Vertices.reserve(1000);
+    sprites.Indices.reserve(1000);
 
     sprites.Vertices.clear();
     sprites.Indices.clear();
@@ -308,7 +309,12 @@ void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJa
     for(std::shared_ptr<Creature> c : creatures)
     {
         addBillboard(sprites, c->pos, 1, cam);
-        WinS::sb->drawText(std::to_string(c->pos), cam->Project(c->pos), WinS::f, Color::Wheat);
+        std::stringstream ss;
+        ss << std::to_string(c->pos);
+        auto s1 = c->mem_list.getMemList();
+        for(auto &s2 : s1)
+            ss << s2 << "\n";
+        WinS::sb->drawText(ss.str(), cam->Project(c->pos), WinS::f, Color::Wheat);
     }
 
 //    FORijk

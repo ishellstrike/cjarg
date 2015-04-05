@@ -36,9 +36,9 @@ JargGameWindow::~JargGameWindow()
 
 bool JargGameWindow::BaseInit()
 {
-    LOG(verbose) << "Jarg initialization start";
-    LOG(verbose) << "User-preferred locale setting is " << std::locale("").name().c_str();
-    LOG(verbose) << "Hardware concurrency " << std::thread::hardware_concurrency();
+    LOG(info) << "Jarg initialization start";
+    LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
+    LOG(info) << "Hardware concurrency " << std::thread::hardware_concurrency();
     glfwSetErrorCallback([](int a, const char* description){LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
@@ -54,8 +54,7 @@ bool JargGameWindow::BaseInit()
 
     monitor = nullptr;
 
-    //window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
-    window = glfwCreateWindow(RESX, RESY, "jarg", monitor, nullptr);
+    window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -78,13 +77,13 @@ bool JargGameWindow::BaseInit()
     int glVersion[2] = {-1, -1};
     glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
     glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
-    LOG(verbose) << "Renderer: " << glGetString(GL_RENDERER);
-    LOG(verbose) << "Vendor: " << glGetString(GL_VENDOR);
-    LOG(verbose) << "Version: " << glGetString(GL_VERSION);
-    LOG(verbose) << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-    LOG(verbose) << "using OpenGL: " << glVersion[0] << "." << glVersion[1];
-    LOG(verbose) << "GLFW: " << glfwGetVersionString();
-    LOG(verbose) << "GLEW: " << glewGetString(GLEW_VERSION);
+    LOG(info) << "Renderer: " << glGetString(GL_RENDERER);
+    LOG(info) << "Vendor: " << glGetString(GL_VENDOR);
+    LOG(info) << "Version: " << glGetString(GL_VERSION);
+    LOG(info) << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    LOG(info) << "using OpenGL: " << glVersion[0] << "." << glVersion[1];
+    LOG(info) << "GLFW: " << glfwGetVersionString();
+    LOG(info) << "GLEW: " << glewGetString(GLEW_VERSION);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -136,6 +135,7 @@ bool JargGameWindow::BaseInit()
     cjarg_main_w *ww = new cjarg_main_w(ws.get());
     //auto www = new cjarg_list_test(ws.get());
     perf = new cjarg_perfomance(ws.get());
+    build = new cjarg_base_mode_main(ws.get());
 
     atlas.LoadAll();
 
@@ -147,11 +147,13 @@ bool JargGameWindow::BaseInit()
     lworker->SetGenerator(TestGenerator_City1::Generate);
     level = std::make_shared<Level>(*lworker);
 
-    me = std::shared_ptr<Creature>(database::instance()->getCreature("human")->etalon->instantiate());
+    me = std::shared_ptr<Creature>(database::instance()->getStaticCreature("human")->etalon->instantiate());
     me->pos.z = 32;
     level->lw.mem[Point(0,0)] = std::shared_ptr<Sector>(new Sector());
     level->lw.mem[Point(0,0)]->Init();
     level->lw.mem[Point(0,0)]->creatures.push_back(me);
+    for(auto a : level->colony.team)
+        level->lw.mem[Point(0,0)]->creatures.push_back(a);
 
     std::shared_ptr<Material> mat = std::make_shared<Material>();
 
@@ -217,6 +219,10 @@ void JargGameWindow::BaseUpdate()
         wire = wire ? (glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ), false) : (glPolygonMode( GL_FRONT_AND_BACK, GL_FILL ), true);
     }
 
+    if(Keyboard::isKeyPress(GLFW_KEY_F5)){
+        build->hidden = !build->hidden;
+    }
+
     if(Keyboard::isKeyPress(GLFW_KEY_MINUS))
         level->slice(level->slice() - 1);
     if(Keyboard::isKeyPress(GLFW_KEY_EQUAL))
@@ -243,10 +249,27 @@ void JargGameWindow::BaseUpdate()
 
     if(!WinS::MouseHooked)
     {
-        if(Mouse::isLeftPressed())
-            level->lClick();
-        if(Mouse::isRightPressed())
-            level->rClick();
+        auto ord = build->GetCurOrder();
+
+        switch (ord) {
+        case cjarg_base_mode_main::ORD_RPG:
+            if(Mouse::isLeftPressed())
+                level->lClick();
+            if(Mouse::isRightPressed())
+                level->rClick();
+            break;
+        case cjarg_base_mode_main::ORD_DIG:
+            if(Mouse::isLeftPressed())
+                level->colony.orders.active.push_back(std::make_shared<Order>(Order::Dig, level->m_selected));
+            break;
+        case cjarg_base_mode_main::ORD_BUILD:
+            if(Mouse::isLeftPressed())
+                level->colony.orders.active.push_back(std::make_shared<Order>(Order::Build, level->m_selected));
+            break;
+        default:
+            break;
+        }
+
         if(Keyboard::isKeyPress(GLFW_KEY_1))
             level->change_at(level->m_selected, "chest");
         if(Keyboard::isKeyPress(GLFW_KEY_2))

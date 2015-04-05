@@ -22,6 +22,7 @@
 #include "cjarg_main_w.h"
 #include "cjarg_list_test.h"
 #include "cjarg_perfomance.h"
+#include "cjarg_base_mode_main.h"
 
 class JargGameWindow {
 public:
@@ -64,6 +65,7 @@ public:
     std::shared_ptr<WinS> ws;
     cjarg_main_w *main_w;
     cjarg_perfomance *perf;
+    cjarg_base_mode_main *build;
     bool fixed = true;
 
 

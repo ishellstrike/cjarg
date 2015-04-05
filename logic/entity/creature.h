@@ -6,11 +6,12 @@
 #include "skilllist.h"
 #include "creaturepart.h"
 #include "../agents/gamepart.h"
+#include "wishlist.h"
+#include "memlist.h"
 
 class Creature : public Physic, public GameBase
 {
 public:
-    Creature(){}
     ~Creature(){}
     Creature(const Creature&) = delete;
     Creature& operator=(const Creature&) = delete;
@@ -23,10 +24,16 @@ public:
     SkillList skills;
     std::unique_ptr<CreaturePart> subparts = nullptr;
 
-    std::string full_id = "error";
+    WishList wish_list;
+    MemList mem_list;
 
-private:
+    std::string full_id = "error";
+    friend class database;
     glm::vec3 wantedPos;
+
+protected:
+
+    Creature(){}
 };
 
 #endif // CREATURE_H

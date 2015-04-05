@@ -58,15 +58,24 @@ void database::registerCreature(const std::string &s, StaticCreature *i)
     i->id = creature_db.size() - 1;
 }
 
-StaticCreature *database::getCreature(const std::string &s)
+StaticCreature *database::getStaticCreature(const std::string &s)
 {
     if(creature_pointer.find(s) == creature_pointer.end())
         return creature_db[0].get();
     return creature_db[creature_pointer[s]].get();
 }
 
+std::shared_ptr<Creature> database::instantiateCreature(const std::string &s)
+{
+    return std::shared_ptr<Creature>(instance()->getStaticCreature(s)->etalon->instantiate());
+}
+
+#ifndef max
 #define max(a,b) ((a)>(b)?(a):(b))
+#endif
+#ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))
+#endif
 
 void database::Load()
 {
