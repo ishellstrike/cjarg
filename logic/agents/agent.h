@@ -24,6 +24,7 @@ if(strcmp(part["type"].GetString(), #ctype) == 0)          \
     std::shared_ptr<ctype> c = std::make_shared<ctype>();  \
     c->deserialize(part);                                  \
     b->etalon->parts->pushAgent(c);                        \
+    LOG(verbose) << #ctype << " added";                    \
 } else
 
 
@@ -36,16 +37,13 @@ struct Item;
 
 struct AgentOwner {
     enum TypeNum {
+        ERROR,
         CREATURE,
         BLOCK,
         ITEM
     };
 
-    union Type {
-        Creature *c;
-        Block *b;
-        Item *i;
-    };
+    void *type = nullptr;
 
     TypeNum n;
 };
@@ -78,7 +76,7 @@ public:
     virtual void deserialize(rapidjson::Value &val) = 0;
 
     virtual Agent *instantiate() const = 0;
-    virtual void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l) = 0;
+    virtual void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner) = 0;
     virtual void Init(const glm::vec3 &pos, const Level &l) = 0;
     virtual std::string fullInfo() = 0;
     virtual std::string debugInfo() = 0;

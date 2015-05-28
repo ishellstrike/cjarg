@@ -12,7 +12,7 @@ struct Furnance : public Agent
     Agent *instantiate() const;
     void deserialize(rapidjson::Value &val);
 
-    void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l);
+    void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner);
     void Init(const glm::vec3 &pos, const Level &l);
     std::string fullInfo(){return "";}
     std::string debugInfo(){return "";}

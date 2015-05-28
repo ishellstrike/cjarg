@@ -5,10 +5,10 @@ CONFIG -= qt
 CONFIG += c++11
 #win32:QMAKE_LFLAGS += -shared
 
-unix:DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
-unix:DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
-win32:DEFINES += 'BUILD_DATE=\\\"date\\\"'
-win32:DEFINES += 'GIT_VERSION=\\\"rev\\\"'
+#unix:DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
+#nix:DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
+DEFINES += 'BUILD_DATE=\\\"date\\\"'
+DEFINES += 'GIT_VERSION=\\\"rev\\\"'
 DEFINES += asdasd
 
 SOURCES += main.cpp \
@@ -90,7 +90,8 @@ SOURCES += main.cpp \
     logic/map/colony.cpp \
     cjarg_base_mode_main.cpp \
     logic/entity/wishlist.cpp \
-    logic/entity/memlist.cpp
+    logic/entity/memlist.cpp \
+    logic/agents/stomper.cpp
 
 HEADERS += \
     gamewindow.h \
@@ -179,7 +180,8 @@ HEADERS += \
     logic/map/colony.h \
     cjarg_base_mode_main.h \
     logic/entity/wishlist.h \
-    logic/entity/memlist.h
+    logic/entity/memlist.h \
+    logic/agents/stomper.h
 
 
 

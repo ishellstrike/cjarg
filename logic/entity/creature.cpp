@@ -13,12 +13,19 @@ void Creature::setWantedPos(const glm::vec3 &value)
 
 void Creature::Update(GameTimer &gt, Level &l)
 {
-    if(parts && parts->hasAgent<Wander>()) {
-        if(glm::distance(pos, wantedPos) < 0.1)
+//    if(parts && parts->hasAgent<Wander>()) {
+//        if(glm::distance(pos, wantedPos) < 0.1)
+//        {
+//            wantedPos = {rand()%200 - 100 + pos.x, rand()%200 - 100 + pos.y, pos.z};
+//        }
+//    }
+
+    if(parts)
+        for(std::shared_ptr<Agent> a : parts->agents)
         {
-            wantedPos = {rand()%200 - 100 + pos.x, rand()%200 - 100 + pos.y, pos.z};
+            Agent &ag = *a;
+            ag.Update(gt, pos, l, ao_this);
         }
-    }
 
     if(wish_list.wishes.size() > 0)
     {
@@ -39,6 +46,10 @@ void Creature::Update(GameTimer &gt, Level &l)
 Creature *Creature::instantiate()
 {
     Creature *c = new Creature;
+
+    ao_this.n = AgentOwner::CREATURE;
+    ao_this.type = this;
+
     if(parts)
         c->parts = std::unique_ptr<Dynamic>(parts->instantiate());
     c->id = id;

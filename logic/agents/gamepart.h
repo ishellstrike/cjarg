@@ -13,6 +13,7 @@
 
 class Dynamic
 {
+    friend class Creature;
 public:
     Dynamic *instantiate() const
     {
@@ -66,12 +67,12 @@ public:
         agents.push_back(agent);
     }
 
-    bool isEmpty()
+    bool isEmpty() const
     {
         return agents.size() == 0;
     }
 
-    std::string debugInfo()
+    std::string debugInfo() const
     {
         std::stringstream ss;
 
@@ -83,7 +84,7 @@ public:
         return ss.str();
     }
 
-    std::string fullInfo()
+    std::string fullInfo() const
     {
         std::stringstream ss;
 
@@ -295,6 +296,7 @@ private:
 
 struct GameBase {
     std::unique_ptr<Dynamic> parts = nullptr;
+    AgentOwner ao_this;
 
     Jid id = 0;
 };

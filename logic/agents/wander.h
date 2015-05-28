@@ -9,13 +9,13 @@ struct Wander : public Agent
 {
     AGENT(Wander)
 
-    Agent *instantiate() const;
-    void deserialize(rapidjson::Value &val);
+    Agent *instantiate() const override;
+    void deserialize(rapidjson::Value &val) override;
 
-    void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l);
-    void Init(const glm::vec3 &pos, const Level &l);
-    std::string fullInfo(){return "";}
-    std::string debugInfo(){return "";}
+    void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner) override;
+    void Init(const glm::vec3 &pos, const Level &l) override;
+    std::string fullInfo() override {return "";}
+    std::string debugInfo() override {return "";}
 };
 
 #endif // WANDER_H

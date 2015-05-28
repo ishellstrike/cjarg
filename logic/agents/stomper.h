@@ -1,19 +1,13 @@
-#ifndef JOINABLE_H
-#define JOINABLE_H
+#ifndef STOMPER_H
+#define STOMPER_H
 #include "agent.h"
-#include "../entity/item.h"
-#include <vector>
-#include "rapidjson/document.h"
-#include "../map/staticblock.h"
-#include "../map/level.h"
 
-struct Joinable : public Agent
+//!
+//! \brief Behavior agent
+//!
+struct Stomper : public Agent
 {
-    AGENT(Joinable)
-
-    int join_id = 0;
-
-    bool has_joines[StaticBlock::SIDE_AFTER_LAST] = {false, false, false, false, false, false};
+    AGENT(Stomper)
 
     Agent *instantiate() const override;
     void deserialize(rapidjson::Value &val) override;
@@ -24,4 +18,4 @@ struct Joinable : public Agent
     std::string debugInfo() override {return "";}
 };
 
-#endif // JOINABLE_H
+#endif // STOMPER_H

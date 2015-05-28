@@ -26,7 +26,7 @@ Agent *Organ::instantiate() const
     return f;
 }
 
-void Organ::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l)
+void Organ::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner)
 {
 
 }

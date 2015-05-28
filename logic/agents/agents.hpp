@@ -6,10 +6,12 @@
     CASTER(Furnance) \
     CASTER(Joinable) \
     CASTER(Organ) \
-    CASTER(Wander)
+    CASTER(Wander) \
+    CASTER(Stomper)
 
 #define PARTS_PARSER                                                                                               \
     if(val.HasMember("parts")) {                                                                                   \
+        LOG(verbose) << "found parts";                                                                             \
         rapidjson::Value &arr = val["parts"];                                                                      \
         if(val["parts"].IsArray())                                                                                 \
         for(decltype(arr.Size()) a = 0; a < arr.Size(); a++)                                                       \
@@ -33,6 +35,7 @@
 #include "joinable.h"
 #include "fatal.h"
 #include "wander.h"
+#include "stomper.h"
 
 #endif // AGENTS_H
 

@@ -76,9 +76,12 @@
     "id":"wanderman",
     "name":"бродит",
     "parts":[
-      {
-        "type":"Wander"
-      }
+	{
+		"type":"Wander"
+	},{
+		"type":"Stomper",
+		"power":1
+	}
     ]
   }
 ]
