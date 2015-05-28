@@ -9,6 +9,7 @@ unix:DEFINES += BUILD_DATE='"\\\"$(shell date)\\\""'
 unix:DEFINES += GIT_VERSION='"\\\"$(shell git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)\\\""'
 win32:DEFINES += 'BUILD_DATE=\\\"date\\\"'
 win32:DEFINES += 'GIT_VERSION=\\\"rev\\\"'
+DEFINES += asdasd
 
 SOURCES += main.cpp \
     gamewindow.cpp \

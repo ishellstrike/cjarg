@@ -63,9 +63,9 @@ public:
     double world_tick = 0;
 
     std::shared_ptr<WinS> ws;
-    cjarg_main_w *main_w;
-    cjarg_perfomance *perf;
-    cjarg_base_mode_main *build;
+    cjarg_main_w *main_w = nullptr;
+    cjarg_perfomance *perf = nullptr;
+    cjarg_base_mode_main *build = nullptr;
     bool fixed = true;
 
 

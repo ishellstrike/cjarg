@@ -39,7 +39,7 @@ bool JargGameWindow::BaseInit()
     LOG(info) << "Jarg initialization start";
     LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
     LOG(info) << "Hardware concurrency " << std::thread::hardware_concurrency();
-    glfwSetErrorCallback([](int a, const char* description){LOG(error) << description;});
+    glfwSetErrorCallback([](int a, const char* description){(void)a; LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
     {
@@ -92,6 +92,7 @@ bool JargGameWindow::BaseInit()
 
     Keyboard::Initialize();
     glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods){
+        (void)win;
         Keyboard::SetKey(key, scancode, action, mods);
     });
     Mouse::initialize(window);
@@ -101,21 +102,28 @@ bool JargGameWindow::BaseInit()
     Resize(RESX, RESY);
     //Mouse::SetFixedPosState(true);
     glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos){
+        (void)window;
         Mouse::SetCursorPos(xpos, ypos);
     });
     glfwSetCursorEnterCallback(window, [](GLFWwindow *window, int entered){
+        (void)window;
         Mouse::cursorClientArea(entered);
     });
     glfwSetWindowFocusCallback(window, [](GLFWwindow *window, int focused){
+        (void)window;
         Mouse::windowFocus(focused);
     });
     glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int a, int b, int c){
+        (void)window;
         Mouse::SetButton(a, b, c);
     });
     glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int a, int b){
+        (void)window;
         JargGameWindow::Resize(a, b); Mouse::setWindowSize(a, b);
     });
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset){
+        (void)window;
+        (void)xoffset;
         Mouse::Scroll(yoffset);
     });
 

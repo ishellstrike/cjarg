@@ -14,7 +14,15 @@
 class Dynamic
 {
 public:
-    Dynamic *instantiate() const;
+    Dynamic *instantiate() const
+    {
+        Dynamic *dyn = new Dynamic();
+        for(auto ag : agents)
+        {
+            dyn->agents.push_back(std::shared_ptr<Agent>(ag->instantiate()));
+        }
+        return dyn;
+    }
 
     template <typename T>
     T *getAgent()
@@ -118,6 +126,7 @@ struct DeserializeHelper {
 #define DESERIALIZE(...) DeserializeHelper::deserialize(val, __VA_ARGS__)
 
     static void deserialize(const rapidjson::Value &val) {
+        (void)val;
     }
 
     template <typename Last>

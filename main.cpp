@@ -12,14 +12,13 @@
 #define private public
 #endif
 
-#include <logic/map/scheme.h>
-#include "logic/agents/chest.h"
 #include "gamewindow.h"
 
 int main( int argc, char* const argv[] )
 {
 #ifdef TESTS
     int result = Catch::Session().run( argc, argv );
+    return result;
 #else
     if(argc >= 2)
         for(int i = 1; i < argc; i++)
