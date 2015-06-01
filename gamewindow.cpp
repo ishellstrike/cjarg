@@ -144,6 +144,7 @@ bool JargGameWindow::BaseInit()
     //auto www = new cjarg_list_test(ws.get());
     perf = new cjarg_perfomance(ws.get());
     build = new cjarg_base_mode_main(ws.get());
+    ws->ToTop(ww);
 
     atlas.LoadAll();
 
@@ -231,11 +232,16 @@ void JargGameWindow::BaseUpdate()
         build->hidden = !build->hidden;
     }
 
-    if(Keyboard::isKeyPress(GLFW_KEY_MINUS))
+    if(Keyboard::isKeyPress(GLFW_KEY_MINUS)) {
         level->slice(level->slice() - 1);
-    if(Keyboard::isKeyPress(GLFW_KEY_EQUAL))
+    }
+    if(Keyboard::isKeyPress(GLFW_KEY_EQUAL)) {
         level->slice(level->slice() + 1);
+    }
 
+    if(Keyboard::isKeyPress(GLFW_KEY_ESCAPE)) {
+        ws->CloseTop();
+    }
 
     if (Keyboard::isKeyDown(GLFW_KEY_LEFT_ALT))
     {
