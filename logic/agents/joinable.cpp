@@ -13,7 +13,7 @@ void Joinable::deserialize(rapidjson::Value &val)
 
 }
 
-void Joinable::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner)
+void Joinable::Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const AgentOwner &owner)
 {
 
 }

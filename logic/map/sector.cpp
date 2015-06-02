@@ -311,6 +311,7 @@ void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJa
         addBillboard(sprites, c->pos, 1, cam);
         std::stringstream ss;
         ss << std::to_string(c->pos);
+        ss << "\n" << c->id << " " << c->getStaticCreature()->full_id << "\n";
         auto s1 = c->mem_list.getMemList();
         for(auto &s2 : s1)
             ss << s2 << "\n";

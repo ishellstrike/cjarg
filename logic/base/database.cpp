@@ -7,7 +7,7 @@
 #include <logic/map/scheme.h>
 #include "../agents/agents.hpp"
 
-void database::registerBlock(const std::string &s, StaticBlock *b)
+Jid database::registerBlock(const std::string &s, StaticBlock *b)
 {
     if(block_pointer.find(s) != block_pointer.end())
         LOG(info) << "block " << s << " redefinition";
@@ -15,12 +15,12 @@ void database::registerBlock(const std::string &s, StaticBlock *b)
     block_back_pointer[block_db.size() - 1] = s;
     block_pointer[s] = block_db.size() - 1;
 
-    b->id = block_db.size() - 1;
+    return b->id = block_db.size() - 1;
     //b->full_id = s;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
-void database::registerItem(const std::string &s, StaticItem *i)
+Jid database::registerItem(const std::string &s, StaticItem *i)
 {
     if(item_pointer.find(s) != item_pointer.end())
         LOG(info) << "item " << s << " redefinition";
@@ -28,7 +28,7 @@ void database::registerItem(const std::string &s, StaticItem *i)
     item_back_pointer[item_db.size() - 1] = s;
     item_pointer[s] = item_db.size() - 1;
 
-    i->id = item_db.size() - 1;
+    return i->id = item_db.size() - 1;
     //i->full_id = s;
     //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
@@ -47,7 +47,7 @@ StaticItem *database::getItem(const Jid &s)
     return item_db[s].get();
 }
 
-void database::registerCreature(const std::string &s, StaticCreature *i)
+Jid database::registerCreature(const std::string &s, StaticCreature *i)
 {
     if(creature_pointer.find(s) != creature_pointer.end())
         LOG(info) << "creature " << s << " redefinition";
@@ -55,7 +55,7 @@ void database::registerCreature(const std::string &s, StaticCreature *i)
     creature_back_pointer[creature_db.size() - 1] = s;
     creature_pointer[s] = creature_db.size() - 1;
 
-    i->id = creature_db.size() - 1;
+    return i->id = creature_db.size() - 1;
 }
 
 StaticCreature *database::getStaticCreature(const std::string &s)
@@ -180,6 +180,7 @@ void database::Load()
 
                     std::string id = val["id"].GetString();
                     b->full_id = id;
+                    //b->etalon->full_id = id;
 
                     try {
                         b->deserialize(val);
@@ -231,7 +232,7 @@ void database::Load()
                         b->etalon->parts = nullptr;
                     }
 
-                    registerCreature(id, b);
+                    b->etalon->id = registerCreature(id, b);
                     loaded ++;
                 }
 

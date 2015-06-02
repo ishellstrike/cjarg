@@ -47,19 +47,19 @@ public:
     std::unordered_map<std::string, Jid> block_pointer;
     std::unordered_map<Jid, std::string> block_back_pointer;
     std::vector<std::unique_ptr<StaticBlock>> block_db;
-    void registerBlock(const std::string &s, StaticBlock* b);
+    Jid registerBlock(const std::string &s, StaticBlock* b);
 
     std::unordered_map<std::string, Jid> item_pointer;
     std::unordered_map<Jid, std::string> item_back_pointer;
     std::vector<std::unique_ptr<StaticItem>> item_db;
-    void registerItem(const std::string &s, StaticItem *i);
+    Jid registerItem(const std::string &s, StaticItem *i);
     StaticItem *getItem(const std::string &s);
     StaticItem *getItem(const Jid &s);
 
     std::unordered_map<std::string, Jid> creature_pointer;
     std::unordered_map<Jid, std::string> creature_back_pointer;
     std::vector<std::unique_ptr<StaticCreature>> creature_db;
-    void registerCreature(const std::string &s, StaticCreature *i);
+    Jid registerCreature(const std::string &s, StaticCreature *i);
     StaticCreature *getStaticCreature(const std::string &s);
     static std::shared_ptr<Creature> instantiateCreature(const std::string &s);
 

@@ -76,7 +76,7 @@ public:
     virtual void deserialize(rapidjson::Value &val) = 0;
 
     virtual Agent *instantiate() const = 0;
-    virtual void Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner) = 0;
+    virtual void Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const AgentOwner &owner) = 0;
     virtual void Init(const glm::vec3 &pos, const Level &l) = 0;
     virtual std::string fullInfo() = 0;
     virtual std::string debugInfo() = 0;

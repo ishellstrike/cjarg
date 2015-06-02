@@ -1,5 +1,6 @@
 #include "logic/entity/creature.h"
 #include "../agents/wander.h"
+#include "logic/base/database.h"
 
 const glm::vec3 &Creature::getWantedPos() const
 {
@@ -58,5 +59,10 @@ Creature *Creature::instantiate()
         c->subparts = std::unique_ptr<CreaturePart>(subparts->instantiate());
 
     return c;
+}
+
+StaticCreature *Creature::getStaticCreature()
+{
+    return database::instance()->getStaticCreature(database::instance()->creature_back_pointer[id]);
 }
 

@@ -12,7 +12,7 @@ void Wander::deserialize(rapidjson::Value &val)
 
 }
 
-void Wander::Update(const GameTimer &gt, const glm::vec3 &pos, const Level &l, const AgentOwner &owner)
+void Wander::Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const AgentOwner &owner)
 {
 
 }

@@ -19,7 +19,7 @@ struct Item : public GameBase
 
     void deserialize(rapidjson::Value &val)
     {
-        auto tex_id = val["id"].GetString();
+        //auto tex_id = val["id"].GetString();
         //id = database::instance()->item_db[database::instance()->item_pointer[tex_id]]->id;
         count = val["count"].GetInt();
     }

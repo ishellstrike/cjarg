@@ -9,6 +9,8 @@
 #include "wishlist.h"
 #include "memlist.h"
 
+class StaticCreature;
+
 class Creature : public Physic, public GameBase
 {
 public:
@@ -20,6 +22,7 @@ public:
     void setWantedPos(const glm::vec3 &value);
     void Update(GameTimer &gt, Level &l);
     Creature *instantiate();
+    StaticCreature *getStaticCreature();
 
     SkillList skills;
     std::unique_ptr<CreaturePart> subparts = nullptr;
@@ -27,9 +30,9 @@ public:
     WishList wish_list;
     MemList mem_list;
 
-    std::string full_id = "error";
     friend class database;
     glm::vec3 wantedPos;
+
 
 protected:
 
