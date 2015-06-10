@@ -32,17 +32,8 @@ Sector::Sector(const Point &p) :
 
 Sector::~Sector()
 {
-    FORijk
-    {
-        delete blocks[i][j][k];
-    }
-    blocks.clear();
 }
 
-void Sector::blockId(const Point3 &p, Jid i)
-{
-    blocks[p.x][p.y][p.z]->id(i);
-}
 
 Jid Sector::blockId(const Point3 &p)
 {
@@ -59,7 +50,7 @@ void Sector::Init()
         {
             blocks[i][j].resize(RZ);
             for(int k = 0; k < RZ; k++)
-                blocks[i][j][k] = new Block();
+                blocks[i][j][k] = std::unique_ptr<Block>(new Block);
         }
     }
 
@@ -71,20 +62,9 @@ void Sector::Init()
 //    }
 }
 
-Block *Sector::block(const Point3 &p)
+std::unique_ptr<Block> &Sector::block(const Point3 &p)
 {
     return blocks[p.x][p.y][p.z];
-}
-
-void Sector::block(const Point3 &p, Jid i)
-{
-    blocks[p.x][p.y][p.z]->id(i);
-}
-
-void Sector::block(const Point3 &p, std::string s)
-{
-    auto db = database::instance();
-    blocks[p.x][p.y][p.z]->id(db->block_db[db->block_pointer[s]]->id);
 }
 
 void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
@@ -97,7 +77,7 @@ void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
             if(l == '.') continue;
             auto dict = s.dict.find(l);
             std::string st = dict->second;
-            block({pos.x + i, pos.y + j, pos.z}, st);
+            block({pos.x + i, pos.y + j, pos.z}) = std::unique_ptr<Block>(database::instance()->getStaticBlock(st)->etalon->instantiate());
         }
     }
 }
@@ -311,7 +291,7 @@ void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJa
         addBillboard(sprites, c->pos, 1, cam);
         std::stringstream ss;
         ss << std::to_string(c->pos);
-        ss << "\n" << c->id << " " << c->getStaticCreature()->full_id << "\n";
+        ss << "\n" << c->id() << " " << c->getStaticCreature()->full_id << "\n";
         auto s1 = c->mem_list.getMemList();
         for(auto &s2 : s1)
             ss << s2 << "\n";

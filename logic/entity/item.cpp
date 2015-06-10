@@ -4,12 +4,12 @@
 
 std::string Item::description()
 {
-    return database::instance()->getItem(id)->description;
+    return database::instance()->getItem(id())->description;
 }
 
 std::string Item::name()
 {
-    return database::instance()->getItem(id)->name;
+    return database::instance()->getItem(id())->name;
 }
 
 std::string Item::fullInfo()
@@ -21,7 +21,7 @@ std::string Item::debugInfo()
 {
     std::stringstream s;
 
-    s << database::instance()->getItem(id)->debugInfo();
+    s << database::instance()->getItem(id())->debugInfo();
 
     return s.str();
 }

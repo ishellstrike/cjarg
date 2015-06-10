@@ -21,8 +21,9 @@ public:
     const glm::vec3 &getWantedPos() const;
     void setWantedPos(const glm::vec3 &value);
     void Update(GameTimer &gt, Level &l);
-    Creature *instantiate();
     StaticCreature *getStaticCreature();
+
+    Creature *instantiate();
 
     SkillList skills;
     std::unique_ptr<CreaturePart> subparts = nullptr;

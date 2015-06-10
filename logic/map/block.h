@@ -3,21 +3,17 @@
 #include <vector>
 #include <logic/agents/gamepart.h>
 
-struct Block
+struct Block : GameBase
 {
-    Jid id();
-
-    void id(Jid id_);
-
-    std::unique_ptr<Dynamic> parts = nullptr;
+    Block *instantiate();
 
     Block(){}
     ~Block(){}
     Block(const Block&) = delete;
     Block& operator=(const Block&) = delete;
+    std::string debugInfo();
 
 private:
-    Jid m_id = 0;
     Jtex m_tex = 0;
 };
 

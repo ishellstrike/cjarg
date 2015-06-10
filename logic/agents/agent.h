@@ -43,9 +43,7 @@ struct AgentOwner {
         ITEM
     };
 
-    void *type = nullptr;
-
-    TypeNum n;
+    TypeNum n = ERROR;
 };
 
 class Agent

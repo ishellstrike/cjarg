@@ -25,9 +25,9 @@ void TrivialGenerator::Generate(std::shared_ptr<Sector> s)
          c = glm::max(c, 0.f);
          c = glm::min(c, RZ - 2.f);
 
-         s->blocks[i][j][(int)c]->id(database::instance()->block_pointer["grass"]);
+         s->blocks[i][j][(int)c] = std::unique_ptr<Block>(database::instance()->getStaticBlock("grass")->etalon->instantiate());
          for(int k=c - 1; k>=0; k--)
-             s->blocks[i][j][k]->id(database::instance()->block_pointer["dirt"]);
+             s->blocks[i][j][k] = std::unique_ptr<Block>(database::instance()->getStaticBlock("dirt")->etalon->instantiate());
      }
 }
 
@@ -41,9 +41,9 @@ void TestGenerator_City1::Generate(std::shared_ptr<Sector> s)
 
         if(Noise::normalized_simplexnoise((i + ii)/32.f,(j + jj)/32.f) +
            Noise::normalized_simplexnoise((i + ii)/64.f,(j + jj)/64.f) > 1.f)
-            s->blocks[i][j][0]->id(database::instance()->block_pointer["dirt"]);
+            s->blocks[i][j][0] = std::unique_ptr<Block>(database::instance()->getStaticBlock("grass")->etalon->instantiate());
         else
-            s->blocks[i][j][0]->id(database::instance()->block_pointer["grass"]);
+            s->blocks[i][j][0] = std::unique_ptr<Block>(database::instance()->getStaticBlock("dirt")->etalon->instantiate());
     }
 
     //gen_helper::PlaceWall(s, {0,0,0}, {5,5,5}, 5, "glass");

@@ -10,27 +10,25 @@
 Jid database::registerBlock(const std::string &s, StaticBlock *b)
 {
     if(block_pointer.find(s) != block_pointer.end())
-        LOG(info) << "block " << s << " redefinition";
+        LOG(error) << "block " << s << " redefinition";
     block_db.push_back(std::unique_ptr<StaticBlock>(b));
     block_back_pointer[block_db.size() - 1] = s;
     block_pointer[s] = block_db.size() - 1;
 
+    LOG(verbose) << "register \"" << s << "\" as " << block_db.size() - 1 << " block";
     return b->id = block_db.size() - 1;
-    //b->full_id = s;
-    //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
 Jid database::registerItem(const std::string &s, StaticItem *i)
 {
     if(item_pointer.find(s) != item_pointer.end())
-        LOG(info) << "item " << s << " redefinition";
+        LOG(error) << "item " << s << " redefinition";
     item_db.push_back(std::unique_ptr<StaticItem>(i));
     item_back_pointer[item_db.size() - 1] = s;
     item_pointer[s] = item_db.size() - 1;
 
+    LOG(verbose) << "register \"" << s << "\" as " << item_db.size() - 1 << " item";
     return i->id = item_db.size() - 1;
-    //i->full_id = s;
-    //LOG(info) << "register \"" << s << "\" as " << block_db.size() - 1;
 }
 
 StaticItem *database::getItem(const std::string &s)
@@ -50,11 +48,12 @@ StaticItem *database::getItem(const Jid &s)
 Jid database::registerCreature(const std::string &s, StaticCreature *i)
 {
     if(creature_pointer.find(s) != creature_pointer.end())
-        LOG(info) << "creature " << s << " redefinition";
+        LOG(error) << "creature " << s << " redefinition";
     creature_db.push_back(std::unique_ptr<StaticCreature>(i));
     creature_back_pointer[creature_db.size() - 1] = s;
     creature_pointer[s] = creature_db.size() - 1;
 
+    LOG(verbose) << "register \"" << s << "\" as " << creature_db.size() - 1 << " creature";
     return i->id = creature_db.size() - 1;
 }
 
@@ -68,6 +67,18 @@ StaticCreature *database::getStaticCreature(const std::string &s)
 std::shared_ptr<Creature> database::instantiateCreature(const std::string &s)
 {
     return std::shared_ptr<Creature>(instance()->getStaticCreature(s)->etalon->instantiate());
+}
+
+StaticBlock *database::getStaticBlock(const std::string &s)
+{
+    if(block_pointer.find(s) == block_pointer.end())
+        return block_db[0].get();
+    return block_db[block_pointer[s]].get();
+}
+
+std::shared_ptr<Block> database::instantiateBlock(const std::string &s)
+{
+    return std::shared_ptr<Block>(instance()->getStaticBlock(s)->etalon->instantiate());
 }
 
 #ifndef max
@@ -232,7 +243,7 @@ void database::Load()
                         b->etalon->parts = nullptr;
                     }
 
-                    b->etalon->id = registerCreature(id, b);
+                    registerCreature(id, b);
                     loaded ++;
                 }
 

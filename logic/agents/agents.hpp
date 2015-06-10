@@ -7,7 +7,8 @@
     CASTER(Joinable) \
     CASTER(Organ) \
     CASTER(Wander) \
-    CASTER(Stomper)
+    CASTER(Stomper) \
+    CASTER(Stompable)
 
 #define PARTS_PARSER                                                                                               \
     if(val.HasMember("parts")) {                                                                                   \
@@ -36,6 +37,7 @@
 #include "fatal.h"
 #include "wander.h"
 #include "stomper.h"
+#include "stompable.h"
 
 #endif // AGENTS_H
 

@@ -73,7 +73,6 @@ bool JargGameWindow::BaseInit()
         return false;
     }
 
-
     int glVersion[2] = {-1, -1};
     glGetIntegerv(GL_MAJOR_VERSION, &glVersion[0]);
     glGetIntegerv(GL_MINOR_VERSION, &glVersion[1]);
@@ -141,7 +140,7 @@ bool JargGameWindow::BaseInit()
 
     new Win(ws.get());
     cjarg_main_w *ww = new cjarg_main_w(ws.get());
-    //auto www = new cjarg_list_test(ws.get());
+    auto www = new cjarg_list_test(ws.get());
     perf = new cjarg_perfomance(ws.get());
     build = new cjarg_base_mode_main(ws.get());
     ws->ToTop(ww);

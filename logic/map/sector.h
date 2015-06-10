@@ -33,20 +33,17 @@ struct Sector
     Sector();
     Sector(const Point &p);
     ~Sector();
-    void blockId(const Point3 &p, Jid i);
     Jid blockId(const Point3 &p);
     void Init();
 
-    Block *block(const Point3 &p);
-    void block(const Point3 &p, Jid i);
-    void block(const Point3 &p, std::string s);
+    std::unique_ptr<Block> &block(const Point3 &p);
     void placeScheme(const Scheme &s, glm::vec3 pos);
 
     void Rebuild(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice);
     void Rebuild(int slice);
     void MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice, std::shared_ptr<Camera> cam);
 
-    std::vector<std::vector<std::vector<Block*>>> blocks;
+    std::vector<std::vector<std::vector<std::unique_ptr<Block>>>> blocks;
     Point offset;
     typedef std::list<std::shared_ptr<Creature>> CreatureList;
     CreatureList creatures;

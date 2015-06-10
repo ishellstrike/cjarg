@@ -12,6 +12,7 @@
 #include "sge/mouse.h"
 #include "sge/geometry/cube.h"
 #include "logic/base/database.h"
+#include "sge_ui/wins.h"
 
 const glm::vec3 Level::neigb_offset[] = {
     glm::vec3(0, 0,-1), glm::vec3( 0, 0, 1),
@@ -93,6 +94,11 @@ void Level::Render(std::shared_ptr<Camera> cam)
             vertcount += pair.second->vertcount;
         }
     }
+
+    std::stringstream ss;
+    Block *b = block(m_selected).get();
+    ss << b->debugInfo();
+    WinS::sb->drawText(ss.str(), cam->Project(m_selected), WinS::f, Color::Wheat);
 
     decltype(lw.mem.begin()) last_ok;
     for(auto beg = lw.mem.begin(); beg != lw.mem.end(); )
@@ -303,22 +309,24 @@ void Level::Preload(Point p, int r)
         }
 }
 
-Block *Level::block(const Point3 &p) const
+std::unique_ptr<Block> &Level::block(const Point3 &p) const
 {
+    if(p.z >= RZ) return std::unique_ptr<Block>();
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find({divx, divy}) == lw.mem.end())
-        return nullptr;
+        return std::unique_ptr<Block>();
     auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
 }
 
-Block *Level::block(const glm::vec3 &p) const
+std::unique_ptr<Block> &Level::block(const glm::vec3 &p) const
 {
+    if(p.z >= RZ) return std::unique_ptr<Block>();
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
-        return nullptr;
+        return std::unique_ptr<Block>();
     auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
 }
@@ -327,7 +335,7 @@ std::vector<Block *> Level::neighbours(const glm::vec3 &p) const
 {
     std::vector<Block *> result;
     for(auto &offset : neigb_offset)
-        result.push_back(block(p + offset));
+        result.push_back(block(p + offset).get());
     return result;
 }
 
@@ -336,7 +344,7 @@ StaticBlock *Level::block_base(const glm::vec3 &p) const
     return database::instance()->block_db[block(p)->id()].get();
 }
 
-Block *Level::selected() const
+std::unique_ptr<Block> &Level::selected() const
 {
     return block(m_selected);
 }
@@ -348,14 +356,14 @@ StaticBlock *Level::selected_base() const
 
 void Level::lClick()
 {
-    Block *a = selected();
+    Block *a = selected().get();
     StaticBlock *b = database::instance()->block_db[a->id()].get();
     b->lClick(a);
 }
 
 void Level::rClick()
 {
-    Block *a = selected();
+    Block *a = selected().get();
     StaticBlock *b = database::instance()->block_db[a->id()].get();
     b->rClick(a);
 }
@@ -376,7 +384,9 @@ bool Level::change_at(const Point3 &p, const std::string &id)
 
 bool Level::change_at(const Point3 &p, Jid id)
 {
-    if(block(p)) {
+    //if(block(p))
+    {
+        if(p.z >= RZ) return false;
         int divx = p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX;
         int divy = p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY;
         if(lw.mem.find({divx, divy}) == lw.mem.end())
@@ -384,7 +394,7 @@ bool Level::change_at(const Point3 &p, Jid id)
         auto sect = lw.mem[Point(divx, divy)];
         if(sect->state != Sector::READY)
             return false;
-        sect->block({p.x - divx * RX, p.y - divy * RY, p.z})->id(id);
+        sect->block({p.x - divx * RX, p.y - divy * RY, p.z}) = std::unique_ptr<Block>(database::instance()->block_db[id]->etalon->instantiate());
 
         sect->markRebuild();
 

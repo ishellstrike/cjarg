@@ -13,17 +13,10 @@
 
 class Dynamic
 {
-    friend class Creature;
 public:
-    Dynamic *instantiate() const
-    {
-        Dynamic *dyn = new Dynamic();
-        for(auto ag : agents)
-        {
-            dyn->agents.push_back(std::shared_ptr<Agent>(ag->instantiate()));
-        }
-        return dyn;
-    }
+    Dynamic *instantiate() const;
+
+    void Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const AgentOwner &owner);
 
     template <typename T>
     T *getAgent()
@@ -67,32 +60,11 @@ public:
         agents.push_back(agent);
     }
 
-    bool isEmpty() const
-    {
-        return agents.size() == 0;
-    }
+    bool isEmpty() const;
 
-    std::string debugInfo() const
-    {
-        std::stringstream ss;
+    std::string debugInfo() const;
 
-        for(std::shared_ptr<Agent> ag : agents)
-        {
-            ss << "{" << ag->debugInfo() << "} ";
-        }
-
-        return ss.str();
-    }
-
-    std::string fullInfo() const
-    {
-        std::stringstream ss;
-
-        for(std::shared_ptr<Agent> ag : agents)
-            ss << ag->fullInfo() << ". ";
-
-        return ss.str();
-    }
+    std::string fullInfo() const;
 
 private:
     std::vector<std::shared_ptr<Agent>> agents;
@@ -295,10 +267,29 @@ private:
 };
 
 struct GameBase {
+    friend class database;
+
     std::unique_ptr<Dynamic> parts = nullptr;
     AgentOwner ao_this;
 
-    Jid id = 0;
+    template <typename T>
+    T *getAgent()
+    {
+        if(parts) return parts->getAgent<T>();
+        return nullptr;
+    }
+
+    template <typename T>
+    T *hasAgent()
+    {
+        if(parts) return parts->hasAgent<T>();
+        return nullptr;
+    }
+
+    Jid id();
+
+protected:
+    Jid m_id = 0;
 };
 
 struct Static

@@ -1,11 +1,28 @@
 #include "block.h"
 #include "logic/base/database.h"
 #include "sge/textureatlas.h"
-Jid Block::id()
+
+Block *Block::instantiate()
 {
-    return m_id;
+    Block *c = new Block;
+
+    ao_this.n = AgentOwner::CREATURE;
+
+    if(parts)
+        c->parts = std::unique_ptr<Dynamic>(parts->instantiate());
+    c->m_id = m_id;
+
+    return c;
 }
-void Block::id(Jid id_)
+
+std::string Block::debugInfo()
 {
-    m_id = id_;
+    std::stringstream s;
+    s << "block " << m_id << "\n";
+    if(parts) {
+        s << parts->debugInfo() << "\n";
+    }
+    s << "\n";
+
+    return s.str();
 }

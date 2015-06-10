@@ -34,12 +34,12 @@ public:
     void Draw(SpriteBatch &sb, const glm::vec3 &cam);
     void Preload(Point p, int r);
 
-    Block *block(const Point3 &p) const;
-    Block *block(const glm::vec3 &p) const;
+    std::unique_ptr<Block> &block(const Point3 &p) const;
+    std::unique_ptr<Block> &block(const glm::vec3 &p) const;
     std::vector<Block *> neighbours(const glm::vec3 &p) const;
     StaticBlock *block_base(const glm::vec3 &p) const;
     StaticBlock *selected_base() const;
-    Block *selected() const;
+    std::unique_ptr<Block> &selected() const;
 
     void lClick();
     void rClick();

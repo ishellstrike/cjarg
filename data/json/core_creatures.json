@@ -71,14 +71,14 @@
 				]
 			}
 		],
-	"parts":[
-		{
-			"type":"Wander"
-		},{
-			"type":"Stomper",
-			"power":1
-		}
-    ]
+    "parts":[
+                {
+                    "type":"Wander"
+                },{
+                    "type":"Stomper",
+                    "power":1
+                }
+            ]
 	},{
     "type":"creature",
     "id":"wanderman",

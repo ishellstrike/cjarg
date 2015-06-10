@@ -22,11 +22,7 @@ void Creature::Update(GameTimer &gt, Level &l)
 //    }
 
     if(parts)
-        for(std::shared_ptr<Agent> a : parts->agents)
-        {
-            Agent &ag = *a;
-            ag.Update(gt, pos, l, ao_this);
-        }
+        parts->Update(gt, pos, l, ao_this);
 
     if(wish_list.wishes.size() > 0)
     {
@@ -49,11 +45,10 @@ Creature *Creature::instantiate()
     Creature *c = new Creature;
 
     ao_this.n = AgentOwner::CREATURE;
-    ao_this.type = this;
 
     if(parts)
         c->parts = std::unique_ptr<Dynamic>(parts->instantiate());
-    c->id = id;
+    c->m_id = m_id;
 
     if(subparts)
         c->subparts = std::unique_ptr<CreaturePart>(subparts->instantiate());
@@ -63,6 +58,6 @@ Creature *Creature::instantiate()
 
 StaticCreature *Creature::getStaticCreature()
 {
-    return database::instance()->getStaticCreature(database::instance()->creature_back_pointer[id]);
+    return database::instance()->getStaticCreature(database::instance()->creature_back_pointer[m_id]);
 }
 

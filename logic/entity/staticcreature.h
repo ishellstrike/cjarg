@@ -37,7 +37,7 @@ public:
         s << DEBUGINFO(description);
 
         return s.str();
-    }
+    }    
 };
 
 #endif // STATICCREATURE_H

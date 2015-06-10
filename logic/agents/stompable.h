@@ -1,19 +1,15 @@
-#ifndef JOINABLE_H
-#define JOINABLE_H
+#ifndef STOMPABLE_H
+#define STOMPABLE_H
 #include "agent.h"
-#include "../entity/item.h"
-#include <vector>
-#include "rapidjson/document.h"
-#include "../map/staticblock.h"
-#include "../map/level.h"
 
-struct Joinable : public Agent
+//!
+//! \brief Behavior agent
+//!
+struct Stompable : public Agent
 {
-    AGENT(Joinable)
+    AGENT(Stompable)
 
-    int join_id = 0;
-
-    bool has_joines[StaticBlock::SIDE_AFTER_LAST];
+    std::string afterstomp;
 
     Agent *instantiate() const override;
     void deserialize(rapidjson::Value &val) override;
@@ -24,4 +20,5 @@ struct Joinable : public Agent
     std::string debugInfo() override {return "";}
 };
 
-#endif // JOINABLE_H
+
+#endif // STOMPABLE_H
