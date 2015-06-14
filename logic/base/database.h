@@ -65,7 +65,7 @@ public:
     static std::shared_ptr<Creature> instantiateCreature(const std::string &s);
 
     StaticBlock *getStaticBlock(const std::string &s);
-    std::shared_ptr<Block> instantiateBlock(const std::string &s);
+    static std::shared_ptr<Block> instantiateBlock(const std::string &s);
 
     std::unordered_map<SchemeType, std::vector<Scheme>> scheme_db;
 

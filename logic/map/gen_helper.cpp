@@ -11,7 +11,7 @@ void gen_helper::PlaceWall(std::shared_ptr<Sector> &s, const glm::vec3 &start, c
     {
         for(int i = 0; i < height && i + point.z < RZ; i++)
         {
-            s->block(point + glm::vec3(0,0,i)) = std::unique_ptr<Block>(database::instance()->getStaticBlock(id)->etalon->instantiate());
+            s->block(point + glm::vec3(0,0,i), database::instantiateBlock(id));
         }
     }
 }
@@ -21,5 +21,5 @@ void gen_helper::PlaceRegion(std::shared_ptr<Sector> &s, const glm::vec3 &start,
         for(int i = start.x; i <= end.x && i < RX; i++)
             for(int j = start.y; j <= end.y && j < RY; j++)
                 for(int k = start.z; k <= end.z && k < RZ; k++)
-                    s->block({i,j,k}) = std::unique_ptr<Block>(database::instance()->getStaticBlock(id)->etalon->instantiate());
+                    s->block({i,j,k}, database::instantiateBlock(id));
 }

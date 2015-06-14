@@ -25,10 +25,11 @@ public:
 
     int tex[SIDE_AFTER_LAST];
     std::unique_ptr<ClickReaction> r_click, l_click;
-    std::unique_ptr<Block> etalon;
+    std::shared_ptr<Block> etalon;
 
     std::string full_id;
     Jid id;
+    bool pure_static = false;
 
     bool setTexture(SIDE side, std::string tex_);
     void setTexture(std::string tex_);
@@ -39,6 +40,8 @@ public:
 
     void setTexture(Jtex tex_);
 
+    std::shared_ptr<Block> instantiate();
+
     //trivial vars
     bool transparent = false;
     bool cube = true;
@@ -47,7 +50,7 @@ public:
 
     void deserialize(const rapidjson::Value &val)
     {
-        DESERIALIZE(NVP(transparent), NVP(cube), NVP(name), NVP(description));
+        DESERIALIZE(NVP(transparent), NVP(cube), NVP(name), NVP(description), NVP(pure_static));
 
         if(val.HasMember("alltex") || val.HasMember("tex")) {
             if(val.HasMember("alltex")) setTexture(val["alltex"].Begin()->GetString());

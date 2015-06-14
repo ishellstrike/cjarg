@@ -4,6 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++11
 
+#QMAKE_CXXFLAGS += -O2
+
 SOURCES += main.cpp \
     gamewindow.cpp \
     logic/map/sector.cpp \

@@ -58,6 +58,13 @@ void StaticBlock::setTexture(Jtex tex_)
     }
 }
 
+std::shared_ptr<Block> StaticBlock::instantiate()
+{
+    if(pure_static)
+        return etalon;
+    return etalon->instantiate();
+}
+
 void StaticBlock::setTexture(std::string tex_)
 {
     for(int i=0; i<SIDE_AFTER_LAST; ++i)

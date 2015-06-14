@@ -1,4 +1,5 @@
 #include "stompable.h"
+#include "gamepart.h"
 
 Agent *Stompable::instantiate() const
 {
@@ -8,10 +9,7 @@ Agent *Stompable::instantiate() const
 
 void Stompable::deserialize(rapidjson::Value &val)
 {
-    if(val.HasMember("afterstomp"))
-    {
-         val["afterstomp"].GetString();
-    }
+    DESERIALIZE(NVP(afterstomp));
 }
 
 void Stompable::Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const AgentOwner &owner)

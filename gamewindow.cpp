@@ -39,6 +39,12 @@ bool JargGameWindow::BaseInit()
     LOG(info) << "Jarg initialization start";
     LOG(info) << "User-preferred locale setting is " << std::locale("").name().c_str();
     LOG(info) << "Hardware concurrency " << std::thread::hardware_concurrency();
+
+    LOG(verbose) << "Block size " << to_traf_string(sizeof(std::shared_ptr<Block>) + sizeof(Block));
+    LOG(verbose) << "Sector minimal size " << to_traf_string(sizeof(std::shared_ptr<Block>)*RX*RY*RZ);
+    LOG(verbose) << "Sector dim " << RX << "x" << RY << "x" << RZ;
+
+
     glfwSetErrorCallback([](int a, const char* description){(void)a; LOG(error) << description;});
     int glfwErrorCode = glfwInit();
     if (!glfwErrorCode)
@@ -54,7 +60,7 @@ bool JargGameWindow::BaseInit()
 
     monitor = nullptr;
 
-    window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", GIT_VERSION, BUILD_DATE).c_str(), monitor, nullptr);
+    window = glfwCreateWindow(RESX, RESY, string_format("cjarg %s %s", "v", "d").c_str(), monitor, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -152,7 +158,7 @@ bool JargGameWindow::BaseInit()
     database::instance()->Load();
 
     lworker = std::make_shared<LevelWorker>();
-    lworker->SetGenerator(TestGenerator_City1::Generate);
+    lworker->SetGenerator(TrivialGenerator::Generate);
     level = std::make_shared<Level>(*lworker);
 
     me = std::shared_ptr<Creature>(database::instance()->getStaticCreature("human")->etalon->instantiate());
@@ -361,8 +367,11 @@ void JargGameWindow::Mainloop()
     {
         BaseUpdate();
         BaseDraw();
-        tiker += std::chrono::microseconds(100000/6);
-        if(fixed) std::this_thread::sleep_until(tiker);
+        if(fixed)
+        {
+           // tiker += std::chrono::microseconds(100000/6);
+          //  std::this_thread::sleep_until(tiker);
+        }
     }
 }
 

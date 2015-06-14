@@ -96,7 +96,7 @@ void Level::Render(std::shared_ptr<Camera> cam)
     }
 
     std::stringstream ss;
-    Block *b = block(m_selected).get();
+    Block *b = block(m_selected);
     ss << b->debugInfo();
     WinS::sb->drawText(ss.str(), cam->Project(m_selected), WinS::f, Color::Wheat);
 
@@ -309,24 +309,24 @@ void Level::Preload(Point p, int r)
         }
 }
 
-std::unique_ptr<Block> &Level::block(const Point3 &p) const
+Block *Level::block(const Point3 &p) const
 {
-    if(p.z >= RZ) return std::unique_ptr<Block>();
+    if(p.z >= RZ || p.z < 0) return nullptr;
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find({divx, divy}) == lw.mem.end())
-        return std::unique_ptr<Block>();
+        return nullptr;
     auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({p.x - divx * RX, p.y - divy * RY, p.z});
 }
 
-std::unique_ptr<Block> &Level::block(const glm::vec3 &p) const
+Block *Level::block(const glm::vec3 &p) const
 {
-    if(p.z >= RZ) return std::unique_ptr<Block>();
+    if(p.z >= RZ || p.z < 0) return nullptr;
     int divx = static_cast<int>(p.x < 0 ? (p.x + 1) / RX - 1 : p.x / RX);
     int divy = static_cast<int>(p.y < 0 ? (p.y + 1) / RY - 1 : p.y / RY);
     if(lw.mem.find(Point(divx, divy)) == lw.mem.end())
-        return std::unique_ptr<Block>();
+        return nullptr;
     auto &sect = lw.mem[Point(divx, divy)];
     return sect->block({(int)p.x - divx * RX, (int)p.y - divy * RY, (int)p.z});
 }
@@ -335,7 +335,7 @@ std::vector<Block *> Level::neighbours(const glm::vec3 &p) const
 {
     std::vector<Block *> result;
     for(auto &offset : neigb_offset)
-        result.push_back(block(p + offset).get());
+        result.push_back(block(p + offset));
     return result;
 }
 
@@ -344,26 +344,26 @@ StaticBlock *Level::block_base(const glm::vec3 &p) const
     return database::instance()->block_db[block(p)->id()].get();
 }
 
-std::unique_ptr<Block> &Level::selected() const
+Block *Level::selected_block() const
 {
     return block(m_selected);
 }
 
 StaticBlock *Level::selected_base() const
 {
-    return database::instance()->block_db[selected()->id()].get();
+    return database::instance()->block_db[selected_block()->id()].get();
 }
 
 void Level::lClick()
 {
-    Block *a = selected().get();
+    Block *a = selected_block();
     StaticBlock *b = database::instance()->block_db[a->id()].get();
     b->lClick(a);
 }
 
 void Level::rClick()
 {
-    Block *a = selected().get();
+    Block *a = selected_block();
     StaticBlock *b = database::instance()->block_db[a->id()].get();
     b->rClick(a);
 }
@@ -394,7 +394,7 @@ bool Level::change_at(const Point3 &p, Jid id)
         auto sect = lw.mem[Point(divx, divy)];
         if(sect->state != Sector::READY)
             return false;
-        sect->block({p.x - divx * RX, p.y - divy * RY, p.z}) = std::unique_ptr<Block>(database::instance()->block_db[id]->etalon->instantiate());
+        sect->block({p.x - divx * RX, p.y - divy * RY, p.z}, database::instance()->block_db[id]->instantiate());
 
         sect->markRebuild();
 

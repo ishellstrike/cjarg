@@ -21,7 +21,7 @@ void Joinable::Update(const GameTimer &gt, const glm::vec3 &pos, Level &l, const
 void Joinable::Init(const glm::vec3 &pos, const Level &l)
 {
     auto n = l.neighbours(pos);
-    auto th = l.block(pos).get(); //this block
+    auto th = l.block(pos); //this block
     for(Block *b : n)
     {
         if(b->id() == th->id() && b->parts)

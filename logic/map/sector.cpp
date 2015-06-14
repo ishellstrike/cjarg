@@ -50,7 +50,7 @@ void Sector::Init()
         {
             blocks[i][j].resize(RZ);
             for(int k = 0; k < RZ; k++)
-                blocks[i][j][k] = std::unique_ptr<Block>(new Block);
+                blocks[i][j][k] = std::make_shared<Block>();
         }
     }
 
@@ -62,9 +62,14 @@ void Sector::Init()
 //    }
 }
 
-std::unique_ptr<Block> &Sector::block(const Point3 &p)
+Block *Sector::block(const Point3 &p)
 {
-    return blocks[p.x][p.y][p.z];
+    return blocks[p.x][p.y][p.z].get();
+}
+
+void Sector::block(const Point3 &p, std::shared_ptr<Block> nv)
+{
+    blocks[p.x][p.y][p.z] = nv;
 }
 
 void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
@@ -77,7 +82,8 @@ void Sector::placeScheme(const Scheme &s, glm::vec3 pos)
             if(l == '.') continue;
             auto dict = s.dict.find(l);
             std::string st = dict->second;
-            block({pos.x + i, pos.y + j, pos.z}) = std::unique_ptr<Block>(database::instance()->getStaticBlock(st)->etalon->instantiate());
+            StaticBlock *sb = database::instance()->getStaticBlock(st);
+            block({pos.x + i, pos.y + j, pos.z}, std::shared_ptr<Block>(sb->instantiate()));
         }
     }
 }
@@ -115,16 +121,18 @@ void Sector::Rebuild(int slice)
         if(!apos) continue;
         float qq,ww,q,w;
 
+        StaticBlock *sb = database::instance()->block_db[blocks[i][j][k]->id()].get();
+
         if(j == 0 || database::instance()->block_db[blocks[i][j - 1][k]->id()]->transparent ||
                      !database::instance()->block_db[blocks[i][j - 1][k]->id()]->cube)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BACK],
-                    q,w,qq,ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i,     j,     k    }, {q, ww}));
+            get_uvs(sb->tex[StaticBlock::SIDE_BACK], q, w, qq, ww);
+
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i,     j,     k    }, {q,  ww}));
             mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i + 1, j,     k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i + 1, j,     k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i    , j,     k + 1}, {q, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i + 1, j,     k + 1}, {qq, w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,1,0}, {i    , j,     k + 1}, {q,  w }));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -139,8 +147,7 @@ void Sector::Rebuild(int slice)
         if(i == RX - 1 || database::instance()->block_db[blocks[i+1][j][k]->id()]->transparent ||
                           !database::instance()->block_db[blocks[i+1][j][k]->id()]->cube)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_RIGHT],
-                    q,w,qq,ww);
+            get_uvs(sb->tex[StaticBlock::SIDE_RIGHT], q, w, qq, ww);
 
             mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j,     k + 1}, {q, w}));
             mesh.Vertices.push_back(VertPosNormTanBiTex({-1,0,0}, {i + 1, j,     k    }, {q, ww}));
@@ -160,13 +167,12 @@ void Sector::Rebuild(int slice)
         if(i == 0 || database::instance()->block_db[blocks[i - 1][j][k]->id()]->transparent ||
                      !database::instance()->block_db[blocks[i - 1][j][k]->id()]->cube)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_LEFT],
-                    q,w,qq,ww);
+            get_uvs(sb->tex[StaticBlock::SIDE_LEFT], q, w, qq, ww);
 
             mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j,     k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j,     k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j,     k + 1}, {qq, w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k + 1}, {q,  w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({1,0,0}, {i    , j + 1, k    }, {q,  ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -181,13 +187,12 @@ void Sector::Rebuild(int slice)
         if(j == RY - 1 || database::instance()->block_db[blocks[i][j+1][k]->id()]->transparent ||
                           !database::instance()->block_db[blocks[i][j+1][k]->id()]->cube)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_FRONT],
-                    q,w,qq,ww);
+            get_uvs(sb->tex[StaticBlock::SIDE_FRONT], q, w, qq, ww);
 
             mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i    , j + 1, k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i    , j + 1, k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i    , j + 1, k + 1}, {qq, w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k + 1}, {q,  w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,-1,0}, {i + 1, j + 1, k    }, {q,  ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -203,13 +208,12 @@ void Sector::Rebuild(int slice)
                      !database::instance()->block_db[blocks[i][j][k - 1]->id()]->cube)
         if(k != 0)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_BOTTOM],
-                    q,w,qq,ww);
+            get_uvs(sb->tex[StaticBlock::SIDE_BOTTOM], q, w, qq, ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j    , k    }, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i    , j    , k    }, {qq, w}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j    , k    }, {q,  w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i    , j    , k    }, {qq, w }));
             mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i    , j + 1, k    }, {qq, ww}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j + 1, k    }, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,1}, {i + 1, j + 1, k    }, {q,  ww}));
 
             mesh.Indices.push_back(c + 0);
             mesh.Indices.push_back(c + 1);
@@ -224,12 +228,11 @@ void Sector::Rebuild(int slice)
         if(k == RZ - 1 || database::instance()->block_db[blocks[i][j][k + 1]->id()]->transparent ||
                           !database::instance()->block_db[blocks[i][j][k + 1]->id()]->cube || k == slice - 1)
         {
-            get_uvs(database::instance()->block_db[blocks[i][j][k]->id()]->tex[StaticBlock::SIDE_TOP],
-                    q,w,qq,ww);
+            get_uvs(sb->tex[StaticBlock::SIDE_TOP], q, w, qq, ww);
 
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j    , k + 1}, {qq, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j    , k + 1}, {q, w}));
-            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q, ww}));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j    , k + 1}, {qq, w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j    , k + 1}, {q,  w }));
+            mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q,  ww}));
             mesh.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j + 1, k + 1}, {qq, ww}));
 
             mesh.Indices.push_back(c + 0);
@@ -249,20 +252,20 @@ void Sector::Rebuild(int slice)
     state = UNBINDED;
 }
 
-void addBillboard(Mesh &m, glm::vec3 pos, int tex, std::shared_ptr<Camera> cam)
+void addBillboard(Mesh &m, glm::vec3 pos, int tex, std::shared_ptr<Camera> /*cam*/)
 {
     float qq,ww,q,w;
     get_uvs(tex,q,w,qq,ww);
 
-    int i = pos.x;
-    int j = pos.y;
-    int k = pos.z;
+    int i = static_cast<int>(pos.x);
+    int j = static_cast<int>(pos.y);
+    int k = static_cast<int>(pos.z);
 
     int c = m.Vertices.size();
 
-    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j,     k + 1}, {qq, w}));
-    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j,     k + 1}, {q, w}));
-    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q, ww}));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j,     k + 1}, {qq, w }));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j,     k + 1}, {q,  w }));
+    m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i + 1, j + 1, k + 1}, {q,  ww}));
     m.Vertices.push_back(VertPosNormTanBiTex({0,0,-1}, {i    , j + 1, k + 1}, {qq, ww}));
 
     m.Indices.push_back(c + 0);
@@ -274,7 +277,7 @@ void addBillboard(Mesh &m, glm::vec3 pos, int tex, std::shared_ptr<Camera> cam)
     m.Indices.push_back(c + 0);
 }
 
-void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int slice, std::shared_ptr<Camera> cam)
+void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJargShader> basic_, int /*slice*/, std::shared_ptr<Camera> cam)
 {
     sprites.World = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(offset.x * RX, offset.y * RY, 0));
     sprites.material = mat_;
@@ -294,7 +297,9 @@ void Sector::MakeSprites(std::shared_ptr<Material> mat_, std::shared_ptr<BasicJa
         ss << "\n" << c->id() << " " << c->getStaticCreature()->full_id << "\n";
         auto s1 = c->mem_list.getMemList();
         for(auto &s2 : s1)
+        {
             ss << s2 << "\n";
+        }
         WinS::sb->drawText(ss.str(), cam->Project(c->pos), WinS::f, Color::Wheat);
     }
 

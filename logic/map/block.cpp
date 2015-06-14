@@ -2,9 +2,9 @@
 #include "logic/base/database.h"
 #include "sge/textureatlas.h"
 
-Block *Block::instantiate()
+std::shared_ptr<Block> Block::instantiate()
 {
-    Block *c = new Block;
+    std::shared_ptr<Block> c = std::make_shared<Block>();
 
     ao_this.n = AgentOwner::CREATURE;
 

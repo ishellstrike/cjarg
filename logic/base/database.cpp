@@ -78,7 +78,7 @@ StaticBlock *database::getStaticBlock(const std::string &s)
 
 std::shared_ptr<Block> database::instantiateBlock(const std::string &s)
 {
-    return std::shared_ptr<Block>(instance()->getStaticBlock(s)->etalon->instantiate());
+    return instance()->getStaticBlock(s)->instantiate();
 }
 
 #ifndef max
@@ -91,16 +91,25 @@ std::shared_ptr<Block> database::instantiateBlock(const std::string &s)
 void database::Load()
 {
     StaticBlock *ss = new StaticBlock();
+    ss->etalon = std::unique_ptr<Block>(new Block());
     ss->setTexture(0);
     ss->transparent = true;
+    ss->pure_static = true;
     registerBlock("air", ss);
 
     ss = new StaticBlock();
+    ss->etalon = std::unique_ptr<Block>(new Block());
     ss->setTexture("error.png");
-    registerBlock("error", ss);
+    ss->pure_static = true;
+    registerBlock("error_block", ss);
 
     StaticCreature *sc = new StaticCreature;
-    registerCreature("error", sc);
+    sc->etalon = std::unique_ptr<Creature>(new Creature());
+    registerCreature("error_creature", sc);
+
+    StaticItem *si = new StaticItem;
+    si->etalon = std::unique_ptr<Item>(new Item());
+    registerItem("error_item", si);
 
     std::vector<std::string> files;
     getFiles(Prefecences::Instance()->getJsonDir(), files);
@@ -173,7 +182,8 @@ void database::Load()
                         b->etalon->parts = nullptr;
                     }
 
-                    registerBlock(id, b);
+                    Jid jid = registerBlock(id, b);
+                    b->etalon->m_id = jid;
                     loaded ++;
                 }
 
@@ -208,7 +218,8 @@ void database::Load()
                         b->etalon->parts = nullptr;
                     }
 
-                    registerItem(id, b);
+                    Jid jid = registerItem(id, b);
+                    b->etalon->m_id = jid;
                     loaded ++;
                 }
 
@@ -243,7 +254,8 @@ void database::Load()
                         b->etalon->parts = nullptr;
                     }
 
-                    registerCreature(id, b);
+                    Jid jid = registerCreature(id, b);
+                    b->etalon->m_id = jid;
                     loaded ++;
                 }
 

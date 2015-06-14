@@ -3,7 +3,8 @@
 	"id":"dirt",
 	"name":"земля",
 	"type":"block",
-    "alltex":["dirt1.png"]
+    "alltex":["dirt1.png"],
+    "pure_static":true
 },{
 	"id":"grass",
 	"name":"трава",
@@ -14,22 +15,26 @@
                             "type":"Stompable",
                             "afterstomp":"dirt"
                 }
-    ]
+    ],
+    "pure_static":true
 },{
 	"id":"fence",
 	"name":"металическая решетка",
 	"type":"block",
 	"transparent":true,
-    "alltex":["fence_s.png"]
+    "alltex":["fence_s.png"],
+    "pure_static":true
 },{
 	"id":"bricks",
 	"type":"block",
-    "alltex":["briwall1.png"]
+    "alltex":["briwall1.png"],
+    "pure_static":true
 },{
 	"id":"bath",
 	"name":"ванна",
 	"type":"block",
-    "alltex":["bath1.png","bath2.png","bath3.png","bath4.png","bath5.png"]
+    "alltex":["bath1.png","bath2.png","bath3.png","bath4.png","bath5.png"],
+    "pure_static":true
 },{
 	"id":"door",
 	"name":"деревянная дверь",
@@ -75,7 +80,8 @@
 	"id":"glass",
 	"type":"block",
 	"alltex":["glass_ver.png"],
-	"transparent":true
+    "transparent":true,
+    "pure_static":true
 },{
     "id":"cone",
     "type":"block",

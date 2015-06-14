@@ -5,16 +5,13 @@
 
 struct Block : GameBase
 {
-    Block *instantiate();
+    std::shared_ptr<Block> instantiate();
 
     Block(){}
     ~Block(){}
     Block(const Block&) = delete;
     Block& operator=(const Block&) = delete;
     std::string debugInfo();
-
-private:
-    Jtex m_tex = 0;
 };
 
 #endif // BLOCK_H_
